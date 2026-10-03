@@ -23,15 +23,11 @@
   <div class="overlay" id="overlay"></div>
 
   <!-- Painel lateral (Drawer) -->
-  <aside class="drawer" id="drawer">
+  <nav class="drawer" id="drawer">
     <div class="drawer-header">
       <div class="drawer-title">PAINEL DE CONTROLE</div>
       <button class="btn-fechar" id="btnFechar" aria-label="Fechar Menu">&times;</button>
     </div>
-
-
-
-
 <nav class="drawer-menu">
       <!-- 1. Operações da Tabuada -->
       <button class="drawer-btn" id="btnToggleModos" type="button">
@@ -130,23 +126,33 @@
         <span>Configurações</span>
       </button>
     </nav>
-
-
-
-
-
-
-
     <div class="drawer-footer">
       Total-X v1.0 • Plataforma de Agilidade Mental
+    </div> 
+    </nav>
+<!--=======
+=====================================Painel Lateral Direito: Ranking TOP 50 (usando nav) ================================-->
+  <nav class="painel-ranking" id="painelRanking">
+    <div class="ranking-header">
+      <div class="ranking-titulo">
+        <i class="bi bi-trophy-fill"></i>
+        <span>TOP 50</span>
+      </div>
+      <button class="btn-fechar" id="btnFecharRanking" aria-label="Fechar Ranking">&times;</button>
     </div>
-  </aside>
 
+    <!-- Vazio: pronto para carregar os dados do Firebase -->
+    <div class="ranking-conteudo" id="listaRankingTop50"></div>
+
+    <div class="ranking-footer">
+      Sincronização em tempo real
+    </div>
+  </nav>
   <!-- Apresentação Central -->
 <!-- Botão Flutuante do Ranking (Canto Superior Direito) -->
-  <button class="btn-ranking-flutuante" id="btnAbrirLeaderboard" aria-label="Abrir Ranking ">
+  <button class="btn-ranking-flutuante" id="btnAbrirLeaderboard" aria-label="Abrir Ranking Top 50">
     <i class="bi bi-trophy-fill"></i>
-    <span>TOP 50 - REDORDES</span>
+    <span>TOP 50</span>
   </button>
 
   <!-- Apresentação Central -->
@@ -157,7 +163,8 @@
       alt="Mascote"
     >
 
-   <h1 class="game-title">TOTAL -<span> X</span></h1>
+  
+
     <!-- Texto explicativo de identificação do usuário -->
     <p class="auth-info-txt">
       Nome e PIN são apenas registro para identificar o usuário no jogo e colocá-lo nas posições. 
@@ -326,28 +333,6 @@
       </div>
     </div>
   </div>
-  <!-- Modal Exclusivo: Leaderboard TOP 50 -->
-<!-- Painel Lateral Direito: TOP 50 (Drawer Direito) -->
-<!-- Painel Lateral Direito: TOP 50 -->
-  <aside class="drawer-top50" id="drawerTop50">
-    <div class="drawer-header">
-      <div class="modal-titulo-box">
-        <i class="bi bi-trophy-fill icone-trofeu-ouro"></i>
-        <div class="drawer-title" style="color: #f1c40f;">TOP 50 - RECORDES</div>
-      </div>
-      <button class="btn-fechar" id="btnFecharTop50" aria-label="Fechar">&times;</button>
-    </div>
-
-    <div class="top50-corpo">
-      <div class="tabela-topo-header">
-        <span class="col-pos">#</span>
-        <span class="col-nick">JOGADOR</span>
-        <span class="col-modo">MODO</span>
-        <span class="col-pts">PONTOS</span>
-      </div>
-      <div class="lista-top50" id="listaTop50Container"></div>
-    </div>
-  </aside>
 
   <!-- Container de Toasts de Notificação -->
   <div class="toast-container" id="toastContainer"></div>
@@ -401,11 +386,9 @@ if (elRankingPontos) elRankingPontos.textContent = `${recordeSalvo} pts`;
     const overlay = document.getElementById("overlay");
     const drawer = document.getElementById("drawer");
 
-    function abrirMenu() {
-      drawer.classList.add("ativo");
-      overlay.classList.add("ativo");
-    }
-
+function abrirMenu() {
+  drawer.classList.add("ativo");
+}
     function fecharMenu() {
       drawer.classList.remove("ativo");
       overlay.classList.remove("ativo");
@@ -538,18 +521,14 @@ if (elRankingPontos) elRankingPontos.textContent = `${recordeSalvo} pts`;
     });
 
     // Zerar Recorde
-document.getElementById("btnLimparRecordes").addEventListener("click", () => {
-  localStorage.removeItem("mathSnakeHighScore");
-  const elMenu = document.getElementById("recordeMenuTxt");
-  const elModal = document.getElementById("recordeModalTxt");
-  const elRank = document.getElementById("rankingPontosTxt");
-  
-  if (elMenu) elMenu.textContent = "0";
-  if (elModal) elModal.textContent = "0";
-  if (elRank) elRank.textContent = "0 pts";
-  
-  showToast("Seus recordes foram redefinidos.", "alerta");
-});
+    document.getElementById("btnLimparRecordes").addEventListener("click", () => {
+      localStorage.removeItem("mathSnakeHighScore");
+      document.getElementById("recordeMenuTxt").textContent = "0";
+      document.getElementById("recordeModalTxt").textContent = "0";
+      document.getElementById("rankingPontosTxt").textContent = "0 pts";
+      showToast("Seus recordes foram redefinidos.", "alerta");
+    });
+
 
     // Eventos dos novos botões com ShowToast
     document.getElementById("btnBatalhaEquipes").addEventListener("click", () => {
@@ -627,76 +606,32 @@ document.getElementById("btnLimparRecordes").addEventListener("click", () => {
       }, 700);
     });
 
-    // Abrir o Modal de Recordes pelo botão do canto direito
-// Abrir o NOVO modal de TOP 50 pelo botão flutuante
-// Controle do Drawer Lateral Direito (Top 50)
-const btnAbrirLeaderboard = document.getElementById("btnAbrirLeaderboard");
-    const drawerTop50 = document.getElementById("drawerTop50");
-    const btnFecharTop50 = document.getElementById("btnFecharTop50");
+    // Controle do Painel Lateral do Ranking (TOP 50)
+  
+    const painelRanking = document.getElementById("painelRanking");
+    const btnFecharRanking = document.getElementById("btnFecharRanking");
 
-    function abrirTop50() {
-      fecharMenu();
-      carregarTabelaTop50();
-      drawerTop50.classList.add("ativo");
-      overlay.classList.add("ativo");
-    }
-
-    function fecharTop50() {
-      drawerTop50.classList.remove("ativo");
+ function abrirRanking() {
+  fecharMenu();
+  painelRanking.classList.add("ativo");
+}
+    function fecharRanking() {
+      painelRanking.classList.remove("ativo");
       overlay.classList.remove("ativo");
     }
 
-    if (btnAbrirLeaderboard) btnAbrirLeaderboard.addEventListener("click", abrirTop50);
-    if (btnFecharTop50) btnFecharTop50.addEventListener("click", fecharTop50);
-    // Ajuste no clique do overlay para fechar ambos os menus
+    if (btnAbrirLeaderboard) {
+      btnAbrirLeaderboard.addEventListener("click", abrirRanking);
+    }
+    if (btnFecharRanking) {
+      btnFecharRanking.addEventListener("click", fecharRanking);
+    }
+
+    // Fechar ao clicar no overlay de fundo escurecido
     overlay.addEventListener("click", () => {
       fecharMenu();
-      fecharTop50();
+      fecharRanking();
     });
-    // Renderizador dos 50 melhores jogadores
-    function carregarTabelaTop50() {
-      const container = document.getElementById("listaTop50Container");
-      if (!container) return;
-
-      const mockTop50 = [
-        { nome: "ALEX7", modo: "Multiplicação", pontos: 4850 },
-        { nome: "DEV_X", modo: "Misto/PEMDAS", pontos: 4420 },
-        { nome: "BRUNO", modo: "Frenesi", pontos: 3980 },
-        { nome: "CARLA", modo: "Multiplicação", pontos: 3750 },
-        { nome: "LUCAS", modo: "Soma", pontos: 3500 },
-        { nome: "FELIP", modo: "Divisão", pontos: 3200 },
-        { nome: "GABRI", modo: "Misto/PEMDAS", pontos: 3100 },
-        { nome: "TIAGO", modo: "Multiplicação", pontos: 2950 },
-        { nome: "MARIA", modo: "Soma", pontos: 2800 },
-        { nome: "PAULO", modo: "Subtração", pontos: 2650 }
-      ];
-
-      for (let i = 11; i <= 50; i++) {
-        mockTop50.push({
-          nome: `JOG${i < 10 ? '0' + i : i}`,
-          modo: i % 2 === 0 ? "Multiplicação" : "Soma",
-          pontos: Math.max(100, 2600 - (i * 48))
-        });
-      }
-
-      container.innerHTML = mockTop50.map((item, index) => {
-        const posicao = index + 1;
-        let medalhaClass = "";
-        if (posicao === 1) medalhaClass = "pos-ouro";
-        else if (posicao === 2) medalhaClass = "pos-prata";
-        else if (posicao === 3) medalhaClass = "pos-bronze";
-        return `
-          <div class="linha-top50 ${medalhaClass}">
-            <span class="col-pos pos-badge">${posicao}</span>
-            <span class="col-nick">${item.nome}</span>
-            <span class="col-modo">${item.modo}</span>
-            <span class="col-pts">${item.pontos} <small>pts</small></span>
-          </div>
-        `;
-     
-      
-      }).join("");
-    }
   </script>
 </body>
 </html>
