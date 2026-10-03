@@ -1,299 +1,379 @@
-import { CONFIG, gameState } from "./config.js";
-import { criarContaAleatoria, popularAlvosIniciais } from "./math.js";
-import {
-  criarEfeitoPerdaGomo,
-  atualizarCobra,
-  atualizarParticulas,
-  desenharCabecaRealista
-} from "./snake.js";
+import { bancoSvgEmojis, inicializarCatalogo, carregarMaisEmojis } from "./emoji.js";
+  
+  // Recupera dados salvos
+    const recordeSalvo = localStorage.getItem("mathSnakeHighScore") || "0";
+    const dificuldadeSalva = localStorage.getItem("mathSnakeDificuldade") || "facil";
+    const operacaoSalva = localStorage.getItem("mathSnakeOperacao") || "soma";
 
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
-const inputContainer = document.getElementById("inputContainer");
-const mathInput = document.getElementById("mathInput");
-const timerTxt = document.getElementById("timerTxt");
-const pontosTxt = document.getElementById("pontosTxt");
-const recordeTxt = document.getElementById("recordeTxt");
-const gameOverModal = document.getElementById("gameOverModal");
-const pontosFinalTxt = document.getElementById("pontosFinalTxt");
-const recordeFinalTxt = document.getElementById("recordeFinalTxt");
-const btnReiniciar = document.getElementById("btnReiniciar");
+    
+    const elRecordeMenu = document.getElementById("recordeMenuTxt");
+if (elRecordeMenu) elRecordeMenu.textContent = recordeSalvo;
 
-recordeTxt.textContent = gameState.recorde;
+const elRecordeModal = document.getElementById("recordeModalTxt");
+if (elRecordeModal) elRecordeModal.textContent = recordeSalvo;
 
-function redimensionar() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+const elRankingPontos = document.getElementById("rankingPontosTxt");
+if (elRankingPontos) elRankingPontos.textContent = `${recordeSalvo} pts`;
+
+    // Sistema de Notificações Toast nativo
+    function showToast(mensagem, tipo = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast-item toast-${tipo}`;
+
+      let icone = 'bi-info-circle-fill';
+      if (tipo === 'sucesso') icone = 'bi-check-circle-fill';
+      if (tipo === 'alerta') icone = 'bi-exclamation-triangle-fill';
+
+      toast.innerHTML = `
+        <i class="bi ${icone} toast-icone"></i>
+        <div class="toast-conteudo">${mensagem}</div>
+        <button class="toast-fechar">&times;</button>
+      `;
+
+      container.appendChild(toast);
+
+      const fechar = () => {
+        toast.classList.add('saindo');
+        setTimeout(() => toast.remove(), 250);
+      };
+
+      toast.querySelector('.toast-fechar').addEventListener('click', fechar);
+      setTimeout(fechar, 3200);
+    }
+
+    // Controle do Drawer Lateral
+    const btnHamburguer = document.getElementById("btnHamburguer");
+    const btnFechar = document.getElementById("btnFechar");
+    const overlay = document.getElementById("overlay");
+    const drawer = document.getElementById("drawer");
+
+function abrirMenu() {
+  drawer.classList.add("ativo");
 }
-window.addEventListener("resize", redimensionar);
-redimensionar();
+    function fecharMenu() {
+      drawer.classList.remove("ativo");
+      overlay.classList.remove("ativo");
+    }
 
-window.addEventListener("mousemove", (e) => {
-  gameState.mouse.x = e.clientX;
-  gameState.mouse.y = e.clientY;
-});
+    btnHamburguer.addEventListener("click", abrirMenu);
+    btnFechar.addEventListener("click", fecharMenu);
+    overlay.addEventListener("click", fecharMenu);
 
-function pararTimer() {
-  if (gameState.timerInterval) {
-    clearInterval(gameState.timerInterval);
-    gameState.timerInterval = null;
-  }
-}
+    // Sanfona de Operações
+    const btnToggleModos = document.getElementById("btnToggleModos");
+    const submenuModos = document.getElementById("submenuModos");
+    const setaModos = document.getElementById("setaModos");
+    const btnsOperacao = document.querySelectorAll(".btn-operacao");
 
-function dispararGameOver() {
-  gameState.emJogo = false;
-  pararTimer();
-  inputContainer.style.display = "none";
+    btnToggleModos.addEventListener("click", function() {
+      const estaAberto = submenuModos.classList.toggle("aberto");
+      btnToggleModos.classList.toggle("aberto", estaAberto);
+      setaModos.style.transform = estaAberto ? "rotate(180deg)" : "rotate(0deg)";
+    });
 
-  if (gameState.pontos > gameState.recorde) {
-    gameState.recorde = gameState.pontos;
-    localStorage.setItem("mathSnakeHighScore", gameState.recorde);
-    recordeTxt.textContent = gameState.recorde;
-  }
-
-  pontosFinalTxt.textContent = gameState.pontos;
-  recordeFinalTxt.textContent = gameState.recorde;
-  gameOverModal.style.display = "flex";
-}
-
-function iniciarTimer() {
-  pararTimer();
-  gameState.tempoRestante = CONFIG.tempoBase;
-  timerTxt.textContent = gameState.tempoRestante;
-  gameState.timerInterval = setInterval(() => {
-    gameState.tempoRestante--;
-    timerTxt.textContent = gameState.tempoRestante;
-
-    if (gameState.tempoRestante <= 0) {
-      mathInput.value = "";
-      mathInput.classList.remove("erro");
-      gameState.bloqueioInput = false;
-
-      if (gameState.segmentos.length > 1) {
-        const gomoRemovido = gameState.segmentos.pop();
-        criarEfeitoPerdaGomo(gomoRemovido.x, gomoRemovido.y);
+    // Seleção de Operação com persistência
+    btnsOperacao.forEach(function(btn) {
+      if (btn.dataset.modo === operacaoSalva) {
+        btn.classList.add("ativo");
+        if (!btn.querySelector(".badge-tag")) {
+          btn.insertAdjacentHTML("beforeend", '<span class="badge-tag">Ativo</span>');
+        }
+      } else {
+        btn.classList.remove("ativo");
+        const tag = btn.querySelector(".badge-tag");
+        if (tag) tag.remove();
       }
 
-      if (gameState.segmentos.length <= 1) {
-        dispararGameOver();
+      btn.addEventListener("click", function() {
+        btnsOperacao.forEach(function(b) {
+          b.classList.remove("ativo");
+          const tag = b.querySelector(".badge-tag");
+          if (tag) tag.remove();
+        });
+
+        btn.classList.add("ativo");
+        btn.insertAdjacentHTML("beforeend", '<span class="badge-tag">Ativo</span>');
+        localStorage.setItem("mathSnakeOperacao", btn.dataset.modo);
+        showToast(`Operação alterada para: ${btn.querySelector('span').textContent}`, 'sucesso');
+      });
+    });
+
+    // Gerenciador de Modais
+    function abrirModal(id) {
+      fecharMenu();
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.add("ativo");
+    }
+
+    function fecharModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.remove("ativo");
+    }
+
+    document.querySelectorAll("[data-fechar]").forEach(btn => {
+      btn.addEventListener("click", () => fecharModal(btn.dataset.fechar));
+    });
+
+    document.querySelectorAll(".modal-backdrop").forEach(backdrop => {
+      backdrop.addEventListener("click", (e) => {
+        if (e.target === backdrop) backdrop.classList.remove("ativo");
+      });
+    });
+
+    // Eventos dos botões do Menu Lateral
+    document.getElementById("btnAbrirRegras").addEventListener("click", () => abrirModal("modalRegras"));
+    document.getElementById("btnAbrirDificuldade").addEventListener("click", () => abrirModal("modalDificuldade"));
+    document.getElementById("btnAbrirRecordes").addEventListener("click", () => abrirModal("modalRecordes"));
+
+    document.getElementById("btnDesafioDiario").addEventListener("click", () => {
+      fecharMenu();
+      showToast("Desafio Diário carregado: ganhe 2x de pontuação hoje!", "sucesso");
+    });
+
+    document.getElementById("btnTreinoCorporativo").addEventListener("click", () => {
+      fecharMenu();
+      showToast("Modo Agilidade Cognitiva configurado para métricas de foco.", "info");
+    });
+
+    document.getElementById("btnAbrirConfig").addEventListener("click", () => {
+      fecharMenu();
+      showToast("Painel de áudio e gráficos em breve.", "info");
+    });
+
+    // Lógica da Seleção de Dificuldade
+    const cardsDificuldade = document.querySelectorAll(".card-dif");
+    let nivelSelecionado = dificuldadeSalva;
+
+    function atualizarBadgeDificuldade(nivel) {
+      const badge = document.getElementById("badgeDificuldadeAtual");
+      const rankingTxt = document.getElementById("rankingDificuldadeTxt");
+      const mapaNomes = {
+        facil: 'Fácil',
+        medio: 'Médio',
+        dificil: 'Difícil',
+        frenesi: 'Frenesi'
+      };
+      const label = mapaNomes[nivel] || 'Fácil';
+      if (badge) badge.textContent = label;
+      if (rankingTxt) rankingTxt.textContent = `Nível: ${label}`;
+    }
+
+    cardsDificuldade.forEach(card => {
+      if (card.dataset.nivel === dificuldadeSalva) {
+        card.classList.add("ativo");
+      } else {
+        card.classList.remove("ativo");
+      }
+
+      card.addEventListener("click", () => {
+        cardsDificuldade.forEach(c => c.classList.remove("ativo"));
+        card.classList.add("ativo");
+        nivelSelecionado = card.dataset.nivel;
+      });
+    });
+
+    atualizarBadgeDificuldade(dificuldadeSalva);
+
+    document.getElementById("btnSalvarDificuldade").addEventListener("click", () => {
+      localStorage.setItem("mathSnakeDificuldade", nivelSelecionado);
+      atualizarBadgeDificuldade(nivelSelecionado);
+      fecharModal("modalDificuldade");
+      showToast("Nível de desafio atualizado com sucesso!", "sucesso");
+    });
+
+    // Zerar Recorde
+    document.getElementById("btnLimparRecordes").addEventListener("click", () => {
+      localStorage.removeItem("mathSnakeHighScore");
+      document.getElementById("recordeMenuTxt").textContent = "0";
+      document.getElementById("recordeModalTxt").textContent = "0";
+      document.getElementById("rankingPontosTxt").textContent = "0 pts";
+      showToast("Seus recordes foram redefinidos.", "alerta");
+    });
+
+
+    // Eventos dos novos botões com ShowToast
+    document.getElementById("btnBatalhaEquipes").addEventListener("click", () => {
+      fecharMenu();
+      showToast("Modo Versus Corporativo: crie salas de batalha rápida para o seu time!", "sucesso");
+    });
+
+    document.getElementById("btnOnboarding").addEventListener("click", () => {
+      fecharMenu();
+      showToast("Módulo Didático: aprenda raciocínio ágil passo a passo sem penalidades.", "info");
+    });
+
+    document.getElementById("btnModoPressao").addEventListener("click", () => {
+      fecharMenu();
+      showToast("Atenção: Modo Sob Pressão reduz o tempo de resposta pela metade!", "alerta");
+    });
+
+    document.getElementById("btnAnalyticsRH").addEventListener("click", () => {
+      fecharMenu();
+      showToast("Métricas da Empresa: precisão, tempo médio e histórico de raciocínio.", "info");
+    });
+
+    document.getElementById("btnMascotes").addEventListener("click", () => {
+      fecharMenu();
+      showToast("Seleção de Avatares: troque a reação visual do emoji durante o cálculo!", "sucesso");
+    });
+
+
+
+    // Sanitização em tempo real dos campos de entrada
+    const inputApelido = document.getElementById("inputApelido");
+    const inputPin = document.getElementById("inputPin");
+    const btnIniciarJogo = document.getElementById("btnIniciarJogo");
+
+    // Preenche com o último apelido usado no aparelho, se houver
+    inputApelido.value = localStorage.getItem("totalX_lastNick") || "";
+    inputPin.value = localStorage.getItem("totalX_lastPin") || "";
+
+    inputApelido.addEventListener("input", function() {
+      // Aceita apenas letras e números, convertendo para maiúsculo
+      this.value = this.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+    });
+
+    inputPin.addEventListener("input", function() {
+      // Aceita estritamente números
+      this.value = this.value.replace(/\D/g, '');
+    });
+
+    // Ação ao clicar em Jogar
+    btnIniciarJogo.addEventListener("click", function(e) {
+      e.preventDefault();
+      const nick = inputApelido.value.trim();
+      const pin = inputPin.value.trim();
+
+      if (nick.length < 3) {
+        showToast("Digite um apelido com no mínimo 3 caracteres.", "alerta");
+        inputApelido.focus();
         return;
       }
 
-      if (gameState.alvoAtivo) {
-        const idx = gameState.alvos.findIndex((a) => a.id === gameState.alvoAtivo.id);
-        if (idx !== -1) gameState.alvos.splice(idx, 1);
-        gameState.alvos.push(criarContaAleatoria());
+      if (pin.length < 4) {
+        showToast("O PIN de segurança deve ter pelo menos 4 dígitos.", "alerta");
+        inputPin.focus();
+        return;
       }
 
-      gameState.alvoAtivo = null;
-      gameState.entradaAtiva = false;
-      inputContainer.style.display = "none";
-      pararTimer();
+      // Salva apenas temporariamente os dados digitados para persistir na sessão
+      localStorage.setItem("totalX_lastNick", nick);
+      localStorage.setItem("totalX_lastPin", pin);
+
+      showToast(`Bem-vindo, ${nick}! Iniciando o desafio...`, "sucesso");
+      
+      setTimeout(() => {
+        window.location.href = "ambiente.html";
+      }, 700);
+    });
+
+    // Controle do Painel Lateral do Ranking (TOP 50)
+  
+    const painelRanking = document.getElementById("painelRanking");
+    const btnFecharRanking = document.getElementById("btnFecharRanking");
+
+ function abrirRanking() {
+  fecharMenu();
+  painelRanking.classList.add("ativo");
+}
+    function fecharRanking() {
+      painelRanking.classList.remove("ativo");
+      overlay.classList.remove("ativo");
     }
-  }, 1000);
-}
 
-function reiniciarJogo() {
-  gameState.pontos = 0;
-  pontosTxt.textContent = "0";
-  gameState.emJogo = true;
-  gameState.entradaAtiva = false;
-  gameState.bloqueioInput = false;
-  gameState.alvoAtivo = null;
-  gameState.particulas.length = 0;
-  mathInput.classList.remove("erro");
-  mathInput.value = "";
-  inputContainer.style.display = "none";
-  gameOverModal.style.display = "none";
+    if (btnAbrirLeaderboard) {
+      btnAbrirLeaderboard.addEventListener("click", abrirRanking);
+    }
+    if (btnFecharRanking) {
+      btnFecharRanking.addEventListener("click", fecharRanking);
+    }
 
-  gameState.segmentos.length = 0;
-  gameState.anguloAtual = 0;
-  gameState.mouse.x = window.innerWidth / 2 + 100;
-  gameState.mouse.y = window.innerHeight / 2;
+    // Fechar ao clicar no overlay de fundo escurecido
+    overlay.addEventListener("click", () => {
+      fecharMenu();
+      fecharRanking();
+    });
 
-  for (let i = 0; i < CONFIG.totalSegmentosInicial; i++) {
-    gameState.segmentos.push({ x: -i * CONFIG.distanciaEntreSegmentos, y: 0 });
-  }
+// ==========================================
+    // Eventos do Painel de Emojis SVG (200+)
+    // ==========================================
+    const btnTrocarEmoji = document.getElementById("btnTrocarEmoji");
+    const painelSelecaoEmoji = document.getElementById("painelSelecaoEmoji");
+    const btnFecharPainelEmoji = document.getElementById("btnFecharPainelEmoji");
+    const gradeEmojis = document.getElementById("gradeEmojis");
+    const emojiPreviewBox = document.getElementById("emojiPreviewBox");
+    const inputBuscaEmoji = document.getElementById("inputBuscaEmoji");
 
-  popularAlvosIniciais();
-}
+    let idEmojiSelecionado = localStorage.getItem("totalX_emojiId") || "grinning_eyes";
 
-document.addEventListener("click", () => {
-  if (gameState.entradaAtiva && gameState.emJogo && !gameState.bloqueioInput) {
-    mathInput.focus();
-  }
-});
-
-btnReiniciar.addEventListener("click", reiniciarJogo);
-
-mathInput.addEventListener("input", () => {
-  if (gameState.bloqueioInput || !gameState.alvoAtivo) return;
-
-  mathInput.value = mathInput.value.replace(/\D/g, "");
-  const digitado = mathInput.value;
-  if (!digitado) return;
-
-  const valorInt = parseInt(digitado, 10);
-  const strEsperada = String(gameState.alvoAtivo.resultado);
-
-  if (valorInt === gameState.alvoAtivo.resultado) {
-    gameState.pontos += 2;
-    pontosTxt.textContent = gameState.pontos;
-    mathInput.value = "";
-
-    const ultimo = gameState.segmentos[gameState.segmentos.length - 1];
-    gameState.segmentos.push({ x: ultimo.x, y: ultimo.y });
-
-    const idx = gameState.alvos.findIndex((a) => a.id === gameState.alvoAtivo.id);
-    if (idx !== -1) gameState.alvos.splice(idx, 1);
-    gameState.alvos.push(criarContaAleatoria());
-
-    gameState.alvoAtivo = null;
-    gameState.entradaAtiva = false;
-    inputContainer.style.display = "none";
-    pararTimer();
-    return;
-  }
-
-  if (digitado.length >= strEsperada.length) {
-    gameState.bloqueioInput = true;
-    mathInput.classList.add("erro");
-
-    setTimeout(() => {
-      mathInput.value = "";
-      mathInput.classList.remove("erro");
-      gameState.bloqueioInput = false;
-      mathInput.focus();
-    }, 180);
-  }
-});
-
-function atualizar() {
-  atualizarCobra();
-  atualizarParticulas();
-
-  const cabeca = gameState.segmentos[0];
-  if (!gameState.entradaAtiva) {
-    const raioAtivacao = 50;
-    for (let i = 0; i < gameState.alvos.length; i++) {
-      const a = gameState.alvos[i];
-      const dist = Math.hypot(a.x - cabeca.x, a.y - cabeca.y);
-      if (dist <= raioAtivacao) {
-        gameState.alvoAtivo = a;
-        gameState.entradaAtiva = true;
-        inputContainer.style.display = "flex";
-        mathInput.value = "";
-        mathInput.focus();
-        iniciarTimer();
-        break;
+  function carregarEmojiPrincipal(id) {
+      if (emojiPreviewBox) {
+        // Se existir a chave usa-a; se não existir, pega o primeiro SVG do banco automaticamente
+        const svgFinal = bancoSvgEmojis[id] || Object.values(bancoSvgEmojis)[0] || "";
+        emojiPreviewBox.innerHTML = svgFinal;
       }
     }
-  }
-}
+    // Carrega o emoji inicial
+    carregarEmojiPrincipal(idEmojiSelecionado);
 
-function desenhar() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  const cabeca = gameState.segmentos[0] || { x: 0, y: 0 };
-  const centroX = window.innerWidth / 2;
-  const centroY = window.innerHeight / 2;
-
-  ctx.save();
-  ctx.translate(centroX - cabeca.x, centroY - cabeca.y);
-
-  // Grid
-// Grid otimizado com único batch de desenho
-  ctx.strokeStyle = "#131e2b";
-  ctx.lineWidth = 1;
-  const step = 50;
-  const offsetX = Math.floor((cabeca.x - centroX) / step) * step;
-  const offsetY = Math.floor((cabeca.y - centroY) / step) * step;
-
-  ctx.beginPath();
-  for (let x = offsetX - step; x < offsetX + canvas.width + step * 2; x += step) {
-    ctx.moveTo(x, offsetY - step);
-    ctx.lineTo(x, offsetY + canvas.height + step * 2);
-  }
-  for (let y = offsetY - step; y < offsetY + canvas.height + step * 2; y += step) {
-    ctx.moveTo(offsetX - step, y);
-    ctx.lineTo(offsetX + canvas.width + step * 2, y);
-  }
-  ctx.stroke();
-
-  // Alvos matemáticos
-  if (gameState.emJogo) {
-    ctx.font = "bold 26px monospace";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-
-    for (let i = 0; i < gameState.alvos.length; i++) {
-      const a = gameState.alvos[i];
-      const isAtivo = gameState.alvoAtivo && gameState.alvoAtivo.id === a.id;
-      ctx.fillStyle = isAtivo ? "#ffff00" : "#00e5ff";
-      ctx.shadowColor = isAtivo ? "#ffff00" : "#00e5ff";
-      ctx.shadowBlur = isAtivo ? 18 : 12;
-      ctx.fillText(a.texto, a.x, a.y);
+    function abrirPainelComGrade() {
+      if (inputBuscaEmoji) inputBuscaEmoji.value = "";
+      gradeEmojis.innerHTML = "";
+      inicializarCatalogo("");
+      carregarMaisEmojis(gradeEmojis, idEmojiSelecionado);
+      painelSelecaoEmoji.classList.add("ativo");
     }
-    ctx.shadowBlur = 0;
-  }
 
-  // Partículas
-  for (let i = 0; i < gameState.particulas.length; i++) {
-    const p = gameState.particulas[i];
-    ctx.save();
-    ctx.globalAlpha = Math.max(0, p.opacidade);
-    ctx.fillStyle = p.cor;
-    ctx.shadowColor = p.cor;
-    ctx.shadowBlur = 8;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.raio, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-  }
+    if (btnTrocarEmoji) {
+      btnTrocarEmoji.addEventListener("click", abrirPainelComGrade);
+    }
 
-  // Corpo da Cobra
-  for (let i = gameState.segmentos.length - 1; i > 0; i--) {
-    const seg = gameState.segmentos[i];
-    ctx.beginPath();
-    ctx.arc(seg.x, seg.y, CONFIG.raioSegmento, 0, Math.PI * 2);
-    ctx.fillStyle = "#f5d442";
-    ctx.shadowColor = "rgba(0,0,0,0.35)";
-    ctx.shadowBlur = 4;
-    ctx.fill();
-  }
-  ctx.shadowBlur = 0;
+    if (btnFecharPainelEmoji) {
+      btnFecharPainelEmoji.addEventListener("click", () => {
+        painelSelecaoEmoji.classList.remove("ativo");
+      });
+    }
 
-  // Cabeça do Emoji
-  desenharCabecaRealista(ctx, cabeca.x, cabeca.y, CONFIG.raioSegmento);
+    if (gradeEmojis) {
+      // Scroll infinito para dezenas/centenas de emojis
+      gradeEmojis.addEventListener("scroll", () => {
+        if (gradeEmojis.scrollTop + gradeEmojis.clientHeight >= gradeEmojis.scrollHeight - 40) {
+          carregarMaisEmojis(gradeEmojis, idEmojiSelecionado);
+        }
+      });
 
-  ctx.restore();
-}
+      // Seleção do emoji
+      gradeEmojis.addEventListener("click", (e) => {
+        const item = e.target.closest(".emoji-item");
+        if (!item) return;
 
-function loop() {
-  if (gameState.emJogo) {
-    atualizar();
-  }
-  desenhar();
-  requestAnimationFrame(loop);
-}
+        idEmojiSelecionado = item.dataset.id;
+        carregarEmojiPrincipal(idEmojiSelecionado);
+        localStorage.setItem("totalX_emojiId", idEmojiSelecionado);
 
-reiniciarJogo();
-loop();
+        gradeEmojis.querySelectorAll(".emoji-item").forEach(b => b.classList.remove("ativo"));
+        item.classList.add("ativo");
 
-window.addEventListener("keydown", (e) => {
-  const tecla = e.key.toLowerCase();
-  if (["w", "a", "s", "d", "arrowup", "arrowleft", "arrowdown", "arrowright"].includes(tecla)) {
-    if (tecla === "w" || tecla === "arrowup") gameState.teclas.w = true;
-    if (tecla === "a" || tecla === "arrowleft") gameState.teclas.a = true;
-    if (tecla === "s" || tecla === "arrowdown") gameState.teclas.s = true;
-    if (tecla === "d" || tecla === "arrowright") gameState.teclas.d = true;
-  }
-});
+        painelSelecaoEmoji.classList.remove("ativo");
+        showToast("Avatar atualizado com sucesso!", "sucesso");
+      });
+    }
 
-window.addEventListener("keyup", (e) => {
-  const tecla = e.key.toLowerCase();
-  if (tecla === "w" || tecla === "arrowup") gameState.teclas.w = false;
-  if (tecla === "a" || tecla === "arrowleft") gameState.teclas.a = false;
-  if (tecla === "s" || tecla === "arrowdown") gameState.teclas.s = false;
-  if (tecla === "d" || tecla === "arrowright") gameState.teclas.d = false;
-});
+    // Filtro dinâmico de pesquisa
+    if (inputBuscaEmoji) {
+      inputBuscaEmoji.addEventListener("input", (e) => {
+        gradeEmojis.innerHTML = "";
+        inicializarCatalogo(e.target.value.trim());
+        carregarMaisEmojis(gradeEmojis, idEmojiSelecionado);
+      });
+    }
+
+    // Fechar ao clicar fora
+    document.addEventListener("click", (e) => {
+      if (painelSelecaoEmoji && painelSelecaoEmoji.classList.contains("ativo")) {
+        if (!painelSelecaoEmoji.contains(e.target) && !btnTrocarEmoji.contains(e.target)) {
+          painelSelecaoEmoji.classList.remove("ativo");
+        }
+      }
+    });
