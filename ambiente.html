@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Emoji Math Snake - Protótipo Slither</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="hud">PONTOS: <span id="pontosTxt">0</span> | RECORDE: <span id="recordeTxt">0</span></div>
+
+  <!-- Caixa de texto acoplada à cabeça (centralizada) -->
+  <div id="inputContainer">
+    <span id="timerTxt">5</span>
+    <input type="text" id="mathInput" placeholder="?" autocomplete="off" inputmode="numeric">
+  </div>
+
+  <!-- Tela de Derrota -->
+  <div id="gameOverModal">
+    <h1>GAME OVER</h1>
+    <p>Pontuação: <span id="pontosFinalTxt">0</span></p>
+    <p style="font-size: 16px; color: #f5d442;">Melhor Recorde: <span id="recordeFinalTxt">0</span></p>
+    <button id="btnReiniciar">JOGAR NOVAMENTE</button>
+  </div>
+
+  <canvas id="gameCanvas"></canvas>
+
+  <!-- Ligação modular ES6 -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

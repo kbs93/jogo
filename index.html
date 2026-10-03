@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Total-X</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+
+  <!-- Elemento de iluminação suave de fundo -->
+  <div class="bg-glow"></div>
+
+  <!-- Botão de abertura do menu lateral -->
+  <button class="btn-hamburguer" id="btnHamburguer" aria-label="Abrir Menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <!-- Fundo escurecido ao abrir o Drawer -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Painel lateral (Drawer) -->
+  <aside class="drawer" id="drawer">
+    <div class="drawer-header">
+      <div class="drawer-title">PAINEL DE CONTROLE</div>
+      <button class="btn-fechar" id="btnFechar" aria-label="Fechar Menu">&times;</button>
+    </div>
+
+
+
+
+<nav class="drawer-menu">
+      <!-- 1. Operações da Tabuada -->
+      <button class="drawer-btn" id="btnToggleModos" type="button">
+        <i class="bi bi-calculator-fill icone"></i>
+        <span>Operações do Jogo</span>
+        <i class="bi bi-chevron-down seta-menu" id="setaModos"></i>
+      </button>
+
+      <div class="submenu-tabuada" id="submenuModos">
+        <button class="btn-operacao ativo" data-modo="soma" type="button">
+          <i class="bi bi-plus-lg op-icone"></i>
+          <span>Soma</span>
+          <span class="badge-tag">Ativo</span>
+        </button>
+        <button class="btn-operacao" data-modo="subtracao" type="button">
+          <i class="bi bi-dash-lg op-icone"></i>
+          <span>Subtração</span>
+        </button>
+        <button class="btn-operacao" data-modo="multiplicacao" type="button">
+          <i class="bi bi-x-lg op-icone"></i>
+          <span>Multiplicação</span>
+        </button>
+        <button class="btn-operacao" data-modo="divisao" type="button">
+          <i class="bi bi-slash-lg op-icone"></i>
+          <span>Divisão</span>
+        </button>
+      </div>
+
+      <!-- 2. Dificuldade -->
+      <button class="drawer-btn btn-menu-item" id="btnAbrirDificuldade" type="button">
+        <i class="bi bi-speedometer2 icone"></i>
+        <span>Dificuldade</span>
+        <span class="badge-status" id="badgeDificuldadeAtual">Médio</span>
+      </button>
+
+      <!-- 3. Como Jogar & PEMDAS -->
+      <button class="drawer-btn btn-menu-item" id="btnAbrirRegras" type="button">
+        <i class="bi bi-mortarboard-fill icone"></i>
+        <span>Como Jogar & PEMDAS</span>
+      </button>
+
+      <!-- 4. Tabela de Recordes -->
+      <button class="drawer-btn btn-menu-item" id="btnAbrirRecordes" type="button">
+        <i class="bi bi-trophy-fill icone"></i>
+        <span>Tabela de Recordes</span>
+      </button>
+
+      <!-- 5. Desafio Diário Corporativo -->
+      <button class="drawer-btn btn-menu-item" id="btnDesafioDiario" type="button">
+        <i class="bi bi-calendar-check-fill icone"></i>
+        <span>Desafio Diário</span>
+        <span class="badge-novo">Novo</span>
+      </button>
+
+      <!-- 6. Agilidade Cognitiva / Treino de Foco -->
+      <button class="drawer-btn btn-menu-item" id="btnTreinoCorporativo" type="button">
+        <i class="bi bi-graph-up-arrow icone"></i>
+        <span>Agilidade Cognitiva</span>
+      </button>
+
+      <!-- 7. Batalha por Equipes (Hackathon / Gamificação Corporativa) -->
+      <button class="drawer-btn btn-menu-item" id="btnBatalhaEquipes" type="button">
+        <i class="bi bi-people-fill icone"></i>
+        <span>Batalha por Equipes</span>
+        <span class="badge-tag-roxo">Versus</span>
+      </button>
+
+      <!-- 8. Treinamento de Onboarding (Didático) -->
+      <button class="drawer-btn btn-menu-item" id="btnOnboarding" type="button">
+        <i class="bi bi-briefcase-fill icone"></i>
+        <span>Treino de Onboarding</span>
+      </button>
+
+      <!-- 9. Modo Sob Pressão (Cálculo com Tempo Crítico) -->
+      <button class="drawer-btn btn-menu-item" id="btnModoPressao" type="button">
+        <i class="bi bi-stopwatch-fill icone"></i>
+        <span>Modo Sob Pressão</span>
+        <span class="badge-tag-alerta">Fast</span>
+      </button>
+
+      <!-- 10. Dashboard de Desempenho / Analytics RH -->
+      <button class="drawer-btn btn-menu-item" id="btnAnalyticsRH" type="button">
+        <i class="bi bi-pie-chart-fill icone"></i>
+        <span>Métricas da Empresa</span>
+      </button>
+
+      <!-- 11. Mascotes & Expressões Corporativas -->
+      <button class="drawer-btn btn-menu-item" id="btnMascotes" type="button">
+        <i class="bi bi-emoji-sunglasses-fill icone"></i>
+        <span>Avatares & Emojis</span>
+      </button>
+
+      <!-- 12. Configurações -->
+      <button class="drawer-btn btn-menu-item" id="btnAbrirConfig" type="button">
+        <i class="bi bi-sliders icone"></i>
+        <span>Configurações</span>
+      </button>
+    </nav>
+
+
+
+
+
+
+
+    <div class="drawer-footer">
+      Total-X v1.0 • Plataforma de Agilidade Mental
+    </div>
+  </aside>
+
+  <!-- Apresentação Central -->
+<!-- Botão Flutuante do Ranking (Canto Superior Direito) -->
+  <button class="btn-ranking-flutuante" id="btnAbrirLeaderboard" aria-label="Abrir Ranking ">
+    <i class="bi bi-trophy-fill"></i>
+    <span>TOP 50 - REDORDES</span>
+  </button>
+
+  <!-- Apresentação Central -->
+  <main class="menu-stage">
+    <img 
+      class="emoji-preview" 
+      src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Grinning%20face%20with%20big%20eyes/3D/grinning_face_with_big_eyes_3d.png" 
+      alt="Mascote"
+    >
+
+   <h1 class="game-title">TOTAL -<span> X</span></h1>
+    <!-- Texto explicativo de identificação do usuário -->
+    <p class="auth-info-txt">
+      Nome e PIN são apenas registro para identificar o usuário no jogo e colocá-lo nas posições. 
+      Ao entrar novamente, basta digitar Nome + PIN para recuperar seu recorde anterior.
+    </p>
+
+    <!-- Campos de Entrada: Apelido + PIN -->
+    <div class="auth-inputs-box">
+      <input 
+        type="text" 
+        id="inputApelido" 
+        class="input-auth" 
+        placeholder="Apelido (até 5 letras)" 
+        maxlength="5" 
+        autocomplete="off"
+        spellcheck="false"
+      >
+      <input 
+        type="password" 
+        id="inputPin" 
+        class="input-auth" 
+        placeholder="PIN (até 8 dígitos)" 
+        maxlength="8" 
+        inputmode="numeric"
+        autocomplete="off"
+      >
+    </div>
+
+    <!-- Botão de Iniciar Jogo -->
+    <button type="button" class="btn-jogar" id="btnIniciarJogo">Jogar</button>
+  </main>
+  <!-- ==================== MODAIS ==================== -->
+
+  <!-- Modal 1: Como Jogar & Guia Matemático (PEMDAS) -->
+  <div class="modal-backdrop" id="modalRegras">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-titulo-box">
+          <i class="bi bi-book-half modal-icone-titulo"></i>
+          <h3>Como Jogar & Ordem PEMDAS</h3>
+        </div>
+        <button class="btn-fechar-modal" data-fechar="modalRegras">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="regra-item">
+          <div class="regra-numero">1</div>
+          <div class="regra-texto">
+            <strong>Mecânica com Emojis:</strong> O mascote flutua em direção à conta matemática. Digite a resposta correta antes que ele alcance o alvo para acelerar seu combo.
+          </div>
+        </div>
+
+        <div class="regra-item">
+          <div class="regra-numero">2</div>
+          <div class="regra-texto">
+            <strong>Sanitização em Tempo Real:</strong> Apenas dígitos numéricos são aceitos. Não precisa apertar Enter: ao bater o resultado correto, o emoji devora o número na hora.
+          </div>
+        </div>
+
+        <div class="pemdas-box">
+          <div class="pemdas-titulo"><i class="bi bi-shield-check"></i> Guia Oficial de Precedência (PEMDAS)</div>
+          <div class="pemdas-grid">
+            <div class="pemdas-card"><span class="pemdas-sigla">P</span><span class="pemdas-desc">Parênteses <strong>( )</strong></span></div>
+            <div class="pemdas-card"><span class="pemdas-sigla">E</span><span class="pemdas-desc">Expoentes <strong>x²</strong></span></div>
+            <div class="pemdas-card"><span class="pemdas-sigla">MD</span><span class="pemdas-desc">Mult. & Divisão <strong>× ÷</strong></span></div>
+            <div class="pemdas-card"><span class="pemdas-sigla">AS</span><span class="pemdas-desc">Adição & Subtr. <strong>+ −</strong></span></div>
+          </div>
+          <div class="pemdas-exemplo">Exemplo: <code>5 + 3 × 4</code> → Primeiro <code>3 × 4 = 12</code>, depois <code>5 + 12 = 17</code></div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-modal-acao" data-fechar="modalRegras">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Seleção de Dificuldade -->
+  <div class="modal-backdrop" id="modalDificuldade">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-titulo-box">
+          <i class="bi bi-speedometer2 modal-icone-titulo"></i>
+          <h3>Nível de Desafio</h3>
+        </div>
+        <button class="btn-fechar-modal" data-fechar="modalDificuldade">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="cards-dificuldade">
+          <div class="card-dif ativo" data-nivel="facil">
+            <div class="dif-topo">
+              <span class="dif-nome">Fácil (Iniciante)</span>
+              <span class="dif-badge">Recomendado</span>
+            </div>
+            <p class="dif-desc">Adição e subtração simples de 1 a 20. Velocidade branda para aquecimento mental.</p>
+            <span class="dif-exemplo">Exemplo: 7 + 5 = ?</span>
+          </div>
+
+          <div class="card-dif" data-nivel="medio">
+            <div class="dif-topo">
+              <span class="dif-nome">Médio (Tabuada)</span>
+            </div>
+            <p class="dif-desc">Multiplicação e divisão direta. Ritmo moderado focado em velocidade operacional.</p>
+            <span class="dif-exemplo">Exemplo: 4 × 8 = ?</span>
+          </div>
+
+          <div class="card-dif" data-nivel="dificil">
+            <div class="dif-topo">
+              <span class="dif-nome">Difícil (Misto / PEMDAS)</span>
+            </div>
+            <p class="dif-desc">Expressões encadeadas em duas etapas respeitando as ordens matemáticas com obstáculos.</p>
+            <span class="dif-exemplo">Exemplo: (6 + 2) × 3 = ?</span>
+          </div>
+
+          <div class="card-dif" data-nivel="frenesi">
+            <div class="dif-topo">
+              <span class="dif-nome">Modo Frenesi</span>
+              <span class="dif-badge fogo"><i class="bi bi-fire"></i> Rápido</span>
+            </div>
+            <p class="dif-desc">Aceleração contínua a cada acerto. Ideal para treinos de alta performance cognitiva.</p>
+            <span class="dif-exemplo">Velocidade Progressiva</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-modal-acao" id="btnSalvarDificuldade">Confirmar Nível</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Tabela de Recordes & Métricas -->
+  <div class="modal-backdrop" id="modalRecordes">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-titulo-box">
+          <i class="bi bi-trophy-fill modal-icone-titulo"></i>
+          <h3>Quadro de Recordes</h3>
+        </div>
+        <button class="btn-fechar-modal" data-fechar="modalRecordes">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="recorde-destaque">
+          <span class="recorde-label">Maior Pontuação Pessoal</span>
+          <span class="recorde-valor" id="recordeModalTxt">0</span>
+          <span class="recorde-sub">Pontos acumulados</span>
+        </div>
+
+        <div class="ranking-lista">
+          <div class="ranking-item topo">
+            <div class="ranking-pos">#1</div>
+            <div class="ranking-info">
+              <span class="ranking-nome">Recorde Atual</span>
+              <span class="ranking-modo" id="rankingDificuldadeTxt">Nível: Fácil</span>
+            </div>
+            <div class="ranking-pontos" id="rankingPontosTxt">0 pts</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-modal-secundario" id="btnLimparRecordes">Zerar Recorde</button>
+        <button class="btn-modal-acao" data-fechar="modalRecordes">Fechar</button>
+      </div>
+    </div>
+  </div>
+  <!-- Modal Exclusivo: Leaderboard TOP 50 -->
+<!-- Painel Lateral Direito: TOP 50 (Drawer Direito) -->
+<!-- Painel Lateral Direito: TOP 50 -->
+  <aside class="drawer-top50" id="drawerTop50">
+    <div class="drawer-header">
+      <div class="modal-titulo-box">
+        <i class="bi bi-trophy-fill icone-trofeu-ouro"></i>
+        <div class="drawer-title" style="color: #f1c40f;">TOP 50 - RECORDES</div>
+      </div>
+      <button class="btn-fechar" id="btnFecharTop50" aria-label="Fechar">&times;</button>
+    </div>
+
+    <div class="top50-corpo">
+      <div class="tabela-topo-header">
+        <span class="col-pos">#</span>
+        <span class="col-nick">JOGADOR</span>
+        <span class="col-modo">MODO</span>
+        <span class="col-pts">PONTOS</span>
+      </div>
+      <div class="lista-top50" id="listaTop50Container"></div>
+    </div>
+  </aside>
+
+  <!-- Container de Toasts de Notificação -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    // Recupera dados salvos
+    const recordeSalvo = localStorage.getItem("mathSnakeHighScore") || "0";
+    const dificuldadeSalva = localStorage.getItem("mathSnakeDificuldade") || "facil";
+    const operacaoSalva = localStorage.getItem("mathSnakeOperacao") || "soma";
+
+    
+    const elRecordeMenu = document.getElementById("recordeMenuTxt");
+if (elRecordeMenu) elRecordeMenu.textContent = recordeSalvo;
+
+const elRecordeModal = document.getElementById("recordeModalTxt");
+if (elRecordeModal) elRecordeModal.textContent = recordeSalvo;
+
+const elRankingPontos = document.getElementById("rankingPontosTxt");
+if (elRankingPontos) elRankingPontos.textContent = `${recordeSalvo} pts`;
+
+    // Sistema de Notificações Toast nativo
+    function showToast(mensagem, tipo = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast-item toast-${tipo}`;
+
+      let icone = 'bi-info-circle-fill';
+      if (tipo === 'sucesso') icone = 'bi-check-circle-fill';
+      if (tipo === 'alerta') icone = 'bi-exclamation-triangle-fill';
+
+      toast.innerHTML = `
+        <i class="bi ${icone} toast-icone"></i>
+        <div class="toast-conteudo">${mensagem}</div>
+        <button class="toast-fechar">&times;</button>
+      `;
+
+      container.appendChild(toast);
+
+      const fechar = () => {
+        toast.classList.add('saindo');
+        setTimeout(() => toast.remove(), 250);
+      };
+
+      toast.querySelector('.toast-fechar').addEventListener('click', fechar);
+      setTimeout(fechar, 3200);
+    }
+
+    // Controle do Drawer Lateral
+    const btnHamburguer = document.getElementById("btnHamburguer");
+    const btnFechar = document.getElementById("btnFechar");
+    const overlay = document.getElementById("overlay");
+    const drawer = document.getElementById("drawer");
+
+    function abrirMenu() {
+      drawer.classList.add("ativo");
+      overlay.classList.add("ativo");
+    }
+
+    function fecharMenu() {
+      drawer.classList.remove("ativo");
+      overlay.classList.remove("ativo");
+    }
+
+    btnHamburguer.addEventListener("click", abrirMenu);
+    btnFechar.addEventListener("click", fecharMenu);
+    overlay.addEventListener("click", fecharMenu);
+
+    // Sanfona de Operações
+    const btnToggleModos = document.getElementById("btnToggleModos");
+    const submenuModos = document.getElementById("submenuModos");
+    const setaModos = document.getElementById("setaModos");
+    const btnsOperacao = document.querySelectorAll(".btn-operacao");
+
+    btnToggleModos.addEventListener("click", function() {
+      const estaAberto = submenuModos.classList.toggle("aberto");
+      btnToggleModos.classList.toggle("aberto", estaAberto);
+      setaModos.style.transform = estaAberto ? "rotate(180deg)" : "rotate(0deg)";
+    });
+
+    // Seleção de Operação com persistência
+    btnsOperacao.forEach(function(btn) {
+      if (btn.dataset.modo === operacaoSalva) {
+        btn.classList.add("ativo");
+        if (!btn.querySelector(".badge-tag")) {
+          btn.insertAdjacentHTML("beforeend", '<span class="badge-tag">Ativo</span>');
+        }
+      } else {
+        btn.classList.remove("ativo");
+        const tag = btn.querySelector(".badge-tag");
+        if (tag) tag.remove();
+      }
+
+      btn.addEventListener("click", function() {
+        btnsOperacao.forEach(function(b) {
+          b.classList.remove("ativo");
+          const tag = b.querySelector(".badge-tag");
+          if (tag) tag.remove();
+        });
+
+        btn.classList.add("ativo");
+        btn.insertAdjacentHTML("beforeend", '<span class="badge-tag">Ativo</span>');
+        localStorage.setItem("mathSnakeOperacao", btn.dataset.modo);
+        showToast(`Operação alterada para: ${btn.querySelector('span').textContent}`, 'sucesso');
+      });
+    });
+
+    // Gerenciador de Modais
+    function abrirModal(id) {
+      fecharMenu();
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.add("ativo");
+    }
+
+    function fecharModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.remove("ativo");
+    }
+
+    document.querySelectorAll("[data-fechar]").forEach(btn => {
+      btn.addEventListener("click", () => fecharModal(btn.dataset.fechar));
+    });
+
+    document.querySelectorAll(".modal-backdrop").forEach(backdrop => {
+      backdrop.addEventListener("click", (e) => {
+        if (e.target === backdrop) backdrop.classList.remove("ativo");
+      });
+    });
+
+    // Eventos dos botões do Menu Lateral
+    document.getElementById("btnAbrirRegras").addEventListener("click", () => abrirModal("modalRegras"));
+    document.getElementById("btnAbrirDificuldade").addEventListener("click", () => abrirModal("modalDificuldade"));
+    document.getElementById("btnAbrirRecordes").addEventListener("click", () => abrirModal("modalRecordes"));
+
+    document.getElementById("btnDesafioDiario").addEventListener("click", () => {
+      fecharMenu();
+      showToast("Desafio Diário carregado: ganhe 2x de pontuação hoje!", "sucesso");
+    });
+
+    document.getElementById("btnTreinoCorporativo").addEventListener("click", () => {
+      fecharMenu();
+      showToast("Modo Agilidade Cognitiva configurado para métricas de foco.", "info");
+    });
+
+    document.getElementById("btnAbrirConfig").addEventListener("click", () => {
+      fecharMenu();
+      showToast("Painel de áudio e gráficos em breve.", "info");
+    });
+
+    // Lógica da Seleção de Dificuldade
+    const cardsDificuldade = document.querySelectorAll(".card-dif");
+    let nivelSelecionado = dificuldadeSalva;
+
+    function atualizarBadgeDificuldade(nivel) {
+      const badge = document.getElementById("badgeDificuldadeAtual");
+      const rankingTxt = document.getElementById("rankingDificuldadeTxt");
+      const mapaNomes = {
+        facil: 'Fácil',
+        medio: 'Médio',
+        dificil: 'Difícil',
+        frenesi: 'Frenesi'
+      };
+      const label = mapaNomes[nivel] || 'Fácil';
+      if (badge) badge.textContent = label;
+      if (rankingTxt) rankingTxt.textContent = `Nível: ${label}`;
+    }
+
+    cardsDificuldade.forEach(card => {
+      if (card.dataset.nivel === dificuldadeSalva) {
+        card.classList.add("ativo");
+      } else {
+        card.classList.remove("ativo");
+      }
+
+      card.addEventListener("click", () => {
+        cardsDificuldade.forEach(c => c.classList.remove("ativo"));
+        card.classList.add("ativo");
+        nivelSelecionado = card.dataset.nivel;
+      });
+    });
+
+    atualizarBadgeDificuldade(dificuldadeSalva);
+
+    document.getElementById("btnSalvarDificuldade").addEventListener("click", () => {
+      localStorage.setItem("mathSnakeDificuldade", nivelSelecionado);
+      atualizarBadgeDificuldade(nivelSelecionado);
+      fecharModal("modalDificuldade");
+      showToast("Nível de desafio atualizado com sucesso!", "sucesso");
+    });
+
+    // Zerar Recorde
+document.getElementById("btnLimparRecordes").addEventListener("click", () => {
+  localStorage.removeItem("mathSnakeHighScore");
+  const elMenu = document.getElementById("recordeMenuTxt");
+  const elModal = document.getElementById("recordeModalTxt");
+  const elRank = document.getElementById("rankingPontosTxt");
+  
+  if (elMenu) elMenu.textContent = "0";
+  if (elModal) elModal.textContent = "0";
+  if (elRank) elRank.textContent = "0 pts";
+  
+  showToast("Seus recordes foram redefinidos.", "alerta");
+});
+
+    // Eventos dos novos botões com ShowToast
+    document.getElementById("btnBatalhaEquipes").addEventListener("click", () => {
+      fecharMenu();
+      showToast("Modo Versus Corporativo: crie salas de batalha rápida para o seu time!", "sucesso");
+    });
+
+    document.getElementById("btnOnboarding").addEventListener("click", () => {
+      fecharMenu();
+      showToast("Módulo Didático: aprenda raciocínio ágil passo a passo sem penalidades.", "info");
+    });
+
+    document.getElementById("btnModoPressao").addEventListener("click", () => {
+      fecharMenu();
+      showToast("Atenção: Modo Sob Pressão reduz o tempo de resposta pela metade!", "alerta");
+    });
+
+    document.getElementById("btnAnalyticsRH").addEventListener("click", () => {
+      fecharMenu();
+      showToast("Métricas da Empresa: precisão, tempo médio e histórico de raciocínio.", "info");
+    });
+
+    document.getElementById("btnMascotes").addEventListener("click", () => {
+      fecharMenu();
+      showToast("Seleção de Avatares: troque a reação visual do emoji durante o cálculo!", "sucesso");
+    });
+
+
+
+    // Sanitização em tempo real dos campos de entrada
+    const inputApelido = document.getElementById("inputApelido");
+    const inputPin = document.getElementById("inputPin");
+    const btnIniciarJogo = document.getElementById("btnIniciarJogo");
+
+    // Preenche com o último apelido usado no aparelho, se houver
+    inputApelido.value = localStorage.getItem("totalX_lastNick") || "";
+    inputPin.value = localStorage.getItem("totalX_lastPin") || "";
+
+    inputApelido.addEventListener("input", function() {
+      // Aceita apenas letras e números, convertendo para maiúsculo
+      this.value = this.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+    });
+
+    inputPin.addEventListener("input", function() {
+      // Aceita estritamente números
+      this.value = this.value.replace(/\D/g, '');
+    });
+
+    // Ação ao clicar em Jogar
+    btnIniciarJogo.addEventListener("click", function(e) {
+      e.preventDefault();
+      const nick = inputApelido.value.trim();
+      const pin = inputPin.value.trim();
+
+      if (nick.length < 3) {
+        showToast("Digite um apelido com no mínimo 3 caracteres.", "alerta");
+        inputApelido.focus();
+        return;
+      }
+
+      if (pin.length < 4) {
+        showToast("O PIN de segurança deve ter pelo menos 4 dígitos.", "alerta");
+        inputPin.focus();
+        return;
+      }
+
+      // Salva apenas temporariamente os dados digitados para persistir na sessão
+      localStorage.setItem("totalX_lastNick", nick);
+      localStorage.setItem("totalX_lastPin", pin);
+
+      showToast(`Bem-vindo, ${nick}! Iniciando o desafio...`, "sucesso");
+      
+      setTimeout(() => {
+        window.location.href = "ambiente.html";
+      }, 700);
+    });
+
+    // Abrir o Modal de Recordes pelo botão do canto direito
+// Abrir o NOVO modal de TOP 50 pelo botão flutuante
+// Controle do Drawer Lateral Direito (Top 50)
+const btnAbrirLeaderboard = document.getElementById("btnAbrirLeaderboard");
+    const drawerTop50 = document.getElementById("drawerTop50");
+    const btnFecharTop50 = document.getElementById("btnFecharTop50");
+
+    function abrirTop50() {
+      fecharMenu();
+      carregarTabelaTop50();
+      drawerTop50.classList.add("ativo");
+      overlay.classList.add("ativo");
+    }
+
+    function fecharTop50() {
+      drawerTop50.classList.remove("ativo");
+      overlay.classList.remove("ativo");
+    }
+
+    if (btnAbrirLeaderboard) btnAbrirLeaderboard.addEventListener("click", abrirTop50);
+    if (btnFecharTop50) btnFecharTop50.addEventListener("click", fecharTop50);
+    // Ajuste no clique do overlay para fechar ambos os menus
+    overlay.addEventListener("click", () => {
+      fecharMenu();
+      fecharTop50();
+    });
+    // Renderizador dos 50 melhores jogadores
+    function carregarTabelaTop50() {
+      const container = document.getElementById("listaTop50Container");
+      if (!container) return;
+
+      const mockTop50 = [
+        { nome: "ALEX7", modo: "Multiplicação", pontos: 4850 },
+        { nome: "DEV_X", modo: "Misto/PEMDAS", pontos: 4420 },
+        { nome: "BRUNO", modo: "Frenesi", pontos: 3980 },
+        { nome: "CARLA", modo: "Multiplicação", pontos: 3750 },
+        { nome: "LUCAS", modo: "Soma", pontos: 3500 },
+        { nome: "FELIP", modo: "Divisão", pontos: 3200 },
+        { nome: "GABRI", modo: "Misto/PEMDAS", pontos: 3100 },
+        { nome: "TIAGO", modo: "Multiplicação", pontos: 2950 },
+        { nome: "MARIA", modo: "Soma", pontos: 2800 },
+        { nome: "PAULO", modo: "Subtração", pontos: 2650 }
+      ];
+
+      for (let i = 11; i <= 50; i++) {
+        mockTop50.push({
+          nome: `JOG${i < 10 ? '0' + i : i}`,
+          modo: i % 2 === 0 ? "Multiplicação" : "Soma",
+          pontos: Math.max(100, 2600 - (i * 48))
+        });
+      }
+
+      container.innerHTML = mockTop50.map((item, index) => {
+        const posicao = index + 1;
+        let medalhaClass = "";
+        if (posicao === 1) medalhaClass = "pos-ouro";
+        else if (posicao === 2) medalhaClass = "pos-prata";
+        else if (posicao === 3) medalhaClass = "pos-bronze";
+        return `
+          <div class="linha-top50 ${medalhaClass}">
+            <span class="col-pos pos-badge">${posicao}</span>
+            <span class="col-nick">${item.nome}</span>
+            <span class="col-modo">${item.modo}</span>
+            <span class="col-pts">${item.pontos} <small>pts</small></span>
+          </div>
+        `;
+     
+      
+      }).join("");
+    }
+  </script>
+</body>
+</html>
