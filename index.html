@@ -168,9 +168,7 @@
     </div>
 
     <!-- Título do Jogo -->
-    <h1 class="game-title">
-      TOTAL<span class="separador">-</span><span class="letra-x">X</span>
-    </h1>
+    <h1 class="game-title">X<span class="separador">-</span><span class="letra-x">DOIS</span></h1>
 
     <!-- Texto explicativo de identificação do usuário -->
     <p class="auth-info-txt">
@@ -185,15 +183,46 @@
           <span class="painel-emojis-title"><i class="bi bi-emoji-smile-fill"></i> Galeria de Avatares</span>
           <button type="button" class="btn-fechar" id="btnFecharPainelEmoji" aria-label="Fechar">&times;</button>
         </div>
-        <div class="painel-busca-box">
-          <i class="bi bi-search"></i>
-          <input type="text" id="inputBuscaEmoji" placeholder="Pesquisar entre mais de 200 emojis..." autocomplete="off">
-        </div>
       </div>
 
       <!-- Grade dos Emojis -->
       <div class="grade-emojis-container" id="gradeEmojis"></div>
     </section>
+
+<!-- Painel 2: Editor de Cores do Avatar -->
+    <section class="painel-editor-modal" id="painelEditorCores" aria-label="Personalizar Cores">
+      <div class="painel-editor-topo">
+       <button type="button" class="btn-voltar-galeria" id="btnVoltarGaleria" title="Voltar para a Galeria">
+  <i class="bi bi-arrow-left"></i>
+</button>
+        <span class="painel-emojis-title"></i> Personalizar Avatar</span>
+        <button type="button" class="btn-fechar" id="btnFecharEditor">&times;</button>
+      </div>
+
+      <!-- Preview do Emoji com Fundo Xadrez -->
+      <div class="editor-preview-wrapper">
+        <div class="editor-preview-xadrez" id="editorPreviewBox"></div>
+        <span class="editor-dimensao-txt">32 x 32</span>
+      </div>
+
+      <!-- Grid com os seletores de cores -->
+      <div class="editor-cores-grid" id="gradeCoresEditor"></div>
+
+      <!-- Botão para confirmar a personalização -->
+      <button type="button" class="btn-confirmar-avatar" id="btnConfirmarAvatar">Pronto</button>
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
 
   
     <!-- Campos de Entrada: Apelido + PIN -->

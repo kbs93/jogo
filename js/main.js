@@ -1,4 +1,5 @@
 import { bancoSvgEmojis, inicializarCatalogo, carregarMaisEmojis } from "./emoji.js";
+import { renderizarEditorCores, obterSvgCustomizado } from "./editor.js";
   
   // Recupera dados salvos
     const recordeSalvo = localStorage.getItem("mathSnakeHighScore") || "0";
@@ -294,9 +295,8 @@ function abrirMenu() {
       fecharMenu();
       fecharRanking();
     });
-
 // ==========================================
-    // Eventos do Painel de Emojis SVG (200+)
+    // Fluxo da Galeria e Editor de Cores do Avatar
     // ==========================================
     const btnTrocarEmoji = document.getElementById("btnTrocarEmoji");
     const painelSelecaoEmoji = document.getElementById("painelSelecaoEmoji");
@@ -305,62 +305,68 @@ function abrirMenu() {
     const emojiPreviewBox = document.getElementById("emojiPreviewBox");
     const inputBuscaEmoji = document.getElementById("inputBuscaEmoji");
 
-    let idEmojiSelecionado = localStorage.getItem("totalX_emojiId") || "grinning_eyes";
+    // Elementos do Editor
+    const painelEditorCores = document.getElementById("painelEditorCores");
+    const btnFecharEditor = document.getElementById("btnFecharEditor");
+    const btnVoltarGaleria = document.getElementById("btnVoltarGaleria");
+    const editorPreviewBox = document.getElementById("editorPreviewBox");
+    const gradeCoresEditor = document.getElementById("gradeCoresEditor");
+    const btnConfirmarAvatar = document.getElementById("btnConfirmarAvatar");
 
-  function carregarEmojiPrincipal(id) {
-      if (emojiPreviewBox) {
-        // Se existir a chave usa-a; se não existir, pega o primeiro SVG do banco automaticamente
-        const svgFinal = bancoSvgEmojis[id] || Object.values(bancoSvgEmojis)[0] || "";
-        emojiPreviewBox.innerHTML = svgFinal;
+    let idEmojiSelecionado = localStorage.getItem("totalX_emojiId") || "grinning_eyes";
+    let svgCustomizadoSalvo = localStorage.getItem("totalX_emojiSvgCustom") || "";
+
+    function carregarEmojiPrincipal() {
+      if (!emojiPreviewBox) return;
+      if (svgCustomizadoSalvo) {
+        emojiPreviewBox.innerHTML = svgCustomizadoSalvo;
+      } else {
+        emojiPreviewBox.innerHTML = bancoSvgEmojis[idEmojiSelecionado] || Object.values(bancoSvgEmojis)[0] || "";
       }
     }
-    // Carrega o emoji inicial
-    carregarEmojiPrincipal(idEmojiSelecionado);
 
-    function abrirPainelComGrade() {
+    carregarEmojiPrincipal();
+
+    function abrirGaleria() {
       if (inputBuscaEmoji) inputBuscaEmoji.value = "";
       gradeEmojis.innerHTML = "";
       inicializarCatalogo("");
       carregarMaisEmojis(gradeEmojis, idEmojiSelecionado);
       painelSelecaoEmoji.classList.add("ativo");
+      painelEditorCores.classList.remove("ativo");
     }
 
-    if (btnTrocarEmoji) {
-      btnTrocarEmoji.addEventListener("click", abrirPainelComGrade);
-    }
+    if (btnTrocarEmoji) btnTrocarEmoji.addEventListener("click", abrirGaleria);
+    if (btnFecharPainelEmoji) btnFecharPainelEmoji.addEventListener("click", () => painelSelecaoEmoji.classList.remove("ativo"));
 
-    if (btnFecharPainelEmoji) {
-      btnFecharPainelEmoji.addEventListener("click", () => {
-        painelSelecaoEmoji.classList.remove("ativo");
-      });
-    }
-
+    // Scroll infinito da galeria
     if (gradeEmojis) {
-      // Scroll infinito para dezenas/centenas de emojis
       gradeEmojis.addEventListener("scroll", () => {
         if (gradeEmojis.scrollTop + gradeEmojis.clientHeight >= gradeEmojis.scrollHeight - 40) {
           carregarMaisEmojis(gradeEmojis, idEmojiSelecionado);
         }
       });
 
-      // Seleção do emoji
+      // Clique em um emoji: fecha a galeria e abre o editor de cores
       gradeEmojis.addEventListener("click", (e) => {
         const item = e.target.closest(".emoji-item");
         if (!item) return;
 
         idEmojiSelecionado = item.dataset.id;
-        carregarEmojiPrincipal(idEmojiSelecionado);
-        localStorage.setItem("totalX_emojiId", idEmojiSelecionado);
-
-        gradeEmojis.querySelectorAll(".emoji-item").forEach(b => b.classList.remove("ativo"));
-        item.classList.add("ativo");
+        const svgBase = bancoSvgEmojis[idEmojiSelecionado];
 
         painelSelecaoEmoji.classList.remove("ativo");
-        showToast("Avatar atualizado com sucesso!", "sucesso");
+        painelEditorCores.classList.add("ativo");
+
+        // Abre o editor com as cores extraídas do SVG escolhido
+        renderizarEditorCores(svgBase, gradeCoresEditor, editorPreviewBox, (svgAtualizado) => {
+          // Callback a cada troca de cor: atualiza também a tela principal se desejar
+          emojiPreviewBox.innerHTML = svgAtualizado;
+        });
       });
     }
 
-    // Filtro dinâmico de pesquisa
+    // Busca na galeria
     if (inputBuscaEmoji) {
       inputBuscaEmoji.addEventListener("input", (e) => {
         gradeEmojis.innerHTML = "";
@@ -369,11 +375,31 @@ function abrirMenu() {
       });
     }
 
-    // Fechar ao clicar fora
-    document.addEventListener("click", (e) => {
-      if (painelSelecaoEmoji && painelSelecaoEmoji.classList.contains("ativo")) {
-        if (!painelSelecaoEmoji.contains(e.target) && !btnTrocarEmoji.contains(e.target)) {
-          painelSelecaoEmoji.classList.remove("ativo");
-        }
-      }
-    });
+    // Voltar do editor para a galeria
+    if (btnVoltarGaleria) {
+      btnVoltarGaleria.addEventListener("click", () => {
+        painelEditorCores.classList.remove("ativo");
+        painelSelecaoEmoji.classList.add("ativo");
+      });
+    }
+
+    // Fechar o editor
+    if (btnFecharEditor) {
+      btnFecharEditor.addEventListener("click", () => {
+        painelEditorCores.classList.remove("ativo");
+        carregarEmojiPrincipal(); // Reverte caso não tenha confirmado
+      });
+    }
+
+    // Confirmar e salvar a personalização
+    if (btnConfirmarAvatar) {
+      btnConfirmarAvatar.addEventListener("click", () => {
+        const svgFinal = obterSvgCustomizado();
+        svgCustomizadoSalvo = svgFinal;
+        localStorage.setItem("totalX_emojiId", idEmojiSelecionado);
+        localStorage.setItem("totalX_emojiSvgCustom", svgFinal);
+        emojiPreviewBox.innerHTML = svgFinal;
+        painelEditorCores.classList.remove("ativo");
+        showToast("Avatar personalizado com sucesso!", "sucesso");
+      });
+    }
