@@ -20,6 +20,7 @@ body { background: #080d14; overflow-x: hidden; overflow-y: auto; font-family: '
 .drawer { position: fixed; top: 0; left: 0; width: 310px; max-width: 86vw; height: 100vh; height: 100dvh; background: #0d1722; border-right: 1px solid #1e3144; box-shadow:none; z-index: 50; transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; padding: 18px 16px; }
 .drawer.ativo { transform: translateX(0); }
 
+/*botao x*/
 .drawer-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid #1a2a3a; padding-bottom: 12px; flex-shrink: 0; }
 .drawer-title { color: #00e5ff; font-size: 14px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; }
 .btn-fechar { background: transparent; border: none; color: #8fa0b5; font-size: 24px; cursor: pointer; line-height: 1; padding: 4px; }
@@ -55,14 +56,15 @@ body { background: #080d14; overflow-x: hidden; overflow-y: auto; font-family: '
 =============================== */
 .menu-stage { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 600px; margin: auto; padding: 50px 10px 20px; }
 .emoji-preview { width: clamp(80px, 18vw, 115px); height: clamp(80px, 18vw, 115px); margin-bottom: 8px; filter: drop-shadow(0 14px 22px #000000a6); animation: flutuar 3s ease-in-out infinite alternate; }
-
-
-.emoji-preview-svg { width: clamp(80px, 18vw, 115px); height: clamp(80px, 18vw, 115px); display: flex; align-items: center; justify-content: center; animation: flutuar 3s ease-in-out infinite alternate; filter: drop-shadow(0 14px 22px #000000a6); }
+/*emoji do index */
+.emoji-preview-svg { width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; animation: flutuar 3s ease-in-out infinite alternate; filter: drop-shadow(0 14px 22px #000000a6); }
 .emoji-preview-svg svg { width: 100%; height: 100%; display: block; }
 @keyframes flutuar {
   from { transform: translateY(0) rotate(0); }
   to { transform: translateY(-12px) rotate(3deg); }
 }
+/*imagem no index*/
+.img-apresentacao { width: 100%; height: 100%; object-fit: contain; display: block; }
 
 .game-title { font-size: clamp(44px, 12vw, 88px); font-weight: 900; letter-spacing: -1px; color: #4cd964; text-shadow: 0 4px 0 #1f6b33, 0 8px 0 #12431f, 0 14px 24px #000000b3; line-height: 1; display: inline-flex; align-items: center; justify-content: center; margin: 0; white-space: nowrap; }
 .game-title .separador { margin: 0 4px; color: #4cd964; }
@@ -237,7 +239,7 @@ body { background: #080d14; overflow-x: hidden; overflow-y: auto; font-family: '
 .emoji-trigger-wrap { position: relative; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; transition: transform 0.2s; }
 .emoji-trigger-wrap:hover { transform: scale(1.05); }
 .emoji-trigger-wrap:active { transform: scale(0.95); }
-.emoji-edit-badge { position: absolute; bottom: 8px; right: 8px; width: 28px; height: 28px; background: #00e5ff; color: #080d14; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; box-shadow: 0 2px 8px #00000080; border: 2px solid #080d14; }
+.emoji-edit-badge { position: absolute; bottom: 8px; right: 8px; width: 35px; height: 35px; background: #00e5ff; color: #080d14; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; box-shadow: 0 2px 8px #00000080; border: 2px solid #080d14; }
 
 .painel-emojis-modal { display: none; position: absolute; top: 20px; z-index: 25; width: min(520px, 94vw); background: #0e1724f5; border: 1px solid #1f374e; border-radius: 14px; box-shadow: 0 16px 40px #000000e6; backdrop-filter: blur(10px); padding: 14px 12px; flex-direction: column; animation: toastEntrar 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 .painel-emojis-modal.ativo { display: flex; }
@@ -262,7 +264,8 @@ body { background: #080d14; overflow-x: hidden; overflow-y: auto; font-family: '
 
 .painel-emojis-modal { display: none; position: absolute; top: 10px; z-index: 25; width: min(580px, 94vw); background: #0e1724f5; border: 1px solid #1f374e; border-radius: 14px; box-shadow: 0 16px 40px #000000e6; backdrop-filter: blur(10px); padding: 14px 12px; flex-direction: column; }
 .painel-emojis-modal.ativo { display: flex; }
-.painel-emojis-topo { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.painel-emojis-topo { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+
 .painel-busca-box { display: flex; align-items: center; gap: 8px; background: #071019; border: 1px solid #1a2f44; border-radius: 8px; padding: 6px 10px; margin-bottom: 8px; }
 .painel-busca-box i { color: #556a80; font-size: 13px; }
 .painel-busca-box input { background: transparent; border: none; outline: none; color: #d1e2f2; font-size: 12px; width: 100%; }
@@ -282,6 +285,7 @@ body { background: #080d14; overflow-x: hidden; overflow-y: auto; font-family: '
 @media (max-width: 540px) {
   .grade-emojis-container { grid-template-columns: repeat(4, 1fr); max-height: 260px; }
   .emoji-svg-wrap { width: 28px; height: 28px; }
+  
 } 
 
 /* ===============================
@@ -308,14 +312,18 @@ body { background: #080d14; overflow-x: hidden; overflow-y: auto; font-family: '
 .btn-nav-cor { width: 28px; height: 28px; min-width: 28px; background: #071019; border: 1px solid #1a2f44; border-radius: 6px; color: #00e5ff; font-size: 13px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
 .btn-nav-cor:hover { background: #0c1a29; border-color: #00e5ff; }
 .btn-nav-cor:active { transform: scale(0.92); }
-.editor-paleta-esteira { display: flex; align-items: center; gap: 6px; flex: 1; overflow-x: hidden; padding: 4px 2px; scroll-behavior: smooth; }
-.editor-swatch-item { width: 22px; height: 22px; min-width: 22px; border: 1px solid #3a5068; border-radius: 4px; cursor: pointer; transition: transform 0.1s, border-color 0.15s; }
+
+.editor-paleta-esteira { display: flex; align-items: center; gap: 6px; flex: 1; overflow-x: auto; padding: 4px 2px; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.editor-paleta-esteira::-webkit-scrollbar { display: none; }
+
+.editor-swatch-item { width: 32px; height: 32px; min-width: 32px; border: 1px solid #3a5068; border-radius: 4px; cursor: pointer; transition: transform 0.1s, border-color 0.15s; }
 .editor-swatch-item:active { transform: scale(0.9); }
 .editor-swatch-item:hover { border-color: #00e5ff; }
 
 /* Grade das Cores Selecionáveis */
 .editor-cores-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px 10px; width: 100%; max-width: 340px; }
-.editor-cor-botao { position: relative; display: flex; align-items: center; gap: 8px; background: #071019; border: 1px solid #1a2f44; border-radius: 6px; padding: 5px 8px; width: 100%; cursor: pointer; transition: border-color 0.2s, background 0.15s; }
+.editor-cor-botao { position: relative; display: flex; align-items: center; gap: 8px; background: #071019; border: 1px solid #1a2f44; border-radius: 6px; 
+   padding: 10px; width: 70%; cursor: pointer; transition: border-color 0.2s, background 0.15s; }
 .editor-cor-botao:hover { border-color: #274059; background: #0c1a29; }
 .editor-cor-botao.selecionado { border-color: #00e5ff; background: #0b1e30; box-shadow: 0 0 8px #00e5ff4d; }
 .editor-cor-hex { font-size: 11px; color: #d1e2f2; font-family: monospace; font-weight: 600; pointer-events: none; }

@@ -325,7 +325,7 @@ function abrirMenu() {
       }
     }
 
-    carregarEmojiPrincipal();
+    //carregarEmojiPrincipal();
 
     function abrirGaleria() {
       if (inputBuscaEmoji) inputBuscaEmoji.value = "";
