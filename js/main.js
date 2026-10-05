@@ -1,20 +1,21 @@
 import { bancoSvgEmojis, inicializarCatalogo, carregarMaisEmojis } from "./emoji.js";
 import { renderizarEditorCores, obterSvgCustomizado } from "./editor.js";
+import { autenticarEJogar } from "./authService.js";
   
   // Recupera dados salvos
-    const recordeSalvo = localStorage.getItem("mathSnakeHighScore") || "0";
-    const dificuldadeSalva = localStorage.getItem("mathSnakeDificuldade") || "facil";
-    const operacaoSalva = localStorage.getItem("mathSnakeOperacao") || "soma";
+// Estado local em memória (Zero localStorage)
+  let recordeSalvo = "0";
+  let dificuldadeSalva = "facil";
+  let operacaoSalva = "soma";
 
-    
-    const elRecordeMenu = document.getElementById("recordeMenuTxt");
-if (elRecordeMenu) elRecordeMenu.textContent = recordeSalvo;
+  const elRecordeMenu = document.getElementById("recordeMenuTxt");
+  if (elRecordeMenu) elRecordeMenu.textContent = recordeSalvo;
 
-const elRecordeModal = document.getElementById("recordeModalTxt");
-if (elRecordeModal) elRecordeModal.textContent = recordeSalvo;
+  const elRecordeModal = document.getElementById("recordeModalTxt");
+  if (elRecordeModal) elRecordeModal.textContent = recordeSalvo;
 
-const elRankingPontos = document.getElementById("rankingPontosTxt");
-if (elRankingPontos) elRankingPontos.textContent = `${recordeSalvo} pts`;
+  const elRankingPontos = document.getElementById("rankingPontosTxt");
+  if (elRankingPontos) elRankingPontos.textContent = `${recordeSalvo} pts`;
 
     // Sistema de Notificações Toast nativo
     function showToast(mensagem, tipo = 'info') {
@@ -95,7 +96,7 @@ function abrirMenu() {
 
         btn.classList.add("ativo");
         btn.insertAdjacentHTML("beforeend", '<span class="badge-tag">Ativo</span>');
-        localStorage.setItem("mathSnakeOperacao", btn.dataset.modo);
+    operacaoSalva = btn.dataset.modo;
         showToast(`Operação alterada para: ${btn.querySelector('span').textContent}`, 'sucesso');
       });
     });
@@ -176,22 +177,22 @@ function abrirMenu() {
 
     atualizarBadgeDificuldade(dificuldadeSalva);
 
-    document.getElementById("btnSalvarDificuldade").addEventListener("click", () => {
-      localStorage.setItem("mathSnakeDificuldade", nivelSelecionado);
+document.getElementById("btnSalvarDificuldade").addEventListener("click", () => {
+      dificuldadeSalva = nivelSelecionado;
       atualizarBadgeDificuldade(nivelSelecionado);
       fecharModal("modalDificuldade");
       showToast("Nível de desafio atualizado com sucesso!", "sucesso");
     });
 
     // Zerar Recorde
-    document.getElementById("btnLimparRecordes").addEventListener("click", () => {
-      localStorage.removeItem("mathSnakeHighScore");
+ 
+document.getElementById("btnLimparRecordes").addEventListener("click", () => {
+      recordeSalvo = "0";
       document.getElementById("recordeMenuTxt").textContent = "0";
       document.getElementById("recordeModalTxt").textContent = "0";
       document.getElementById("rankingPontosTxt").textContent = "0 pts";
-      showToast("Seus recordes foram redefinidos.", "alerta");
+      showToast("Recordes limpos da sessão.", "alerta");
     });
-
 
     // Eventos dos novos botões com ShowToast
     document.getElementById("btnBatalhaEquipes").addEventListener("click", () => {
@@ -227,21 +228,16 @@ function abrirMenu() {
     const btnIniciarJogo = document.getElementById("btnIniciarJogo");
 
     // Preenche com o último apelido usado no aparelho, se houver
-    inputApelido.value = localStorage.getItem("totalX_lastNick") || "";
-    inputPin.value = localStorage.getItem("totalX_lastPin") || "";
-
-    inputApelido.addEventListener("input", function() {
-      // Aceita apenas letras e números, convertendo para maiúsculo
+inputApelido.addEventListener("input", function() {
       this.value = this.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
     });
 
     inputPin.addEventListener("input", function() {
-      // Aceita estritamente números
       this.value = this.value.replace(/\D/g, '');
     });
 
-    // Ação ao clicar em Jogar
-    btnIniciarJogo.addEventListener("click", function(e) {
+    // Ação ao clicar em Jogar integrada estritamente com o Firebase
+    btnIniciarJogo.addEventListener("click", async function(e) {
       e.preventDefault();
       const nick = inputApelido.value.trim();
       const pin = inputPin.value.trim();
@@ -258,17 +254,49 @@ function abrirMenu() {
         return;
       }
 
-      // Salva apenas temporariamente os dados digitados para persistir na sessão
-      localStorage.setItem("totalX_lastNick", nick);
-      localStorage.setItem("totalX_lastPin", pin);
+      btnIniciarJogo.disabled = true;
+      btnIniciarJogo.textContent = "Carregando...";
 
-      showToast(`Bem-vindo, ${nick}! Iniciando o desafio...`, "sucesso");
-      
-      setTimeout(() => {
-        window.location.href = "ambiente.html";
-      }, 700);
+      try {
+        const emojiIdAtual = idEmojiSelecionado || "grinning_eyes";
+        const svgAtual = svgCustomizadoSalvo || bancoSvgEmojis[emojiIdAtual] || "";
+
+        const resposta = await autenticarEJogar(nick, pin, emojiIdAtual, svgAtual);
+
+        if (!resposta.sucesso) {
+          showToast(resposta.mensagem, "alerta");
+          btnIniciarJogo.disabled = false;
+          btnIniciarJogo.textContent = "Jogar";
+          inputPin.focus();
+          return;
+        }
+
+        showToast(resposta.mensagem, "sucesso");
+
+        // Transfere o UID do Firebase pela URL, sem usar localStorage
+        setTimeout(() => {
+          window.location.href = `ambiente.html?uid=${encodeURIComponent(resposta.id)}`;
+        }, 500);
+      } catch (erro) {
+        console.error("Erro na autenticação:", erro);
+        showToast("Erro de autenticação: " + (erro.message || "Tente novamente"), "alerta");
+        btnIniciarJogo.disabled = false;
+        btnIniciarJogo.textContent = "Jogar";
+      }
     });
 
+
+
+
+
+
+
+
+
+
+
+
+    ;
     // Controle do Painel Lateral do Ranking (TOP 50)
   
     const painelRanking = document.getElementById("painelRanking");
@@ -313,9 +341,8 @@ function abrirMenu() {
     const gradeCoresEditor = document.getElementById("gradeCoresEditor");
     const btnConfirmarAvatar = document.getElementById("btnConfirmarAvatar");
 
-    let idEmojiSelecionado = localStorage.getItem("totalX_emojiId") || "grinning_eyes";
-    let svgCustomizadoSalvo = localStorage.getItem("totalX_emojiSvgCustom") || "";
-
+ let idEmojiSelecionado = "grinning_eyes";
+    let svgCustomizadoSalvo = "";
     function carregarEmojiPrincipal() {
       if (!emojiPreviewBox) return;
       if (svgCustomizadoSalvo) {
@@ -396,8 +423,15 @@ function abrirMenu() {
       btnConfirmarAvatar.addEventListener("click", () => {
         const svgFinal = obterSvgCustomizado();
         svgCustomizadoSalvo = svgFinal;
-        localStorage.setItem("totalX_emojiId", idEmojiSelecionado);
-        localStorage.setItem("totalX_emojiSvgCustom", svgFinal);
+       if (btnConfirmarAvatar) {
+      btnConfirmarAvatar.addEventListener("click", () => {
+        const svgFinal = obterSvgCustomizado();
+        svgCustomizadoSalvo = svgFinal;
+        emojiPreviewBox.innerHTML = svgFinal;
+        painelEditorCores.classList.remove("ativo");
+        showToast("Avatar personalizado com sucesso!", "sucesso");
+      });
+    }
         emojiPreviewBox.innerHTML = svgFinal;
         painelEditorCores.classList.remove("ativo");
         showToast("Avatar personalizado com sucesso!", "sucesso");

@@ -1,7 +1,7 @@
 // Dicionário preparado para receber centenas de SVGs
 export const bancoSvgEmojis = {
   // Cole aqui os próximos SVGs...
-"pessoas_1":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"pessoas_1":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#fdbb11" d="M9.75 19.75a3.25 3.25 0 1 1-6.5 0a3.25 3.25 0 0 1 6.5 0m19 0a3.25 3.25 0 1 1-6.5 0a3.25 3.25 0 0 1 6.5 0" />
@@ -17,7 +17,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"pessoas_2":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"pessoas_2":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#f1a11e" d="M26.345 5.926c-.55-.22-.992-.65-1.238-1.2c-.668-1.561-2.18-2.672-3.948-2.732a4.4 4.4 0 0 0-2.583.74c-.442.3-1.022.3-1.464 0a4.37 4.37 0 0 0-2.573-.74a4.44 4.44 0 0 0-3.065 1.381c-.363.38-.844.63-1.355.75a5.24 5.24 0 0 0-2.72 1.541l-.01.01C5.836 7.317 5.001 9.468 5.011 11.74v.02c.01.08 0 6.233 0 6.233h.994l19.994.02l1-.016s.044-1.89.072-2.465c.023-.496.039-1.27.039-1.27c.02-.671.294-1.311.736-1.811a4.1 4.1 0 0 0 1.032-2.632a4.08 4.08 0 0 0-2.534-3.892" />
@@ -34,7 +34,7 @@ export const bancoSvgEmojis = {
 </svg>
 
 `,
-"pessoas_3":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"pessoas_3":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#f1a11e" d="m25.787 6.376l-.8-.397c-.6-.299-1.1-.597-1.5-1.095l-1.501-1.491c-1.2-1.094-2.901-1.492-4.402-.995c-1 .298-2.1.298-3.1 0c-1.401-.696-3.001-.398-4.102.597l-1.8 1.89c-.5.397-1 .795-1.5 1.094l-.801.397c-1.4.697-2.2 2.288-2 3.88l1.1 5.669c.1.596.6.994 1.2.994c5.919 0 12.419.1 18.906.1c.6 0 1-.398 1.1-.995l1.1-5.67c.3-1.69-.5-3.281-1.9-3.978" />
@@ -52,7 +52,7 @@ export const bancoSvgEmojis = {
 </svg>
 
 `,
-"pessoas_4":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"pessoas_4":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#f1a11e" d="m25.787 6.376l-.8-.397c-.6-.299-1.1-.597-1.5-1.095l-1.501-1.491c-1.2-1.094-2.901-1.492-4.402-.995c-1 .298-2.1.298-3.1 0c-1.401-.696-3.001-.398-4.102.597l-1.8 1.89c-.5.397-1 .795-1.5 1.094l-.801.397c-1.4.697-2.2 2.288-2 3.88l1.1 5.669c.1.596.6.994 1.2.994c5.919 0 12.419.1 18.906.1c.6 0 1-.398 1.1-.995l1.1-5.67c.3-1.69-.5-3.281-1.9-3.978" />
@@ -68,7 +68,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"pessoas_5":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"pessoas_5":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#bb806e" d="M28 17.9a3 3 0 1 1-6 0a3 3 0 0 1 6 0m-17.7.1a3 3 0 1 1-6 0a3 3 0 0 1 6 0" />
@@ -85,7 +85,7 @@ export const bancoSvgEmojis = {
 </svg>
 
 `,
-"pessoas_6":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"pessoas_6":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#fff9ba" d="M30 17.868c0 .943-.207 1.849-.604 2.66a.96.96 0 0 0 0 .85c.378.792.604 1.679.604 2.622c0 3.32-2.68 6-6 6H8c-3.32 0-6-2.68-6-6c0-.943.226-1.83.604-2.623a.96.96 0 0 0 0-.849A6.25 6.25 0 0 1 2 17.868a6.16 6.16 0 0 1 1.014-3.39l.005-.006a6.04 6.04 0 0 0 .98-3.302v-.02A6.15 6.15 0 0 1 10.152 5c.34 0 .66-.17.849-.434A6.16 6.16 0 0 1 16 2a6.16 6.16 0 0 1 5 2.566c.189.283.51.434.85.434A6.15 6.15 0 0 1 28 11.15v.02c0 1.17.34 2.32.981 3.302l.004.005c.206.3.374.62.524.957h-.01c.322.745.501 1.563.501 2.434" />
@@ -103,7 +103,7 @@ export const bancoSvgEmojis = {
 </svg>
 
 `,
-"pessoas_7":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"pessoas_7":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#492725" d="M13.328 2.945a.32.32 0 0 0-.281 0c-.088-.32-.38-.432-.723-.36c-.035-.515-.656-.736-1.039-.44c-.335-.38-.82-.33-1.105.18c-.235-.259-.589-.326-.801-.122c-.676-.367-1.105.295-1.078.797c.01.175.169.296.246.324c-.082.08-.076.233-.073.3v.005c-.314-.102-.521.275-.466.48c-.461-.148-.766.086-.703.559c-.508-.098-.696.34-.582.613c-.239-.258-.57-.253-.703 0c-.257-.085-.543.084-.543.313c-.347-.04-.544.148-.527.515c-.359-.032-.516.454-.31.645c-.329.066-.454.482-.175.691c-.253.086-.337.4-.195.618c-.32.054-.289.445-.235.562c-.383 0-.445.38-.351.617c-.314-.137-.6.15-.551.461c-.653-.265-.652.5-.477.844c-.37.43.162.685.54.527c0 .088.09.175.136.207c.003.2.04.403.32.461c-.024.034-.074.115-.074.168a.46.46 0 0 0-.441.184c-.408-.136-.707.226-.559.62l.002.005c.068.183.143.382.615.742c-.284.084-.334.365-.324.504c-.4-.237-.793-.008-.512.48c.056.097.278.293.38.375c-.442.157-.69.736-.223 1.242c-.25.214-.167.585.066.77c-.546 0-.736.813-.14.973c-.31.09-.474.561-.182.81c-.304.136-.252.679.055.738c-.124.468.132.652.396.67c-.313.266-.123.684.023.817c-.375.3-.26.87.094.992c-.317.236-.166.698.152.844c-.03-.003-.088.08-.054.328c.039.289.363.469.57.625c-.469.312-.172.867.242.867c-.426.68.195 1.15.567 1.207c-.907.742.46 1.89.75 1.078c.12.059.3.024.324 0c.039.149.195.371.383.512c-.082.27.222.496.402.496c.07.452.462.382.58.36h.006c0 .484.766.788 1.012.23c.115.075.267.05.328.027c.129.407.32.61.734.633c.331.019.574-.393.664-.602c-.209.482.134.748.598.688c-.04.559.687.758.871.176c-.01.142.048.432.352.457c.303.025.425-.378.449-.582c.062.065.232.197.41.203c.223.008.371-.149.46-.285c.165.347.634.832 1.106.383c.042.065.158.2.29.218c.13.02.257-.062.304-.105c.063.027.48.125.685.058c.27-.087.273-.315.276-.488v-.012c.02.047.103.168.352.38c.386.328 1.199.394 1.023-.352c-.02-.087-.027-.082 0-.117s.063-.024.082.035c.152.308.488.586.777.531s.25-.41.266-.387c.012.02.059.078.168.078c.238.48.795.348 1.094.102c.206.16.411.14.488.11c.153-.022.217-.25.224-.352c.338.351 1.292.62 1.354-.277c.405.28 1.442.125 1.262-.532h.105a.9.9 0 0 0 .047.445c.086.211.383.395.75.274c.294-.097.568-.423.668-.574c.28.08.603.048.767-.205c.38.084.8-.152.841-.536c.524 0 .725-.21.783-.474c.11.027.324-.055.394-.11c.552.835 1.897-.3 1.223-1.035c.511-.182.703-.685.445-1.062c.294-.303.412-.705.434-.867c.437-.278.248-.848-.254-.715v-.227c.383-.096.663-.4.566-1.051c.989-.349.407-1.285-.035-1.617c.453.34 1.17-.206.698-.87c.143-.435-.073-.61-.276-.726a.53.53 0 0 0-.187-.642c.09-.1.087-.365.074-.484c.289 0 .46-.54.113-.774c.125-.105.133-.58-.082-.672c.031-.097 0-.168-.086-.25c.055-.058.055-.125.02-.246c.183-.277.067-.734-.266-.86a.57.57 0 0 0-.281-.394c.203-.258.183-.672-.254-.734c-.01-.033-.04-.098-.07-.098c.058-.035.236-.126.459-.298c.403-.311.06-.824-.39-.71c.032-.101 0-.218 0-.289c.126-.128.17-.352.024-.583c.23-.357.093-.719-.175-.838c.54 0 .327-.944-.137-.813c.457-.13.387-.865-.124-.865c.269-.183.343-.714-.22-.795c.061-.335-.072-.543-.363-.703c.154-.357-.073-.716-.442-.824c-.063-.204-.115-.361-.285-.504a.7.7 0 0 0-.161-.422c.061-.277.033-.485-.175-.715c.084-.334-.1-.735-.445-.832c-.187-.427-.834-.662-1.191-.277c-.145-.438-.653-.621-1.062-.353c0-.18-.24-.37-.419-.436c-.179-.313-.6-.488-.95-.356a2 2 0 0 0-.366-.047c-.16-.365-.418-.5-.844-.492c-.263-.339-.744-.223-1.031-.02c-.395-.04-.863.125-.903.575c-.197-.007-.457.152-.511.27c-.117-.052-.216-.09-.625-.169c-.41-.078-.718-.047-.895 0c.277-.285 0-1.09-.527-.851c-.11-.301-.533-.399-.754-.164c-.125-.162-.47-.194-.645-.102c-.065-.433-.523-.809-.898-.3c-.277-.13-.713.017-.645.417c-.347-.053-.613.14-.488.578" />
@@ -129,13 +129,13 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"pessoas_8":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"pessoas_8":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#26c9fc" d="M15.91 3.5c2.16 0 4.26.37 5.75 1.01c1.25.54 1.72 1.12 1.72 1.36s-.47.82-1.72 1.36c-1.49.64-3.58 1.01-5.75 1.01s-4.26-.36-5.74-1C8.91 6.7 8.45 6.11 8.45 5.87s.47-.82 1.72-1.36c1.48-.64 3.58-1.01 5.74-1.01m0-1.5c-4.95 0-8.96 1.73-8.96 3.87s4.01 3.87 8.97 3.87s8.97-1.73 8.97-3.87S20.87 2 15.91 2" />
-		<path fill="#f4f4f4" d="M9.17 28h-4c-.89 0-1.61-.713-1.61-1.584A.42.42 0 0 1 3.98 26h5.19zm13.55 0h4c.89 0 1.61-.713 1.61-1.584a.42.42 0 0 0-.42-.416h-5.19z" />
-		<path fill="#ffffff" d="M9.17 30H6.76c-.88 0-1.6-.713-1.6-1.584A.42.42 0 0 1 5.58 28h3.59zm13.55 0h2.41c.88 0 1.6-.713 1.6-1.584a.42.42 0 0 0-.42-.416h-3.59z" />
-		<path fill="#e6e6e6" d="M9.97 24H2.42c-.23 0-.42.18-.42.42c0 .88.71 1.6 1.6 1.6h4.03c.24 0 .44.19.44.44v2.6c0 .55.45 1 1 1h.9c1.67 0 3.03-1.36 3.03-3.03S11.64 24 9.97 24m11.95 0h7.55c.23 0 .42.18.41.42c0 .88-.71 1.6-1.6 1.6h-4.02c-.24 0-.44.19-.44.44v2.6c0 .55-.45 1-1 1h-.9c-1.67 0-3.03-1.36-3.03-3.03S20.25 24 21.92 24" />
+		<path fill="#fffff9" d="M9.17 28h-4c-.89 0-1.61-.713-1.61-1.584A.42.42 0 0 1 3.98 26h5.19zm13.55 0h4c.89 0 1.61-.713 1.61-1.584a.42.42 0 0 0-.42-.416h-5.19z" />
+		<path fill="#fffff9" d="M9.17 30H6.76c-.88 0-1.6-.713-1.6-1.584A.42.42 0 0 1 5.58 28h3.59zm13.55 0h2.41c.88 0 1.6-.713 1.6-1.584a.42.42 0 0 0-.42-.416h-3.59z" />
+		<path fill="#fffff9" d="M9.97 24H2.42c-.23 0-.42.18-.42.42c0 .88.71 1.6 1.6 1.6h4.03c.24 0 .44.19.44.44v2.6c0 .55.45 1 1 1h.9c1.67 0 3.03-1.36 3.03-3.03S11.64 24 9.97 24m11.95 0h7.55c.23 0 .42.18.41.42c0 .88-.71 1.6-1.6 1.6h-4.02c-.24 0-.44.19-.44.44v2.6c0 .55-.45 1-1 1h-.9c-1.67 0-3.03-1.36-3.03-3.03S20.25 24 21.92 24" />
 		<path fill="#bb806e" d="M10.25 20.51a3 3 0 1 1-6 0a3 3 0 0 1 6 0m17.5 0a3 3 0 1 1-6 0a3 3 0 0 1 6 0" />
 		<path fill="#c68d7b" d="M22.5 7.52a7.94 7.94 0 0 0-4.83-1.66h-3.46c-1.73 0-3.42.58-4.83 1.66c-2.4 1.84-3.7 4.92-3.41 8.07l.81 7.53c.27 2.91 2.17 5.36 4.8 6.2c2.84.9 5.87.9 8.72 0c2.63-.84 4.52-3.29 4.8-6.2l.81-7.53c.3-3.15-1-6.23-3.41-8.07" />
 		<path fill="#593b39" d="M10.262 16.579c.49-.17 1.183-.3 2.096-.217a.464.464 0 1 0 .085-.924c-1.048-.097-1.874.052-2.484.263a.464.464 0 1 0 .303.878m11.67-.878c-.61-.21-1.436-.36-2.484-.263a.464.464 0 0 0 .085.924c.912-.083 1.606.048 2.096.217a.464.464 0 0 0 .303-.878" />
@@ -183,7 +183,7 @@ export const bancoSvgEmojis = {
 </svg>
 `,
 
-"emoji_4":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji_4":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#8c42b3" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-2.385-.445-4.632-1.333-6.598c.985-3.35-.517-6.173-.517-6.173s-.32-.51-.6 0c-.51.906-1.267 1.555-1.95 1.995C23.3 3.21 20.1 2 15.999 2C11.9 2 8.702 3.209 6.404 5.22c-.682-.442-1.435-1.09-1.945-1.993c-.28-.51-.6 0-.6 0s-1.499 2.816-.52 6.162C2.446 11.358 2 13.61 2 16c0 7.731 4.664 13.999 13.999 13.999" />
@@ -318,7 +318,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 15":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 15":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -330,7 +330,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 16":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 16":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -340,7 +340,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 17":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 17":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -350,7 +350,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 18":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 18":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M29.998 15.999c0 7.731-4.665 13.999-14 13.999C6.665 29.998 2 23.73 2 15.998Q2 14.98 2.108 14l13.89-6l13.892 6q.108.98.108 1.999" />
@@ -361,7 +361,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 19":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 19":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -372,7 +372,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 20":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 20":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -382,7 +382,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 21":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 21":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -392,7 +392,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 22":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 22":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<g clip-path="url(#SVGkRCCwb7V)">
@@ -412,7 +412,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 23":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 23":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M16.018 30c9.348 0 14.019-6.276 14.019-14.018S25.366 1.963 16.018 1.963S2 8.24 2 15.982S6.671 30 16.018 30" />
@@ -422,7 +422,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 24":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 24":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c5.751 0 9.73-2.38 11.937-6.015c-.152-.408-.324-1.093-.324-1.093s.914-.622 1.298-.869c.725-1.824 1.088-3.866 1.088-6.022q0-.874-.08-1.719c-.262-.237-.837-.77-.837-.77s.36-.902.517-1.284C28.287 6.327 23.755 2 15.998 2C8.24 2 3.709 6.33 2.399 12.232c.127.353.266 1.112.266 1.112s-.342.614-.583.923Q2 15.118 2 15.999c0 2.158.363 4.202 1.09 6.027c.41.232 1.269.881 1.269.881s-.181.63-.292 1.085c2.208 3.63 6.185 6.006 11.932 6.006" />
@@ -433,7 +433,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 25":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 25":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -444,7 +444,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 26":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 26":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -454,7 +454,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 27":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 27":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M16 29.998c9.334 0 13.998-6.268 13.998-14C29.998 8.269 25.334 2 15.999 2C6.665 2 2 8.268 2 15.999s4.665 13.999 14 13.999" />
@@ -465,7 +465,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 28":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 28":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -476,7 +476,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 29":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 29":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -485,7 +485,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 30":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 30":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -494,7 +494,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 31":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 31":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -502,7 +502,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 32":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 32":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#f8312f" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -513,7 +513,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 33":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 33":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.5 30C24.502 30 29 23.956 29 16.5S24.502 3 15.5 3S2 9.044 2 16.5S6.498 30 15.5 30" />
@@ -527,7 +527,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 34":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 34":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -539,7 +539,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 35":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 35":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -548,7 +548,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 36":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 36":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -557,7 +557,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 37":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 37":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -566,7 +566,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 38":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 38":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -575,7 +575,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 39":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 39":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -585,7 +585,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 40":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 40":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -595,7 +595,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 41":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 41":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#00d26a" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -604,7 +604,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 42":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 42":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -615,7 +615,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 43":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 43":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -626,7 +626,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 44":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 44":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -637,7 +637,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 45":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 45":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#f8312f" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -646,7 +646,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 46":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 46":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -656,7 +656,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 47":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 47":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -665,7 +665,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 48":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 48":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -676,7 +676,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 49":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 49":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -686,7 +686,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 50":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 50":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#1c5cd7" d="M16 1c-3.377 0-6.474.256-8.762.685c-1.131.212-2.14.48-2.903.818c-.376.167-.776.386-1.105.688l-.107.104c.291.355 1.567 1.443 1.567 1.443S7.958 5 8.5 5h.071c1.981.308 4.57.5 7.429.5c2.922 0 5.563-.2 7.56-.52c.687-.075 3.387-.14 3.387-.14S28.5 3.457 28.5 3v-.029q.14.102.27.22c-.33-.302-.73-.521-1.105-.688c-.762-.338-1.772-.606-2.903-.818C22.474 1.255 19.377 1 16 1" />
@@ -696,7 +696,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 51":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 51":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -705,7 +705,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 52":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 52":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -717,7 +717,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 53":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 53":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M19.622 29.521c9.016-2.416 11.9-9.677 9.898-17.145c-2-7.468-8.128-12.315-17.145-9.899s-11.9 9.677-9.898 17.145c2 7.468 8.128 12.315 17.145 9.899" />
@@ -729,7 +729,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 54":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 54":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -739,7 +739,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 55":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 55":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -749,7 +749,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 56":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 56":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffb02e" d="M15.999 29.998c9.334 0 13.999-6.268 13.999-14c0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999" />
@@ -758,7 +758,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 57":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 57":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#533566" d="M17.09 3.425a1.61 1.61 0 0 0 1.76.279a1.61 1.61 0 0 1 2.073.674a1.61 1.61 0 0 0 1.587.809a1.61 1.61 0 0 1 1.763 1.28a1.61 1.61 0 0 0 1.26 1.26a1.61 1.61 0 0 1 1.28 1.763a1.61 1.61 0 0 0 .81 1.587a1.61 1.61 0 0 1 .673 2.073c-.269.59-.16 1.282.279 1.76a1.61 1.61 0 0 1 0 2.18a1.61 1.61 0 0 0-.279 1.76a1.61 1.61 0 0 1-.674 2.073a1.61 1.61 0 0 0-.809 1.587a1.61 1.61 0 0 1-1.28 1.763a1.61 1.61 0 0 0-1.26 1.26a1.61 1.61 0 0 1-1.763 1.28a1.61 1.61 0 0 0-1.587.81a1.61 1.61 0 0 1-2.073.673a1.61 1.61 0 0 0-1.76.279a1.61 1.61 0 0 1-2.18 0a1.61 1.61 0 0 0-1.76-.279a1.61 1.61 0 0 1-2.073-.674a1.61 1.61 0 0 0-1.587-.809a1.61 1.61 0 0 1-1.764-1.28a1.61 1.61 0 0 0-1.259-1.26a1.61 1.61 0 0 1-1.28-1.763a1.61 1.61 0 0 0-.81-1.587a1.61 1.61 0 0 1-.673-2.073c.269-.59.16-1.282-.279-1.76a1.61 1.61 0 0 1 0-2.18a1.61 1.61 0 0 0 .279-1.76a1.61 1.61 0 0 1 .674-2.073a1.61 1.61 0 0 0 .809-1.587a1.61 1.61 0 0 1 1.28-1.764a1.61 1.61 0 0 0 1.26-1.259a1.61 1.61 0 0 1 1.763-1.28a1.61 1.61 0 0 0 1.587-.81a1.61 1.61 0 0 1 2.073-.673c.59.269 1.282.16 1.76-.279a1.61 1.61 0 0 1 2.18 0" />
@@ -773,7 +773,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 58":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 58":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#7d4533" d="m3 17l2.074-4.747A11 11 0 0 1 15 6h2a11 11 0 0 1 9.926 6.253L29 17v2s-1.2 2.4-1.569 3.5C25.97 26.86 21.852 30 17 30h-2c-4.805 0-8.89-3.08-10.388-7.373C4.215 21.49 3 19 3 19z" />
@@ -784,7 +784,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 59":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 59":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#2ed89b" d="M10 4a6 6 0 0 0-5.8 4.5C2.6 11 2 14.5 2 18c0 7 5 11 14 11s14-4 14-11c0-3.5-.6-7-2.2-9.5A6 6 0 0 0 22 4c-3.1 0-5 2.2-6 3.6C15 6.2 13.1 4 10 4" />
@@ -798,7 +798,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>`,
 
-"emoji 60":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 60":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#9b9b9b" d="M4.292 12.406a4.5 4.5 0 1 1 6.4-5.618c2.876-1.192 5.337-1.067 5.337-1.067s2.46-.125 5.336 1.067a4.501 4.501 0 1 1 6.4 5.617c1.35 2.279 1.894 4.577 2.115 6.054a9 9 0 0 1 .15 1.612a8.7 8.7 0 0 1-4.877 7.818s-3.125 1.832-9.125 1.832s-9.125-1.832-9.125-1.832a8.7 8.7 0 0 1-4.875-7.819v-.025a9 9 0 0 1 .15-1.586c.22-1.477.765-3.775 2.114-6.053" />
@@ -810,7 +810,7 @@ export const bancoSvgEmojis = {
 </svg>
 `,
 
-"emoji 61":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 61":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ff8687" d="M3 17C3 10.373 8.373 5 15 5h1.998c6.627 0 12 5.373 12 12v1c0 6.627-5.373 12-12 12H15C8.373 30 3 24.627 3 18z" />
@@ -821,7 +821,7 @@ export const bancoSvgEmojis = {
 </svg>
 `,
 
-"emoji 62":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 62":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#f3c07b" d="M4 9a4 4 0 0 1 4-4h16a4 4 0 0 1 4 4v14a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" />
@@ -833,24 +833,17 @@ export const bancoSvgEmojis = {
 </svg>
 `,
 
-"emoji 63":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 63":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
-		<path fill="#ffb41f" d="M4 6.5C4 4.5 6 4 7.5 5.5L12 10H6c-1.5 0-2-1.5-2-3.5m24 0c0-2-2-2.5-3.5-1L20 10h6c1.5 0 2-1.5 2-3.5" />
-		<path fill="#ff8a24" d="M6 6.5l3.5 3.5H6zm20 0l-3.5 3.5H26z" />
-		<rect x="5" y="9" width="22" height="20" rx="6" fill="#ffb41f" />
-		<line x1="3.5" y1="20.5" x2="7.5" y2="22.5" stroke="#f05a28" stroke-width="1.3" stroke-linecap="round" />
-		<line x1="3.5" y1="26" x2="7.5" y2="24" stroke="#f05a28" stroke-width="1.3" stroke-linecap="round" />
-		<line x1="28.5" y1="20.5" x2="24.5" y2="22.5" stroke="#f05a28" stroke-width="1.3" stroke-linecap="round" />
-		<line x1="28.5" y1="26" x2="24.5" y2="24" stroke="#f05a28" stroke-width="1.3" stroke-linecap="round" />
-		<rect x="11.5" y="16.5" width="1.6" height="3" rx="0.8" fill="#2d1c25" />
-		<rect x="18.9" y="16.5" width="1.6" height="3" rx="0.8" fill="#2d1c25" />
-		<path fill="#ff2690" d="M15 20c.5-.7 1.5-.7 2 0c.3.5 0 1-.5 1.2h-1c-.5-.2-.8-.7-.5-1.2" />
-		<path fill="#b5003c" stroke="#520038" stroke-width="0.7" stroke-linejoin="round" d="M12 22.5c2 .8 3 1.8 4 1.8s2-1 4-1.8c0 3.8-2 5-4 5s-4-1.2-4-5z" />
+		<path fill="#d3d3d3" d="M4 27v-2l.989-1.02l-1.664-.908c0-.808.107-.937.675-1.454c.552-.425 1.006-.982 1.394-1.618H3.508c-1.449 0-2.056-1.85-.89-2.708l5.47-4.027c.281-.73.476-1.507.5-2.28l1.43-1.965l-1.88-2.017c.11-.324.3-.62.563-.857l3.188-2.865A5 5 0 0 1 15.23 2H22a4 4 0 0 1 4 4v.55l2.012 2.437l-15.494 21.015L7 30a3 3 0 0 1-3-3" />
+		<path fill="#9b9b9b" d="M26 26v-3.494a.5.5 0 0 0 .5.494h1a1.5 1.5 0 0 0 1.5-1.5v-14A1.5 1.5 0 0 0 27.5 6h-1a.5.5 0 0 0-.5.495V10.1c-1.42.999-2.21 1.61-3.5 2.901a48 48 0 0 1-.613.596C19.48 15.915 14.325 20.876 12.5 30H22a4 4 0 0 0 4-4m-14.32-7.319A2 2 0 0 1 9.81 20H3.498q-.226-.002-.423-.06c-.663-.19-.259-.94.431-.94h6.362a1 1 0 0 0 .93-.636l2.48-6.337c.251-.64 1.047-.643.812.005z" />
+		<path fill="#636363" d="M26 22.505V6.495A.5.5 0 0 1 26.5 6h.5v17h-.5a.5.5 0 0 1-.5-.495M11.166 11h-2.58a4.6 4.6 0 0 0-.112-1.205a68 68 0 0 0-.38-1.564A2.15 2.15 0 0 1 8.14 7H19a2 2 0 0 1 0 4h-4.934c-.332-.754-1.326-1.159-2.122-.573zM14 25H4l-.675-1.928V23H14a1 1 0 1 1 0 2" />
 	</g>
-</svg>`,
+</svg>
+`,
 
-"emoji 64":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 64":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<circle cx="8" cy="10" r="5" fill="#f6ba7d" />
@@ -865,7 +858,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>`,
 
-"emoji 65":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 65":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<rect x="9.5" y="3" width="4.5" height="11" rx="2.25" fill="#ede8f5" />
@@ -884,7 +877,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>`,
 
-"emoji 66":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 66":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<circle cx="7.5" cy="9.5" r="4.5" fill="#714545" />
@@ -900,7 +893,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>`,
 
-"emoji 67":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 67":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ffdea7" d="M13.98 2.54a3.992 3.992 0 0 0 2.52 5.546a3.992 3.992 0 0 0 2.52-5.546c-.14-.31.16-.63.47-.51c.25.1.49.22.72.38a4.01 4.01 0 0 1 1.34 5.18a3.993 3.993 0 0 1-5.05 1.855a3.993 3.993 0 0 1-5.05-1.855c-.94-1.8-.36-4.06 1.34-5.18c.23-.16.47-.28.72-.38c.31-.12.61.2.47.51" />
@@ -912,7 +905,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 68":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 68":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#6d4534" d="m28.66 12.33l.75.37c.27.14.59-.06.59-.36V8.41A3.415 3.415 0 0 0 26.59 5H26l.59-1.77c.2-.6-.25-1.23-.89-1.23H19c-.65 0-1.28.21-1.8.6A3.03 3.03 0 0 0 16 4.86h-.01c-.04-.89-.48-1.72-1.2-2.25C14.28 2.21 13.65 2 13 2H6.3c-.64 0-1.09.63-.89 1.23L6 5h-.59A3.415 3.415 0 0 0 2 8.41v3.93c0 .3.32.5.59.36l.75-.37c.28-.14.58-.01.65.29c.05.21-.05.41-.24.5l-1 .5c-.46.23-.75.7-.75 1.22v6.45c0 2.79 1.85 5.24 4.53 6.01l8.88 2.54c.38.11.79.11 1.18 0l8.88-2.54A6.255 6.255 0 0 0 30 21.29v-6.45c0-.51-.29-.98-.75-1.21l-1-.5a.46.46 0 0 1-.24-.5a.44.44 0 0 1 .65-.3" />
@@ -925,7 +918,7 @@ export const bancoSvgEmojis = {
 </svg>
 `,
 
-"emoji 69":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 69":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#9b9b9b" d="M4.002 9.57V8.34c0-.74.6-1.34 1.34-1.34h1.23a6.73 6.73 0 0 1 4.537 1.766a9.63 9.63 0 0 1 4.893-1.326c1.79 0 3.463.484 4.897 1.331A6.7 6.7 0 0 1 25.433 7h1.23c.74 0 1.34.6 1.34 1.34v1.23a6.73 6.73 0 0 1-1.837 4.613l3.136 3.737a3 3 0 0 1 .44 3.17A15 15 0 0 1 27.2 25H4.802a15 15 0 0 1-2.54-3.9c-.47-1.05-.3-2.28.44-3.17l3.14-3.745a6.73 6.73 0 0 1-1.84-4.615" />
@@ -937,7 +930,7 @@ export const bancoSvgEmojis = {
 </svg>
 `,
 
-"emoji 70":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 70":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<circle cx="7" cy="8.5" r="4.8" fill="#4d416d" />
@@ -952,7 +945,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>`,
 
-"emoji 71":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 71":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#9b9b9b" d="m26.538 11.96l3.44 6c.25.43-.07.97-.59.97c-.44-.01-.72.48-.58.9l.446 1.24H2.818l.44-1.3a.644.644 0 0 0-.61-.85c-.5 0-.81-.53-.56-.96l3.45-6.02c.14-.25.29-.54.44-.84l.03-8.43c-.03-.59.69-.9 1.09-.47l7.07 5.4c.27.21.61.4.95.4h1.75c.34 0 .68-.19.95-.4l7.07-5.4c.4-.43 1.12-.12 1.09.47l.03 8.29c.15.29.33.61.53.98z" />
@@ -963,7 +956,7 @@ export const bancoSvgEmojis = {
 </svg>
 `,
 
-"emoji 72":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 72":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<circle cx="6.5" cy="11.5" r="5" fill="#8c8996" />
@@ -977,7 +970,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>`,
     
-"emoji 73": `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 73": `<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#f8312f" d="M16 30C9.37 30 4 24.63 4 18V4.08C4 2.93 4.93 2 6.08 2h19.84C27.07 2 28 2.93 28 4.08V18c0 6.63-5.37 12-12 12" />
@@ -1005,7 +998,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>`,
 
-"emoji 75": `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 75": `<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#9b9b9b" d="M16.028 1c-8.282 0-15 6.715-15 14.995c0 2.773.762 4.743 2.286 6.033c1.262 1.067 2.919 1.554 4.714 1.785V28a3.005 3.005 0 0 0 3 2.999a3 3 0 0 0 2.5-1.345a3 3 0 0 0 2.5 1.345a3 3 0 0 0 2.5-1.345a3 3 0 0 0 2.5 1.345c1.652 0 3-1.347 3-3V23.81c1.794-.234 3.451-.72 4.713-1.787c1.524-1.288 2.287-3.256 2.287-6.029c0-8.28-6.718-14.995-15-14.995" />
@@ -1015,7 +1008,7 @@ export const bancoSvgEmojis = {
 </svg>
 `,
 
-"emoji 76": `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 76": `<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#9b9b9b" d="M9.895 6.867L8.724 5.696A2.5 2.5 0 1 0 4.07 4.042a2.5 2.5 0 1 0 1.654 4.654l1.17 1.17a10.94 10.94 0 0 0-1.866 6.13c0 2.034.557 3.43 1.626 4.334a4.8 4.8 0 0 0 1.377.8l-2.306 2.314a2.4 2.4 0 0 0-1.34-.41c-1.3 0-2.357 1.04-2.357 2.322c0 1.28 1.056 2.312 2.356 2.312A2.34 2.34 0 0 0 6.73 30c1.3 0 2.357-1.04 2.357-2.322c0-.53-.183-1.011-.488-1.401l1.679-1.685v.409c0 1.1.899 1.999 2 1.999c.857 0 1.591-.544 1.875-1.305A2.01 2.01 0 0 0 16.028 27c.857 0 1.591-.544 1.875-1.305A2.01 2.01 0 0 0 19.778 27c1.1 0 2-.898 2-2v-.425l1.7 1.775a2.322 2.322 0 0 0 1.91 3.64c1.28 0 2.32-1.04 2.32-2.32c1.28 0 2.33-1.03 2.33-2.31s-1.04-2.32-2.32-2.32c-.53 0-1.01.18-1.4.48l-2.293-2.394a4.8 4.8 0 0 0 1.376-.799c1.07-.903 1.627-2.297 1.627-4.33c0-2.27-.688-4.379-1.867-6.13l1.17-1.171a2.5 2.5 0 1 0 1.654-4.654a2.5 2.5 0 1 0-4.653 1.654L22.16 6.867A10.95 10.95 0 0 0 16.028 5c-2.27 0-4.38.688-6.133 1.867" />
@@ -1027,7 +1020,7 @@ export const bancoSvgEmojis = {
 
 
 
-"emoji 77": `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 77": `<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ff822d" d="m27.75 12.372l-1.78-2.08A3.9 3.9 0 0 0 28 6.702c-.09-2.01-1.74-3.64-3.75-3.7a3.9 3.9 0 0 0-3.6 2.14a10 10 0 0 0-2.782-.967l-1.864.86l-1.872-.86a10 10 0 0 0-2.782.967a3.88 3.88 0 0 0-3.6-2.14c-2.01.07-3.66 1.69-3.75 3.7a3.91 3.91 0 0 0 2.02 3.59l-1.77 2.08a9.3 9.3 0 0 0-1.898 3.585l1.757 2.539l-1.924 1.585l2.236 2.912l-2.06 1.126a4.69 4.69 0 0 0 4.329 2.883h18.62c1.95 0 3.621-1.19 4.329-2.883L28.5 22.5l1.281-2.395L29 18.5l.662-2.528a9.4 9.4 0 0 0-1.912-3.6" />
@@ -1039,7 +1032,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 78": `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 78": `<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#ff6dc6" d="M30.893 15c-.849-7.317-7.059-13-14.604-13h-1.232C7.293 2 1 8.293 1 16.057A4.943 4.943 0 0 0 5.943 21h2.082a5.5 5.5 0 0 0 5.475 5H24a7 7 0 0 0 7-7v-2.289c0-.58-.042-1.149-.107-1.711" />
@@ -1053,14 +1046,13 @@ export const bancoSvgEmojis = {
 "emoji 79": `<svg viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
-		<path fill="#8cb927" d="M14.5 7.5L18 2h2v4z" />
-		<path fill="#ff6e26" d="M16 6C8 6 2 9.5 2 17.5C2 24.5 8 29 16 29s14-4.5 14-11.5C30 9.5 24 6 16 6" />
-		<path fill="#371842" d="M11 12l2.5 3h-5zm10 0l2.5 3h-5z" />
-		<path fill="#371842" d="M7.5 17.5c2.5 1.5 5 .5 8.5.5s6 1 8.5-.5c0 6.5-4 10-8.5 10s-8.5-3.5-8.5-10" />
-		<path fill="#ff6e26" d="M13.5 27.5c1.2-1.5 3.8-1.5 5 0z" />
+		<path fill="#86d72f" d="M13.743 8h3.507c.407 0 .75-.272.75-.614V4.612c0-.535-.793-.816-1.265-.439l-3.506 2.783c-.483.377-.15 1.044.514 1.044" />
+		<path fill="#ff8257" d="M21.438 29h-10.87c-5.718 0-9.83-5.574-8.215-11.137l1.344-4.628C4.77 9.543 8.11 7 11.91 7h8.234c3.83 0 7.2 2.583 8.243 6.337l1.284 4.627C31.216 23.508 27.115 29 21.438 29" />
+		<path fill="#321b41" d="M9.413 15h2.172c.353 0 .545-.434.315-.715l-1.113-1.132a.402.402 0 0 0-.637.008l-1.06 1.132c-.214.281-.023.707.323.707m11 0h2.172c.353 0 .545-.434.315-.715l-1.113-1.132a.402.402 0 0 0-.637.008l-1.06 1.132c-.214.281-.023.707.323.707m.97 2H24c0 3.366-2.548 6.194-5.997 7c-.397-.51-1.12-1.226-2.043-1.226c-1.09 0-1.754.689-2.091 1.19C10.489 23.123 8 20.321 8 17h2.607c.417.501 1.11 1.146 1.983 1.146c1.06 0 1.715-.645 2.062-1.146h2.686c.417.501 1.11 1.146 1.983 1.146c1.06 0 1.715-.645 2.062-1.146" />
 	</g>
-</svg>`,
-"emoji 80": `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+</svg>
+`,
+"emoji 80": `<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#b35f47" d="M22.072 6.66c.126 1.058-.063 1.734-.309 2.133c2.029.56 3.879 1.974 4.743 3.82c.625 1.532.66 3.359.192 5.027C29.18 18.847 31 21.547 31 24.429c0 3.722-2.723 6.399-6.574 6.624v.016H9.03v-.004C4.26 30.95 2 27.75 2 24.023c0-2.494 2.149-5.47 4.549-6.49c-.002-.22.02-.387.056-.512c-.929-1.88.021-3.78.618-4.5l.227-.294l.01-.013c.83-1.083 1.331-1.736 4.895-3.279c3.887-1.683 5.269-3.336 5.8-4.006c.146-.184.281-.425.42-.672c.366-.652.763-1.358 1.478-1.245c.987.156 1.761 1.465 2.02 3.647" />
@@ -1070,7 +1062,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 81": `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 81": `<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#f8312f" d="M5 3.5a1.5 1.5 0 0 1-1 1.415V12l2.16 5.487L4 23c-1.1 0-2-.9-2-1.998v-7.004a2 2 0 0 1 1-1.728V4.915A1.5 1.5 0 1 1 5 3.5m25.05.05c0 .681-.44 1.26-1.05 1.468V12.2c.597.347 1 .994 1 1.73v7.01c0 1.1-.9 2-2 2l-2.94-5.68L28 11.93V5.018a1.55 1.55 0 1 1 2.05-1.468" />
@@ -1083,7 +1075,7 @@ export const bancoSvgEmojis = {
 `,
 
 
-"emoji 82":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 82":`<svg viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#e39d89" d="M6.5 20a5.5 5.5 0 1 0 0-11a5.5 5.5 0 0 0 0 11m19 0a5.5 5.5 0 1 0 0-11a5.5 5.5 0 0 0 0 11" />
@@ -1097,7 +1089,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 83":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 83":`<svg  viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#e39d89" d="M6.5 20a5.5 5.5 0 1 0 0-11a5.5 5.5 0 0 0 0 11m19 0a5.5 5.5 0 1 0 0-11a5.5 5.5 0 0 0 0 11" />
@@ -1112,7 +1104,7 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
-"emoji 84":`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+"emoji 84":`<svg viewBox="0 0 32 32">
 	<path d="M0 0h32v32H0z" fill="none" />
 	<g fill="none">
 		<path fill="#a56953" d="M6.5 20a5.5 5.5 0 1 0 0-11a5.5 5.5 0 0 0 0 11m19 0a5.5 5.5 0 1 0 0-11a5.5 5.5 0 0 0 0 11" />
@@ -1126,12 +1118,33 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
+"emoji 85":`<svg  viewBox="0 0 32 32">
+	<path d="M0 0h32v32H0z" fill="none" />
+	<g fill="none">
+		<path fill="#cdc4d6" d="M14.987 12.083a6.5 6.5 0 1 0-7.794 6.786a6.6 6.6 0 0 0-.1 1.131c0 5.226 4.17 8.28 7.736 9.33c.765.226 1.58.235 2.339-.008c3.373-1.08 7.8-4.499 7.8-9.322c0-.34-.042-.725-.13-1.138a6.5 6.5 0 1 0-7.825-6.785q-.49-.046-1.013-.046q-.516 0-1.013.052" />
+		<path fill="#1c1c1c" d="M12 21a1 1 0 0 0-1 1v1a1 1 0 1 0 2 0v-1a1 1 0 0 0-1-1m8 0a1 1 0 0 0-1 1v1a1 1 0 1 0 2 0v-1a1 1 0 0 0-1-1" />
+		<path fill="#ff8687" d="M12.977 12.513c-2.778.921-4.812 3.058-5.564 5.453a5 5 0 1 1 5.563-5.453M29 13a5 5 0 0 1-4.412 4.966c-.715-2.077-2.47-4.502-5.561-5.486A5 5 0 0 1 29 13M16.031 27.969c1.196 0 1.938-1.735 1.938-2.11S17.644 25 16.03 25c-1.828 0-2.015.422-2.015.86c0 .32.82 2.109 2.015 2.109" />
+		<path fill="#b4acbc" d="M12 26.5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 .5-.5m8.5-.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm-.814 1.036a.5.5 0 1 0-.372.928l5 2a.5.5 0 1 0 .372-.928zm-7.372 0a.5.5 0 1 1 .372.928l-5 2a.5.5 0 1 1-.372-.928z" />
+	</g>
+</svg>
+`,
+"emoji 86":`<svg viewBox="0 0 32 32">
+	<path d="M0 0h32v32H0z" fill="none" />
+	<g fill="none">
+		<path fill="#9b9b9b" d="M16.034 1.5c-5.29 0-9.78 3.792-10.536 8.904l-.001.009L5.26 12.5H2.748c-1.088 0-1.627 1.32-.864 2.084L4.702 17.4L3.557 27.467c-.207 1.386.725 2.813 2.209 3a4 4 0 0 0 3.296-1.097a3.02 3.02 0 0 1 4.18 0c1.538 1.499 4.035 1.499 5.574 0a3.02 3.02 0 0 1 4.179 0a4 4 0 0 0 2.968 1.121h.001c1.584-.073 2.76-1.501 2.537-3.043l-1.143-10.082l2.783-2.782c.764-.764.224-2.084-.863-2.084h-2.47l-.237-2.087l-.002-.008C25.825 5.291 21.324 1.5 16.035 1.5" />
+		<path fill="#ffffff" d="m6.152 13.5l.337-2.957c.684-4.6 4.735-8.043 9.545-8.043s8.87 3.443 9.545 8.042l.335 2.958h3.364c.192 0 .293.24.156.376L26.311 17l1.198 10.577l.001.009c.141.954-.591 1.86-1.591 1.906a3 3 0 0 1-2.227-.838c-1.538-1.499-4.035-1.499-5.574 0a3.02 3.02 0 0 1-4.179 0c-1.539-1.499-4.035-1.499-5.574 0a3 3 0 0 1-2.474.822c-.874-.111-1.48-.978-1.344-1.868l.001-.01L5.75 17.036l-3.159-3.159c-.136-.136-.036-.376.157-.376z" />
+		<path fill="#89029c" d="M21 12H11s0 5 5 5s5-5 5-5" />
+		<path fill="#f70a8d" d="m19.588 16.058l.177-.885a1.254 1.254 0 0 0-.925-1.463a11.7 11.7 0 0 0-5.68 0a1.254 1.254 0 0 0-.925 1.463l.177.885a3.66 3.66 0 0 0 7.176 0" />
+		<path fill="#321b41" d="M11.724 7.053a.5.5 0 1 0-.447.894l1.105.553l-1.105.553a.5.5 0 1 0 .447.894l2-1a.5.5 0 0 0 0-.894zM21 8.5a1.5 1.5 0 1 1-3 0a1.5 1.5 0 0 1 3 0" />
+	</g>
+</svg>
+`,
 
-};
+	};
 
 let listaFiltrada = [];
 let indicePaginacao = 0;
-const ITENS_POR_PAGINA = 328;//quantidade de emojis por página, para não travar o navegador
+const ITENS_POR_PAGINA = 190;//quantidade de emojis por página, para não travar o navegador
 
 export function inicializarCatalogo(termoFiltro = "") {
   listaFiltrada = Object.entries(bancoSvgEmojis).filter(([id]) => 

@@ -4,9 +4,13 @@ import {
   criarEfeitoPerdaGomo,
   atualizarCobra,
   atualizarParticulas,
-  desenharCabecaRealista
+  desenharCabecaRealista,
+  definirAvatarCobra
 } from "./snake.js";
+import { db } from "./firebaseConfig.js";
+import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+// 1. Elementos da interface capturados primeiro (evita erro de canvas indefinido)
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const inputContainer = document.getElementById("inputContainer");
@@ -19,7 +23,36 @@ const pontosFinalTxt = document.getElementById("pontosFinalTxt");
 const recordeFinalTxt = document.getElementById("recordeFinalTxt");
 const btnReiniciar = document.getElementById("btnReiniciar");
 
-recordeTxt.textContent = gameState.recorde;
+// 2. Leitura do UID pela URL e busca direta no Firestore
+const params = new URLSearchParams(window.location.search);
+export const usuarioId = params.get("uid");
+
+export let perfilJogador = {
+  id: usuarioId || null,
+  apelido: "",
+  recorde: 0,
+  emojiSvg: ""
+};
+
+if (usuarioId) {
+  getDoc(doc(db, "usuarios", usuarioId))
+    .then((snap) => {
+      if (snap.exists()) {
+        const dados = snap.data();
+        perfilJogador.apelido = dados.apelido || "";
+        perfilJogador.recorde = dados.recorde || 0;
+        perfilJogador.emojiSvg = dados.emojiSvg || "";
+        gameState.recorde = perfilJogador.recorde;
+        if (recordeTxt) recordeTxt.textContent = gameState.recorde;
+
+        // Aplica o avatar salvo no Firebase na cabeça da cobra
+        if (dados.emojiSvg) {
+          definirAvatarCobra(dados.emojiSvg);
+        }
+      }
+    })
+    .catch((err) => console.error("Erro ao carregar dados do jogador:", err));
+}
 
 function redimensionar() {
   canvas.width = window.innerWidth;
@@ -45,10 +78,17 @@ function dispararGameOver() {
   pararTimer();
   inputContainer.style.display = "none";
 
-  if (gameState.pontos > gameState.recorde) {
+if (gameState.pontos > gameState.recorde) {
     gameState.recorde = gameState.pontos;
-    localStorage.setItem("mathSnakeHighScore", gameState.recorde);
     recordeTxt.textContent = gameState.recorde;
+
+    // Atualiza diretamente no documento do usuário no Firebase (sem localStorage)
+    if (usuarioId) {
+      updateDoc(doc(db, "usuarios", usuarioId), {
+        recorde: gameState.recorde,
+        ultimoAcesso: new Date()
+      }).catch(err => console.error("Erro ao salvar recorde no Firebase:", err));
+    }
   }
 
   pontosFinalTxt.textContent = gameState.pontos;
@@ -191,6 +231,71 @@ function atualizar() {
   }
 }
 
+
+
+// Textura favo de mel BLOCO HEXAGONAL PISO
+const offscreenCanvas = document.createElement("canvas");
+const offscreenCtx = offscreenCanvas.getContext("2d");
+const raioHex = 200;
+const larguraHex = Math.sqrt(3) * raioHex;
+const alturaHex = 2 * raioHex;
+
+offscreenCanvas.width = larguraHex;
+offscreenCanvas.height = alturaHex * 1.5;
+
+function desenharHexagonoUnitario(cx, cy, r) {
+  const pontos = [];
+  for (let i = 0; i < 6; i++) {
+    const angulo = (Math.PI / 180) * (60 * i + 30);
+    pontos.push({
+      x: cx + r * Math.cos(angulo),
+      y: cy + r * Math.sin(angulo)
+    });
+  }
+
+  // 1. Base e preenchimento com luz zenital (deslocada para cima)
+  offscreenCtx.beginPath();
+  pontos.forEach((p, idx) => {
+    if (idx === 0) offscreenCtx.moveTo(p.x, p.y);
+    else offscreenCtx.lineTo(p.x, p.y);
+  });
+  offscreenCtx.closePath();
+
+  const grad = offscreenCtx.createRadialGradient(cx, cy - r * 0.25, 2, cx, cy, r);
+  grad.addColorStop(0, "#2d276b");
+  grad.addColorStop(0.65, "#17143f");
+  grad.addColorStop(1, "#0a091d");
+  offscreenCtx.fillStyle = grad;
+  offscreenCtx.fill();
+
+  // 2. Chanfro Inferior (Sombra profunda da pastilha)
+  offscreenCtx.beginPath();
+  offscreenCtx.moveTo(pontos[0].x, pontos[0].y);
+  offscreenCtx.lineTo(pontos[1].x, pontos[1].y);
+  offscreenCtx.lineTo(pontos[2].x, pontos[2].y);
+  offscreenCtx.strokeStyle = "#060512";
+  offscreenCtx.lineWidth = 3;
+  offscreenCtx.stroke();
+
+  // 3. Chanfro Superior (Borda chanfrada iluminada / Relevo)
+  offscreenCtx.beginPath();
+  offscreenCtx.moveTo(pontos[3].x, pontos[3].y);
+  offscreenCtx.lineTo(pontos[4].x, pontos[4].y);
+  offscreenCtx.lineTo(pontos[5].x, pontos[5].y);
+  offscreenCtx.lineTo(pontos[0].x, pontos[0].y);
+  offscreenCtx.strokeStyle = "#463d9e";
+  offscreenCtx.lineWidth = 2.5;
+  offscreenCtx.stroke();
+}
+
+desenharHexagonoUnitario(larguraHex / 2, alturaHex * 0.75, raioHex - 2);
+desenharHexagonoUnitario(0, 0, raioHex - 2);
+desenharHexagonoUnitario(larguraHex, 0, raioHex - 2);
+desenharHexagonoUnitario(0, alturaHex * 1.5, raioHex - 2);
+desenharHexagonoUnitario(larguraHex, alturaHex * 1.5, raioHex - 2);
+
+const texturaFundoHex = ctx.createPattern(offscreenCanvas, "repeat");
+
 function desenhar() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -203,38 +308,60 @@ function desenhar() {
 
   // Grid
 // Grid otimizado com único batch de desenho
-  ctx.strokeStyle = "#131e2b";
-  ctx.lineWidth = 1;
-  const step = 50;
-  const offsetX = Math.floor((cabeca.x - centroX) / step) * step;
-  const offsetY = Math.floor((cabeca.y - centroY) / step) * step;
-
-  ctx.beginPath();
-  for (let x = offsetX - step; x < offsetX + canvas.width + step * 2; x += step) {
-    ctx.moveTo(x, offsetY - step);
-    ctx.lineTo(x, offsetY + canvas.height + step * 2);
-  }
-  for (let y = offsetY - step; y < offsetY + canvas.height + step * 2; y += step) {
-    ctx.moveTo(offsetX - step, y);
-    ctx.lineTo(offsetX + canvas.width + step * 2, y);
-  }
-  ctx.stroke();
+// Fundo favo de mel infinito em lote único
+  ctx.fillStyle = texturaFundoHex;
+  ctx.fillRect(cabeca.x - centroX, cabeca.y - centroY, canvas.width, canvas.height);
 
   // Alvos matemáticos
+// Alvos matemáticos estilizados em pastilha flutuante
   if (gameState.emJogo) {
-    ctx.font = "bold 26px monospace";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
     for (let i = 0; i < gameState.alvos.length; i++) {
       const a = gameState.alvos[i];
       const isAtivo = gameState.alvoAtivo && gameState.alvoAtivo.id === a.id;
-      ctx.fillStyle = isAtivo ? "#ffff00" : "#00e5ff";
-      ctx.shadowColor = isAtivo ? "#ffff00" : "#00e5ff";
-      ctx.shadowBlur = isAtivo ? 18 : 12;
-      ctx.fillText(a.texto, a.x, a.y);
+
+      // Medição da largura da pílula com margem para a conta
+      ctx.font = "bold 24px monospace";
+      const larguraTexto = ctx.measureText(a.texto).width;
+      const larguraPilula = Math.max(larguraTexto + 32, 80);
+      const alturaPilula = 44;
+      const raioBorda = alturaPilula / 2;
+
+      const px = a.x - larguraPilula / 2;
+      const py = a.y - alturaPilula / 2;
+
+      // 1. Sombra e Brilho Neon (Orbe Flutuante)
+      ctx.save();
+      ctx.shadowColor = isAtivo ? "#ffe600" : "#00f0ff";
+      ctx.shadowBlur = isAtivo ? 20 : 12;
+
+      // 2. Fundo da Pastilha (translúcido com gradiente suave)
+      const gradientePastilha = ctx.createLinearGradient(a.x, py, a.x, py + alturaPilula);
+      if (isAtivo) {
+        gradientePastilha.addColorStop(0, "rgba(255, 230, 0, 0.95)");
+        gradientePastilha.addColorStop(1, "rgba(210, 160, 0, 0.95)");
+      } else {
+        gradientePastilha.addColorStop(0, "rgba(10, 25, 45, 0.88)");
+        gradientePastilha.addColorStop(1, "rgba(5, 12, 24, 0.92)");
+      }
+
+      ctx.beginPath();
+      ctx.roundRect(px, py, larguraPilula, alturaPilula, raioBorda);
+      ctx.fillStyle = gradientePastilha;
+      ctx.fill();
+
+      // 3. Contorno Chanfrado / Borda de Energia
+      ctx.lineWidth = isAtivo ? 3.5 : 2;
+      ctx.strokeStyle = isAtivo ? "#ffffff" : "#00f0ff";
+      ctx.stroke();
+      ctx.restore();
+
+      // 4. Texto da Conta
+      ctx.fillStyle = isAtivo ? "#000000" : "#ffffff";
+      ctx.fillText(a.texto, a.x, a.y + 1);
     }
-    ctx.shadowBlur = 0;
   }
 
   // Partículas

@@ -3,7 +3,7 @@ let mapaSubstituicoes = {};
 let corOrigAtiva = null;
 
 const PALETA_CORES = [
-  "#fadcbc","#e0bb95","#bf8f68","#9b643d","#594539","#ffffff",
+  "#fadcbc","#c68d7b",    "#e0bb95","#bf8f68","#9b643d","#594539","#ffffff",
    "#808080", "#212121","#000000","#fd0a0a", "#800000", "#e74c3c", "#e67e22", 
   "#f1c40f", "#2ecc71", "#025c32", "#0612c2", "#f502e9","#0099ff", "#8e44ad", 
   "#fd79a8", "#d63031", "#e17055", "#ffeaa7", "#00b894", "#e584f8", 

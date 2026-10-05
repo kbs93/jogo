@@ -3,6 +3,33 @@ import { CONFIG, gameState } from "./config.js";
 const emojiCabecaImg = new Image();
 emojiCabecaImg.src = "https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Grinning%20face%20with%20big%20eyes/3D/grinning_face_with_big_eyes_3d.png";
 
+/**
+ * Atualiza o avatar da cobra com o SVG salvo no Firebase
+ */
+export function definirAvatarCobra(svgString) {
+  if (!svgString) return;
+
+  let svgTratado = svgString;
+
+  // 1. Garante o namespace XML para o Canvas aceitar o SVG
+  if (!svgTratado.includes("xmlns=")) {
+    svgTratado = svgTratado.replace("<svg", '<svg xmlns="http://www.w3.org/2000/svg"');
+  }
+
+  // 2. Garante dimensões explícitas para cálculo de naturalWidth
+  if (!svgTratado.includes("width=")) {
+    svgTratado = svgTratado.replace("<svg", '<svg width="128" height="128"');
+  }
+
+  // 3. Conversão para Base64 segura e síncrona (não expira na memória)
+  try {
+    const base64 = btoa(unescape(encodeURIComponent(svgTratado)));
+    emojiCabecaImg.src = `data:image/svg+xml;base64,${base64}`;
+  } catch (e) {
+    emojiCabecaImg.src = `data:image/svg+xml;utf8,${encodeURIComponent(svgTratado)}`;
+  }
+}
+
 export function criarEfeitoPerdaGomo(x, y) {
   for (let i = 0; i < 16; i++) {
     const ang = Math.random() * Math.PI * 2;
@@ -82,7 +109,6 @@ export function atualizarCobra() {
     }
   }
 }
-
 
 export function atualizarParticulas() {
   for (let i = gameState.particulas.length - 1; i >= 0; i--) {
