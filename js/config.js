@@ -3,8 +3,8 @@ export const CONFIG = {
   velocidadeDigitando: 0.8,
   taxaGiro: 0.12,
   raioSegmento: 18,
-  distanciaEntreSegmentos: 16,
-  totalSegmentosInicial: 6,
+  distanciaEntreSegmentos: 13,
+  totalSegmentosInicial: 5,
   tempoBase: 5
 };
 

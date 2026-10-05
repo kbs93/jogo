@@ -8,9 +8,14 @@ import {
   definirAvatarCobra
 } from "./snake.js";
 import { db } from "./firebaseConfig.js";
-import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { 
+  doc, 
+  getDoc, 
+  updateDoc, 
+  serverTimestamp 
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// 1. Elementos da interface capturados primeiro (evita erro de canvas indefinido)
+// 1. Elementos da interface capturados
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const inputContainer = document.getElementById("inputContainer");
@@ -40,12 +45,11 @@ if (usuarioId) {
       if (snap.exists()) {
         const dados = snap.data();
         perfilJogador.apelido = dados.apelido || "";
-        perfilJogador.recorde = dados.recorde || 0;
+        perfilJogador.recorde = typeof dados.recorde === "number" ? dados.recorde : 0;
         perfilJogador.emojiSvg = dados.emojiSvg || "";
         gameState.recorde = perfilJogador.recorde;
         if (recordeTxt) recordeTxt.textContent = gameState.recorde;
 
-        // Aplica o avatar salvo no Firebase na cabeça da cobra
         if (dados.emojiSvg) {
           definirAvatarCobra(dados.emojiSvg);
         }
@@ -73,27 +77,34 @@ function pararTimer() {
   }
 }
 
+async function salvarRecordeNoFirebase() {
+  if (!usuarioId) return;
+
+  const novoRecorde = Math.max(Number(gameState.pontos || 0), Number(gameState.recorde || 0));
+  gameState.recorde = novoRecorde;
+  if (recordeTxt) recordeTxt.textContent = novoRecorde;
+
+  try {
+    // Grava apenas 'recorde' e 'ultimoAcesso' para respeitar 100% as regras do Firestore
+    await updateDoc(doc(db, "usuarios", usuarioId), {
+      recorde: Number(novoRecorde),
+      ultimoAcesso: serverTimestamp()
+    });
+  } catch (err) {
+    console.error("Erro ao salvar pontuação no Firebase:", err);
+  }
+}
+
 function dispararGameOver() {
   gameState.emJogo = false;
   pararTimer();
   inputContainer.style.display = "none";
 
-if (gameState.pontos > gameState.recorde) {
-    gameState.recorde = gameState.pontos;
-    recordeTxt.textContent = gameState.recorde;
+  salvarRecordeNoFirebase();
 
-    // Atualiza diretamente no documento do usuário no Firebase (sem localStorage)
-    if (usuarioId) {
-      updateDoc(doc(db, "usuarios", usuarioId), {
-        recorde: gameState.recorde,
-        ultimoAcesso: new Date()
-      }).catch(err => console.error("Erro ao salvar recorde no Firebase:", err));
-    }
-  }
-
-  pontosFinalTxt.textContent = gameState.pontos;
-  recordeFinalTxt.textContent = gameState.recorde;
-  gameOverModal.style.display = "flex";
+  if (pontosFinalTxt) pontosFinalTxt.textContent = gameState.pontos;
+  if (recordeFinalTxt) recordeFinalTxt.textContent = Math.max(gameState.pontos, gameState.recorde);
+  if (gameOverModal) gameOverModal.style.display = "flex";
 }
 
 function iniciarTimer() {
@@ -135,7 +146,7 @@ function iniciarTimer() {
 
 function reiniciarJogo() {
   gameState.pontos = 0;
-  pontosTxt.textContent = "0";
+  if (pontosTxt) pontosTxt.textContent = "0";
   gameState.emJogo = true;
   gameState.entradaAtiva = false;
   gameState.bloqueioInput = false;
@@ -144,7 +155,7 @@ function reiniciarJogo() {
   mathInput.classList.remove("erro");
   mathInput.value = "";
   inputContainer.style.display = "none";
-  gameOverModal.style.display = "none";
+  if (gameOverModal) gameOverModal.style.display = "none";
 
   gameState.segmentos.length = 0;
   gameState.anguloAtual = 0;
@@ -158,13 +169,14 @@ function reiniciarJogo() {
   popularAlvosIniciais();
 }
 
-document.addEventListener("click", () => {
+document.addEventListener("click", (e) => {
+  if (e.target.closest("#hud") || e.target.closest("#gameOverModal")) return;
   if (gameState.entradaAtiva && gameState.emJogo && !gameState.bloqueioInput) {
     mathInput.focus();
   }
 });
 
-btnReiniciar.addEventListener("click", reiniciarJogo);
+if (btnReiniciar) btnReiniciar.addEventListener("click", reiniciarJogo);
 
 mathInput.addEventListener("input", () => {
   if (gameState.bloqueioInput || !gameState.alvoAtivo) return;
@@ -178,8 +190,14 @@ mathInput.addEventListener("input", () => {
 
   if (valorInt === gameState.alvoAtivo.resultado) {
     gameState.pontos += 2;
-    pontosTxt.textContent = gameState.pontos;
+    if (pontosTxt) pontosTxt.textContent = gameState.pontos;
     mathInput.value = "";
+
+    // Atualiza recorde em tempo real se superar durante a partida
+    if (gameState.pontos > gameState.recorde) {
+      gameState.recorde = gameState.pontos;
+      if (recordeTxt) recordeTxt.textContent = gameState.recorde;
+    }
 
     const ultimo = gameState.segmentos[gameState.segmentos.length - 1];
     gameState.segmentos.push({ x: ultimo.x, y: ultimo.y });
@@ -231,8 +249,6 @@ function atualizar() {
   }
 }
 
-
-
 // Textura favo de mel BLOCO HEXAGONAL PISO
 const offscreenCanvas = document.createElement("canvas");
 const offscreenCtx = offscreenCanvas.getContext("2d");
@@ -253,7 +269,6 @@ function desenharHexagonoUnitario(cx, cy, r) {
     });
   }
 
-  // 1. Base e preenchimento com luz zenital (deslocada para cima)
   offscreenCtx.beginPath();
   pontos.forEach((p, idx) => {
     if (idx === 0) offscreenCtx.moveTo(p.x, p.y);
@@ -268,7 +283,6 @@ function desenharHexagonoUnitario(cx, cy, r) {
   offscreenCtx.fillStyle = grad;
   offscreenCtx.fill();
 
-  // 2. Chanfro Inferior (Sombra profunda da pastilha)
   offscreenCtx.beginPath();
   offscreenCtx.moveTo(pontos[0].x, pontos[0].y);
   offscreenCtx.lineTo(pontos[1].x, pontos[1].y);
@@ -277,7 +291,6 @@ function desenharHexagonoUnitario(cx, cy, r) {
   offscreenCtx.lineWidth = 3;
   offscreenCtx.stroke();
 
-  // 3. Chanfro Superior (Borda chanfrada iluminada / Relevo)
   offscreenCtx.beginPath();
   offscreenCtx.moveTo(pontos[3].x, pontos[3].y);
   offscreenCtx.lineTo(pontos[4].x, pontos[4].y);
@@ -306,14 +319,9 @@ function desenhar() {
   ctx.save();
   ctx.translate(centroX - cabeca.x, centroY - cabeca.y);
 
-  // Grid
-// Grid otimizado com único batch de desenho
-// Fundo favo de mel infinito em lote único
   ctx.fillStyle = texturaFundoHex;
   ctx.fillRect(cabeca.x - centroX, cabeca.y - centroY, canvas.width, canvas.height);
 
-  // Alvos matemáticos
-// Alvos matemáticos estilizados em pastilha flutuante
   if (gameState.emJogo) {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -322,7 +330,6 @@ function desenhar() {
       const a = gameState.alvos[i];
       const isAtivo = gameState.alvoAtivo && gameState.alvoAtivo.id === a.id;
 
-      // Medição da largura da pílula com margem para a conta
       ctx.font = "bold 24px monospace";
       const larguraTexto = ctx.measureText(a.texto).width;
       const larguraPilula = Math.max(larguraTexto + 32, 80);
@@ -332,12 +339,10 @@ function desenhar() {
       const px = a.x - larguraPilula / 2;
       const py = a.y - alturaPilula / 2;
 
-      // 1. Sombra e Brilho Neon (Orbe Flutuante)
       ctx.save();
       ctx.shadowColor = isAtivo ? "#ffe600" : "#00f0ff";
       ctx.shadowBlur = isAtivo ? 20 : 12;
 
-      // 2. Fundo da Pastilha (translúcido com gradiente suave)
       const gradientePastilha = ctx.createLinearGradient(a.x, py, a.x, py + alturaPilula);
       if (isAtivo) {
         gradientePastilha.addColorStop(0, "rgba(255, 230, 0, 0.95)");
@@ -352,19 +357,16 @@ function desenhar() {
       ctx.fillStyle = gradientePastilha;
       ctx.fill();
 
-      // 3. Contorno Chanfrado / Borda de Energia
       ctx.lineWidth = isAtivo ? 3.5 : 2;
       ctx.strokeStyle = isAtivo ? "#ffffff" : "#00f0ff";
       ctx.stroke();
       ctx.restore();
 
-      // 4. Texto da Conta
       ctx.fillStyle = isAtivo ? "#000000" : "#ffffff";
       ctx.fillText(a.texto, a.x, a.y + 1);
     }
   }
 
-  // Partículas
   for (let i = 0; i < gameState.particulas.length; i++) {
     const p = gameState.particulas[i];
     ctx.save();
@@ -378,7 +380,6 @@ function desenhar() {
     ctx.restore();
   }
 
-  // Corpo da Cobra
   for (let i = gameState.segmentos.length - 1; i > 0; i--) {
     const seg = gameState.segmentos[i];
     ctx.beginPath();
@@ -390,7 +391,6 @@ function desenhar() {
   }
   ctx.shadowBlur = 0;
 
-  // Cabeça do Emoji
   desenharCabecaRealista(ctx, cabeca.x, cabeca.y, CONFIG.raioSegmento);
 
   ctx.restore();
@@ -424,3 +424,19 @@ window.addEventListener("keyup", (e) => {
   if (tecla === "s" || tecla === "arrowdown") gameState.teclas.s = false;
   if (tecla === "d" || tecla === "arrowright") gameState.teclas.d = false;
 });
+
+// Ação de Voltar para o Perfil com o UID
+// Ação de Voltar para o Perfil garantindo a gravação antes do redirecionamento
+async function voltarAoMenu() {
+  await salvarRecordeNoFirebase();
+  if (usuarioId) {
+    window.location.href = `index.html?uid=${encodeURIComponent(usuarioId)}&pts=${encodeURIComponent(gameState.pontos || 0)}`;
+  } else {
+    window.location.href = "index.html";
+  }
+}
+const btnVoltarMenu = document.getElementById("btnVoltarMenu");
+if (btnVoltarMenu) btnVoltarMenu.addEventListener("click", voltarAoMenu);
+
+const btnVoltarMenuGO = document.getElementById("btnVoltarMenuGO");
+if (btnVoltarMenuGO) btnVoltarMenuGO.addEventListener("click", voltarAoMenu);

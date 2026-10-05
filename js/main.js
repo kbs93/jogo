@@ -1,439 +1,554 @@
 import { bancoSvgEmojis, inicializarCatalogo, carregarMaisEmojis } from "./emoji.js";
 import { renderizarEditorCores, obterSvgCustomizado } from "./editor.js";
-import { autenticarEJogar } from "./authService.js";
+import { autenticarEJogar, buscarPerfilExistente, buscarPerfilPorId } from "./authService.js";
+
+// Estado em memória (Zero localStorage)
+let usuarioAtivo = null; // Guarda os dados do usuário autenticado na sessão
+let recordeSalvo = 0;
+let dificuldadeSalva = "facil";
+let operacaoSalva = "soma";
+let idEmojiSelecionado = "grinning_eyes";
+let svgCustomizadoSalvo = "";
+
+// Elementos da Interface
+const blocoLoginPadrao = document.getElementById("blocoLoginPadrao");
+const blocoPerfilLogado = document.getElementById("blocoPerfilLogado");
+const perfilCardApelidoTxt = document.getElementById("perfilCardApelidoTxt");
+const perfilCardEmojiBox = document.getElementById("perfilCardEmojiBox");
+const perfilStatMaiorTxt = document.getElementById("perfilStatMaiorTxt");
+const perfilStatModoTxt = document.getElementById("perfilStatModoTxt");
+const perfilStatPontosTxt = document.getElementById("perfilStatPontosTxt");
+const btnPerfilZerarRecorde = document.getElementById("btnPerfilZerarRecorde");
+const btnPerfilSair = document.getElementById("btnPerfilSair");
+const btnPerfilJogar = document.getElementById("btnPerfilJogar");
+
+const elRecordeMenu = document.getElementById("recordeMenuTxt");
+const elRecordeModal = document.getElementById("recordeModalTxt");
+const elRankingPontos = document.getElementById("rankingPontosTxt");
+
+function atualizarRecordeVisual(pontos) {
+  recordeSalvo = pontos;
+  if (elRecordeMenu) elRecordeMenu.textContent = pontos;
+  if (elRecordeModal) elRecordeModal.textContent = pontos;
+  if (elRankingPontos) elRankingPontos.textContent = `${pontos} pts`;
+  if (perfilStatMaiorTxt) perfilStatMaiorTxt.textContent = pontos;
+  if (perfilStatPontosTxt) perfilStatPontosTxt.textContent = `${pontos} pts`;
+}
+atualizarRecordeVisual(0);
+
+// Sistema de Notificações Toast nativo
+function showToast(mensagem, tipo = 'info') {
+  const container = document.getElementById('toastContainer');
+  if (!container) return;
+  const toast = document.createElement('div');
+  toast.className = `toast-item toast-${tipo}`;
+
+  let icone = 'bi-info-circle-fill';
+  if (tipo === 'sucesso') icone = 'bi-check-circle-fill';
+  if (tipo === 'alerta') icone = 'bi-exclamation-triangle-fill';
+
+  toast.innerHTML = `
+    <i class="bi ${icone} toast-icone"></i>
+    <div class="toast-conteudo">${mensagem}</div>
+    <button class="toast-fechar">&times;</button>
+  `;
+
+  container.appendChild(toast);
+
+  const fechar = () => {
+    toast.classList.add('saindo');
+    setTimeout(() => toast.remove(), 250);
+  };
+
+  toast.querySelector('.toast-fechar').addEventListener('click', fechar);
+  setTimeout(fechar, 3200);
+}
+
+// Alternância de Telas (Login vs Perfil Logado)
+// Alternância de Telas (Login vs Perfil Logado)
+// Alternância de Telas (Login vs Perfil Logado)
+function exibirPerfil(perfil, pontosUltimaPartida = null) {
+  usuarioAtivo = perfil;
+  if (blocoLoginPadrao) blocoLoginPadrao.style.display = "none";
+  if (blocoPerfilLogado) blocoPerfilLogado.style.display = "flex";
+
+  if (perfilCardApelidoTxt) perfilCardApelidoTxt.textContent = perfil.apelido;
+  if (perfilCardEmojiBox) perfilCardEmojiBox.innerHTML = perfil.emojiSvg || bancoSvgEmojis[perfil.emojiId] || "";
+
+  const recordeBanco = typeof perfil.recorde === "number" ? perfil.recorde : 0;
+  const pontosPartida = pontosUltimaPartida !== null ? Number(pontosUltimaPartida) : recordeBanco;
   
-  // Recupera dados salvos
-// Estado local em memória (Zero localStorage)
-  let recordeSalvo = "0";
-  let dificuldadeSalva = "facil";
-  let operacaoSalva = "soma";
+  // A Maior Pontuação Pessoal é sempre o ápice (o maior entre o banco e o que acabou de fazer)
+  const maiorPontuacao = Math.max(recordeBanco, pontosPartida);
+  usuarioAtivo.recorde = maiorPontuacao;
 
-  const elRecordeMenu = document.getElementById("recordeMenuTxt");
-  if (elRecordeMenu) elRecordeMenu.textContent = recordeSalvo;
+  // 1. Caixa Esquerda: MAIOR PONTUAÇÃO PESSOAL
+  if (perfilStatMaiorTxt) perfilStatMaiorTxt.textContent = maiorPontuacao;
+  if (elRecordeMenu) elRecordeMenu.textContent = maiorPontuacao;
+  if (elRecordeModal) elRecordeModal.textContent = maiorPontuacao;
+  if (elRankingPontos) elRankingPontos.textContent = `${maiorPontuacao} pts`;
 
-  const elRecordeModal = document.getElementById("recordeModalTxt");
-  if (elRecordeModal) elRecordeModal.textContent = recordeSalvo;
+  // 2. Caixa Direita: Recorde Atual da Rodada
+  if (perfilStatPontosTxt) perfilStatPontosTxt.textContent = `${pontosPartida} pts`;
 
-  const elRankingPontos = document.getElementById("rankingPontosTxt");
-  if (elRankingPontos) elRankingPontos.textContent = `${recordeSalvo} pts`;
+  const mapaNomes = { facil: 'Fácil', medio: 'Médio', dificil: 'Difícil', frenesi: 'Frenesi' };
+  if (perfilStatModoTxt) perfilStatModoTxt.textContent = `Nível: ${mapaNomes[dificuldadeSalva] || 'Fácil'}`;
+}
 
-    // Sistema de Notificações Toast nativo
-    function showToast(mensagem, tipo = 'info') {
-      const container = document.getElementById('toastContainer');
-      const toast = document.createElement('div');
-      toast.className = `toast-item toast-${tipo}`;
+function deslogarEVoltarInicio() {
+  usuarioAtivo = null;
+  svgCustomizadoSalvo = "";
+  idEmojiSelecionado = "grinning_eyes";
+  
+  const elNick = document.getElementById("inputApelido");
+  const elPin = document.getElementById("inputPin");
+  const elBox = document.getElementById("emojiPreviewBox");
+  const elBtn = document.getElementById("btnIniciarJogo");
+  const elPerfil = document.getElementById("blocoPerfilLogado");
+  const elLogin = document.getElementById("blocoLoginPadrao");
 
-      let icone = 'bi-info-circle-fill';
-      if (tipo === 'sucesso') icone = 'bi-check-circle-fill';
-      if (tipo === 'alerta') icone = 'bi-exclamation-triangle-fill';
+  if (elNick) elNick.value = "";
+  if (elPin) elPin.value = "";
+  if (elBox) elBox.innerHTML = '<img src="./img/logo5.png" alt="Apresentação" class="img-apresentacao">';
+  if (elPerfil) elPerfil.style.display = "none";
+  if (elLogin) elLogin.style.display = "flex";
+if (elBtn) {
+    elBtn.disabled = false;
+    elBtn.textContent = "Jogar";
+  }
+  const elBtnPerfil = document.getElementById("btnPerfilJogar");
+  if (elBtnPerfil) {
+    elBtnPerfil.disabled = false;
+    elBtnPerfil.textContent = "Jogar";
+  }
+}
 
-      toast.innerHTML = `
-        <i class="bi ${icone} toast-icone"></i>
-        <div class="toast-conteudo">${mensagem}</div>
-        <button class="toast-fechar">&times;</button>
-      `;
+// Reset ao carregar ou voltar pelo histórico
+// Checa se o usuário retornou do jogo com seu UID na URL
+// Checa se o usuário retornou do jogo com seu UID na URL
+// Checa se o usuário retornou do jogo com seu UID na URL
+async function verificarSessaoInicial() {
+  const params = new URLSearchParams(window.location.search);
+  const uidUrl = params.get("uid");
+  const ptsUrl = params.get("pts");
 
-      container.appendChild(toast);
-
-      const fechar = () => {
-        toast.classList.add('saindo');
-        setTimeout(() => toast.remove(), 250);
-      };
-
-      toast.querySelector('.toast-fechar').addEventListener('click', fechar);
-      setTimeout(fechar, 3200);
+  if (uidUrl) {
+    if (blocoLoginPadrao) blocoLoginPadrao.style.display = "none";
+    
+    const perfil = await buscarPerfilPorId(uidUrl);
+    if (perfil) {
+      exibirPerfil(perfil, ptsUrl);
+      return;
     }
+  }
 
-    // Controle do Drawer Lateral
-    const btnHamburguer = document.getElementById("btnHamburguer");
-    const btnFechar = document.getElementById("btnFechar");
-    const overlay = document.getElementById("overlay");
-    const drawer = document.getElementById("drawer");
+  // Garante a URL totalmente limpa se não houver perfil
+  if (window.location.search) {
+    window.history.replaceState(null, "", window.location.origin + window.location.pathname);
+  }
+  deslogarEVoltarInicio();
+}
+
+verificarSessaoInicial();
+
+window.addEventListener("pageshow", () => {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("uid")) {
+    verificarSessaoInicial();
+  }
+});
+
+
+if (btnPerfilSair) {
+  btnPerfilSair.addEventListener("click", () => {
+    deslogarEVoltarInicio();
+    
+    // Remove todos os parâmetros da URL de forma canônica e definitiva na pilha de navegação
+    const urlLimpa = window.location.origin + window.location.pathname;
+    window.history.replaceState(null, "", urlLimpa);
+    
+    showToast("Você saiu da conta.", "info");
+  });
+}
+
+if (btnPerfilZerarRecorde) {
+  btnPerfilZerarRecorde.addEventListener("click", async () => {
+    if (!usuarioAtivo || !usuarioAtivo.id) return;
+    usuarioAtivo.recorde = 0;
+    atualizarRecordeVisual(0);
+    
+    // Zera também no Firestore de forma persistente
+    try {
+      const { doc, updateDoc, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
+      const { db } = await import("./firebaseConfig.js");
+      await updateDoc(doc(db, "usuarios", usuarioAtivo.id), {
+        recorde: 0,
+        ultimoAcesso: serverTimestamp()
+      });
+      showToast("Recordes zerados com sucesso!", "sucesso");
+    } catch (e) {
+      showToast("Recorde zerado da sessão.", "alerta");
+    }
+  });
+}
+
+// Controle do Drawer Lateral
+const btnHamburguer = document.getElementById("btnHamburguer");
+const btnFechar = document.getElementById("btnFechar");
+const overlay = document.getElementById("overlay");
+const drawer = document.getElementById("drawer");
 
 function abrirMenu() {
-  drawer.classList.add("ativo");
+  if (drawer) drawer.classList.add("ativo");
+  if (overlay) overlay.classList.add("ativo");
 }
-    function fecharMenu() {
-      drawer.classList.remove("ativo");
-      overlay.classList.remove("ativo");
-    }
+function fecharMenu() {
+  if (drawer) drawer.classList.remove("ativo");
+  if (overlay) overlay.classList.remove("ativo");
+}
 
-    btnHamburguer.addEventListener("click", abrirMenu);
-    btnFechar.addEventListener("click", fecharMenu);
-    overlay.addEventListener("click", fecharMenu);
+if (btnHamburguer) btnHamburguer.addEventListener("click", abrirMenu);
+if (btnFechar) btnFechar.addEventListener("click", fecharMenu);
+if (overlay) overlay.addEventListener("click", fecharMenu);
 
-    // Sanfona de Operações
-    const btnToggleModos = document.getElementById("btnToggleModos");
-    const submenuModos = document.getElementById("submenuModos");
-    const setaModos = document.getElementById("setaModos");
-    const btnsOperacao = document.querySelectorAll(".btn-operacao");
+// Sanfona de Operações
+const btnToggleModos = document.getElementById("btnToggleModos");
+const submenuModos = document.getElementById("submenuModos");
+const setaModos = document.getElementById("setaModos");
+const btnsOperacao = document.querySelectorAll(".btn-operacao");
 
-    btnToggleModos.addEventListener("click", function() {
-      const estaAberto = submenuModos.classList.toggle("aberto");
-      btnToggleModos.classList.toggle("aberto", estaAberto);
-      setaModos.style.transform = estaAberto ? "rotate(180deg)" : "rotate(0deg)";
+if (btnToggleModos && submenuModos) {
+  btnToggleModos.addEventListener("click", function() {
+    const estaAberto = submenuModos.classList.toggle("aberto");
+    btnToggleModos.classList.toggle("aberto", estaAberto);
+    if (setaModos) setaModos.style.transform = estaAberto ? "rotate(180deg)" : "rotate(0deg)";
+  });
+}
+
+btnsOperacao.forEach(function(btn) {
+  btn.addEventListener("click", function() {
+    btnsOperacao.forEach(function(b) {
+      b.classList.remove("ativo");
+      const tag = b.querySelector(".badge-tag");
+      if (tag) tag.remove();
     });
 
-    // Seleção de Operação com persistência
-    btnsOperacao.forEach(function(btn) {
-      if (btn.dataset.modo === operacaoSalva) {
-        btn.classList.add("ativo");
-        if (!btn.querySelector(".badge-tag")) {
-          btn.insertAdjacentHTML("beforeend", '<span class="badge-tag">Ativo</span>');
-        }
-      } else {
-        btn.classList.remove("ativo");
-        const tag = btn.querySelector(".badge-tag");
-        if (tag) tag.remove();
-      }
-
-      btn.addEventListener("click", function() {
-        btnsOperacao.forEach(function(b) {
-          b.classList.remove("ativo");
-          const tag = b.querySelector(".badge-tag");
-          if (tag) tag.remove();
-        });
-
-        btn.classList.add("ativo");
-        btn.insertAdjacentHTML("beforeend", '<span class="badge-tag">Ativo</span>');
+    btn.classList.add("ativo");
+    btn.insertAdjacentHTML("beforeend", '<span class="badge-tag">Ativo</span>');
     operacaoSalva = btn.dataset.modo;
-        showToast(`Operação alterada para: ${btn.querySelector('span').textContent}`, 'sucesso');
-      });
-    });
+    showToast(`Operação alterada para: ${btn.querySelector('span').textContent}`, 'sucesso');
+  });
+});
 
-    // Gerenciador de Modais
-    function abrirModal(id) {
-      fecharMenu();
-      const modal = document.getElementById(id);
-      if (modal) modal.classList.add("ativo");
-    }
-
-    function fecharModal(id) {
-      const modal = document.getElementById(id);
-      if (modal) modal.classList.remove("ativo");
-    }
-
-    document.querySelectorAll("[data-fechar]").forEach(btn => {
-      btn.addEventListener("click", () => fecharModal(btn.dataset.fechar));
-    });
-
-    document.querySelectorAll(".modal-backdrop").forEach(backdrop => {
-      backdrop.addEventListener("click", (e) => {
-        if (e.target === backdrop) backdrop.classList.remove("ativo");
-      });
-    });
-
-    // Eventos dos botões do Menu Lateral
-    document.getElementById("btnAbrirRegras").addEventListener("click", () => abrirModal("modalRegras"));
-    document.getElementById("btnAbrirDificuldade").addEventListener("click", () => abrirModal("modalDificuldade"));
-    document.getElementById("btnAbrirRecordes").addEventListener("click", () => abrirModal("modalRecordes"));
-
-    document.getElementById("btnDesafioDiario").addEventListener("click", () => {
-      fecharMenu();
-      showToast("Desafio Diário carregado: ganhe 2x de pontuação hoje!", "sucesso");
-    });
-
-    document.getElementById("btnTreinoCorporativo").addEventListener("click", () => {
-      fecharMenu();
-      showToast("Modo Agilidade Cognitiva configurado para métricas de foco.", "info");
-    });
-
-    document.getElementById("btnAbrirConfig").addEventListener("click", () => {
-      fecharMenu();
-      showToast("Painel de áudio e gráficos em breve.", "info");
-    });
-
-    // Lógica da Seleção de Dificuldade
-    const cardsDificuldade = document.querySelectorAll(".card-dif");
-    let nivelSelecionado = dificuldadeSalva;
-
-    function atualizarBadgeDificuldade(nivel) {
-      const badge = document.getElementById("badgeDificuldadeAtual");
-      const rankingTxt = document.getElementById("rankingDificuldadeTxt");
-      const mapaNomes = {
-        facil: 'Fácil',
-        medio: 'Médio',
-        dificil: 'Difícil',
-        frenesi: 'Frenesi'
-      };
-      const label = mapaNomes[nivel] || 'Fácil';
-      if (badge) badge.textContent = label;
-      if (rankingTxt) rankingTxt.textContent = `Nível: ${label}`;
-    }
-
-    cardsDificuldade.forEach(card => {
-      if (card.dataset.nivel === dificuldadeSalva) {
-        card.classList.add("ativo");
-      } else {
-        card.classList.remove("ativo");
-      }
-
-      card.addEventListener("click", () => {
-        cardsDificuldade.forEach(c => c.classList.remove("ativo"));
-        card.classList.add("ativo");
-        nivelSelecionado = card.dataset.nivel;
-      });
-    });
-
-    atualizarBadgeDificuldade(dificuldadeSalva);
-
-document.getElementById("btnSalvarDificuldade").addEventListener("click", () => {
-      dificuldadeSalva = nivelSelecionado;
-      atualizarBadgeDificuldade(nivelSelecionado);
-      fecharModal("modalDificuldade");
-      showToast("Nível de desafio atualizado com sucesso!", "sucesso");
-    });
-
-    // Zerar Recorde
- 
-document.getElementById("btnLimparRecordes").addEventListener("click", () => {
-      recordeSalvo = "0";
-      document.getElementById("recordeMenuTxt").textContent = "0";
-      document.getElementById("recordeModalTxt").textContent = "0";
-      document.getElementById("rankingPontosTxt").textContent = "0 pts";
-      showToast("Recordes limpos da sessão.", "alerta");
-    });
-
-    // Eventos dos novos botões com ShowToast
-    document.getElementById("btnBatalhaEquipes").addEventListener("click", () => {
-      fecharMenu();
-      showToast("Modo Versus Corporativo: crie salas de batalha rápida para o seu time!", "sucesso");
-    });
-
-    document.getElementById("btnOnboarding").addEventListener("click", () => {
-      fecharMenu();
-      showToast("Módulo Didático: aprenda raciocínio ágil passo a passo sem penalidades.", "info");
-    });
-
-    document.getElementById("btnModoPressao").addEventListener("click", () => {
-      fecharMenu();
-      showToast("Atenção: Modo Sob Pressão reduz o tempo de resposta pela metade!", "alerta");
-    });
-
-    document.getElementById("btnAnalyticsRH").addEventListener("click", () => {
-      fecharMenu();
-      showToast("Métricas da Empresa: precisão, tempo médio e histórico de raciocínio.", "info");
-    });
-
-    document.getElementById("btnMascotes").addEventListener("click", () => {
-      fecharMenu();
-      showToast("Seleção de Avatares: troque a reação visual do emoji durante o cálculo!", "sucesso");
-    });
-
-
-
-    // Sanitização em tempo real dos campos de entrada
-    const inputApelido = document.getElementById("inputApelido");
-    const inputPin = document.getElementById("inputPin");
-    const btnIniciarJogo = document.getElementById("btnIniciarJogo");
-
-    // Preenche com o último apelido usado no aparelho, se houver
-inputApelido.addEventListener("input", function() {
-      this.value = this.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-    });
-
-    inputPin.addEventListener("input", function() {
-      this.value = this.value.replace(/\D/g, '');
-    });
-
-    // Ação ao clicar em Jogar integrada estritamente com o Firebase
-    btnIniciarJogo.addEventListener("click", async function(e) {
-      e.preventDefault();
-      const nick = inputApelido.value.trim();
-      const pin = inputPin.value.trim();
-
-      if (nick.length < 3) {
-        showToast("Digite um apelido com no mínimo 3 caracteres.", "alerta");
-        inputApelido.focus();
-        return;
-      }
-
-      if (pin.length < 4) {
-        showToast("O PIN de segurança deve ter pelo menos 4 dígitos.", "alerta");
-        inputPin.focus();
-        return;
-      }
-
-      btnIniciarJogo.disabled = true;
-      btnIniciarJogo.textContent = "Carregando...";
-
-      try {
-        const emojiIdAtual = idEmojiSelecionado || "grinning_eyes";
-        const svgAtual = svgCustomizadoSalvo || bancoSvgEmojis[emojiIdAtual] || "";
-
-        const resposta = await autenticarEJogar(nick, pin, emojiIdAtual, svgAtual);
-
-        if (!resposta.sucesso) {
-          showToast(resposta.mensagem, "alerta");
-          btnIniciarJogo.disabled = false;
-          btnIniciarJogo.textContent = "Jogar";
-          inputPin.focus();
-          return;
-        }
-
-        showToast(resposta.mensagem, "sucesso");
-
-        // Transfere o UID do Firebase pela URL, sem usar localStorage
-        setTimeout(() => {
-          window.location.href = `ambiente.html?uid=${encodeURIComponent(resposta.id)}`;
-        }, 500);
-      } catch (erro) {
-        console.error("Erro na autenticação:", erro);
-        showToast("Erro de autenticação: " + (erro.message || "Tente novamente"), "alerta");
-        btnIniciarJogo.disabled = false;
-        btnIniciarJogo.textContent = "Jogar";
-      }
-    });
-
-
-
-
-
-
-
-
-
-
-
-
-    ;
-    // Controle do Painel Lateral do Ranking (TOP 50)
-  
-    const painelRanking = document.getElementById("painelRanking");
-    const btnFecharRanking = document.getElementById("btnFecharRanking");
-
- function abrirRanking() {
+// Gerenciador de Modais
+function abrirModal(id) {
   fecharMenu();
-  painelRanking.classList.add("ativo");
+  const modal = document.getElementById(id);
+  if (modal) modal.classList.add("ativo");
 }
-    function fecharRanking() {
-      painelRanking.classList.remove("ativo");
-      overlay.classList.remove("ativo");
-    }
 
-    if (btnAbrirLeaderboard) {
-      btnAbrirLeaderboard.addEventListener("click", abrirRanking);
-    }
-    if (btnFecharRanking) {
-      btnFecharRanking.addEventListener("click", fecharRanking);
-    }
+function fecharModal(id) {
+  const modal = document.getElementById(id);
+  if (modal) modal.classList.remove("ativo");
+}
 
-    // Fechar ao clicar no overlay de fundo escurecido
-    overlay.addEventListener("click", () => {
-      fecharMenu();
-      fecharRanking();
-    });
-// ==========================================
-    // Fluxo da Galeria e Editor de Cores do Avatar
-    // ==========================================
-    const btnTrocarEmoji = document.getElementById("btnTrocarEmoji");
-    const painelSelecaoEmoji = document.getElementById("painelSelecaoEmoji");
-    const btnFecharPainelEmoji = document.getElementById("btnFecharPainelEmoji");
-    const gradeEmojis = document.getElementById("gradeEmojis");
-    const emojiPreviewBox = document.getElementById("emojiPreviewBox");
-    const inputBuscaEmoji = document.getElementById("inputBuscaEmoji");
+document.querySelectorAll("[data-fechar]").forEach(btn => {
+  btn.addEventListener("click", () => fecharModal(btn.dataset.fechar));
+});
 
-    // Elementos do Editor
-    const painelEditorCores = document.getElementById("painelEditorCores");
-    const btnFecharEditor = document.getElementById("btnFecharEditor");
-    const btnVoltarGaleria = document.getElementById("btnVoltarGaleria");
-    const editorPreviewBox = document.getElementById("editorPreviewBox");
-    const gradeCoresEditor = document.getElementById("gradeCoresEditor");
-    const btnConfirmarAvatar = document.getElementById("btnConfirmarAvatar");
+document.querySelectorAll(".modal-backdrop").forEach(backdrop => {
+  backdrop.addEventListener("click", (e) => {
+    if (e.target === backdrop) backdrop.classList.remove("ativo");
+  });
+});
 
- let idEmojiSelecionado = "grinning_eyes";
-    let svgCustomizadoSalvo = "";
-    function carregarEmojiPrincipal() {
-      if (!emojiPreviewBox) return;
-      if (svgCustomizadoSalvo) {
-        emojiPreviewBox.innerHTML = svgCustomizadoSalvo;
-      } else {
-        emojiPreviewBox.innerHTML = bancoSvgEmojis[idEmojiSelecionado] || Object.values(bancoSvgEmojis)[0] || "";
+// Eventos dos botões do Menu Lateral
+const bindClick = (id, fn) => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener("click", fn);
+};
+
+bindClick("btnAbrirRegras", () => abrirModal("modalRegras"));
+bindClick("btnAbrirDificuldade", () => abrirModal("modalDificuldade"));
+
+// Tabela de Recordes no Menu: Se já tiver usuário identificado, vai para o bloco de rascunho
+bindClick("btnAbrirRecordes", () => {
+  fecharMenu();
+  if (usuarioAtivo) {
+    exibirPerfil(usuarioAtivo);
+  } else {
+    abrirModal("modalRecordes");
+  }
+});
+
+bindClick("btnDesafioDiario", () => { fecharMenu(); showToast("Desafio Diário carregado!", "sucesso"); });
+bindClick("btnTreinoCorporativo", () => { fecharMenu(); showToast("Modo Agilidade Cognitiva ativado.", "info"); });
+bindClick("btnAbrirConfig", () => { fecharMenu(); showToast("Configurações em breve.", "info"); });
+bindClick("btnBatalhaEquipes", () => { fecharMenu(); showToast("Modo Versus Corporativo em breve!", "sucesso"); });
+bindClick("btnOnboarding", () => { fecharMenu(); showToast("Treino Didático carregado.", "info"); });
+bindClick("btnModoPressao", () => { fecharMenu(); showToast("Atenção: Modo Sob Pressão ativo!", "alerta"); });
+bindClick("btnAnalyticsRH", () => { fecharMenu(); showToast("Métricas de raciocínio ativadas.", "info"); });
+bindClick("btnMascotes", () => { fecharMenu(); showToast("Escolha seu avatar clicando na logo!", "sucesso"); });
+
+// Lógica de Dificuldade
+const cardsDificuldade = document.querySelectorAll(".card-dif");
+let nivelSelecionado = dificuldadeSalva;
+
+function atualizarBadgeDificuldade(nivel) {
+  const badge = document.getElementById("badgeDificuldadeAtual");
+  const rankingTxt = document.getElementById("rankingDificuldadeTxt");
+  const mapaNomes = { facil: 'Fácil', medio: 'Médio', dificil: 'Difícil', frenesi: 'Frenesi' };
+  const label = mapaNomes[nivel] || 'Fácil';
+  if (badge) badge.textContent = label;
+  if (rankingTxt) rankingTxt.textContent = `Nível: ${label}`;
+  if (perfilStatModoTxt) perfilStatModoTxt.textContent = `Nível: ${label}`;
+}
+
+cardsDificuldade.forEach(card => {
+  card.addEventListener("click", () => {
+    cardsDificuldade.forEach(c => c.classList.remove("ativo"));
+    card.classList.add("ativo");
+    nivelSelecionado = card.dataset.nivel;
+  });
+});
+
+bindClick("btnSalvarDificuldade", () => {
+  dificuldadeSalva = nivelSelecionado;
+  atualizarBadgeDificuldade(nivelSelecionado);
+  fecharModal("modalDificuldade");
+  showToast("Nível de desafio atualizado!", "sucesso");
+});
+
+bindClick("btnLimparRecordes", () => {
+  atualizarRecordeVisual(0);
+  showToast("Recorde redefinido para esta sessão.", "alerta");
+});
+
+// Sanitização e Leitura Dinâmica do Jogador
+const inputApelido = document.getElementById("inputApelido");
+const inputPin = document.getElementById("inputPin");
+const btnIniciarJogo = document.getElementById("btnIniciarJogo");
+const emojiPreviewBox = document.getElementById("emojiPreviewBox");
+
+
+
+inputApelido.addEventListener("input", function() {
+  this.value = this.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+  checarPerfilDinamico();
+});
+
+inputPin.addEventListener("input", function() {
+  if (this.value.length > 8) {
+    this.value = this.value.slice(0, 8);
+  }
+  checarPerfilDinamico();
+});
+
+
+let debounceTimer = null;
+function checarPerfilDinamico() {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(async () => {
+    const nick = inputApelido.value.trim();
+    const pin = inputPin.value.trim();
+    if (nick.length >= 3 && pin.length >= 4) {
+      const perfil = await buscarPerfilExistente(nick, pin);
+      if (perfil) {
+        // Anexa o UID à URL sem recarregar a página
+        const novaUrl = `${window.location.origin}${window.location.pathname}?uid=${encodeURIComponent(perfil.id)}`;
+        window.history.replaceState({ uid: perfil.id }, "", novaUrl);
+
+        exibirPerfil(perfil);
+        showToast(`Bem-vindo de volta, ${perfil.apelido}!`, "sucesso");
       }
     }
+  }, 400);
+}
 
-    //carregarEmojiPrincipal();
+// Iniciar Jogo (Tanto da tela inicial quanto do card logado)
+// Iniciar Jogo com sanitização defensiva contra undefined
+async function iniciarPartida(nick, pin, btnAlvo) {
+  const nickSeguro = String(nick || "").trim();
+  const pinSeguro = String(pin || "").trim();
 
-    function abrirGaleria() {
-      if (inputBuscaEmoji) inputBuscaEmoji.value = "";
-      gradeEmojis.innerHTML = "";
-      inicializarCatalogo("");
+  if (nickSeguro.length < 3) {
+    showToast("Digite um apelido com no mínimo 3 caracteres.", "alerta");
+    if (inputApelido) inputApelido.focus();
+    return;
+  }
+
+  if (pinSeguro.length < 4) {
+    showToast("O PIN de segurança deve ter pelo menos 4 caracteres.", "alerta");
+    if (inputPin) inputPin.focus();
+    return;
+  }
+
+  btnAlvo.disabled = true;
+  btnAlvo.textContent = "Carregando...";
+
+  try {
+    const emojiIdAtual = (usuarioAtivo && usuarioAtivo.emojiId) || idEmojiSelecionado || "grinning_eyes";
+    const svgAtual = svgCustomizadoSalvo || (usuarioAtivo && usuarioAtivo.emojiSvg) || bancoSvgEmojis[emojiIdAtual] || "";
+
+    const resposta = await autenticarEJogar(nickSeguro, pinSeguro, emojiIdAtual, svgAtual);
+
+    if (!resposta.sucesso) {
+      showToast(resposta.mensagem, "alerta");
+      btnAlvo.disabled = false;
+      btnAlvo.textContent = "Jogar";
+      return;
+    }
+
+    showToast(resposta.mensagem, "sucesso");
+
+    setTimeout(() => {
+      window.location.href = `ambiente.html?uid=${encodeURIComponent(resposta.id)}`;
+    }, 450);
+  } catch (erro) {
+    console.error("Erro na autenticação:", erro);
+    showToast("Erro: " + (erro.message || "Tente novamente"), "alerta");
+    btnAlvo.disabled = false;
+    btnAlvo.textContent = "Jogar";
+  }
+}
+
+if (btnPerfilJogar) {
+  btnPerfilJogar.addEventListener("click", async (e) => {
+    e.preventDefault();
+    if (!usuarioAtivo || !usuarioAtivo.id) return;
+
+    btnPerfilJogar.disabled = true;
+    btnPerfilJogar.textContent = "Entrando...";
+
+    try {
+      // Se o usuário personalizou um novo avatar enquanto estava no card, salva no banco
+      if (svgCustomizadoSalvo && svgCustomizadoSalvo !== usuarioAtivo.emojiSvg) {
+        await autenticarEJogar(
+          usuarioAtivo.apelido, 
+          usuarioAtivo.pin, 
+          idEmojiSelecionado || usuarioAtivo.emojiId, 
+          svgCustomizadoSalvo
+        );
+      }
+
+      // Redireciona imediatamente para o ambiente do jogo
+      window.location.href = `ambiente.html?uid=${encodeURIComponent(usuarioAtivo.id)}`;
+    } catch (err) {
+      console.warn("Aviso ao sincronizar avatar:", err);
+      // Mesmo com aviso de rede, entra no jogo com o ID que já está validado
+      window.location.href = `ambiente.html?uid=${encodeURIComponent(usuarioAtivo.id)}`;
+    }
+  });
+}
+
+btnIniciarJogo.addEventListener("click", (e) => {
+  e.preventDefault();
+  iniciarPartida(inputApelido.value.trim(), inputPin.value.trim(), btnIniciarJogo);
+});
+
+
+
+// Ranking Lateral TOP 50
+const painelRanking = document.getElementById("painelRanking");
+const btnFecharRanking = document.getElementById("btnFecharRanking");
+const btnAbrirLeaderboard = document.getElementById("btnAbrirLeaderboard");
+
+function abrirRanking() {
+  fecharMenu();
+  if (painelRanking) painelRanking.classList.add("ativo");
+  if (overlay) overlay.classList.add("ativo");
+}
+function fecharRanking() {
+  if (painelRanking) painelRanking.classList.remove("ativo");
+  if (overlay) overlay.classList.remove("ativo");
+}
+
+if (btnAbrirLeaderboard) btnAbrirLeaderboard.addEventListener("click", abrirRanking);
+if (btnFecharRanking) btnFecharRanking.addEventListener("click", fecharRanking);
+
+// Galeria de Emojis e Editor
+const btnTrocarEmoji = document.getElementById("btnTrocarEmoji");
+const btnTrocarEmojiLogado = document.getElementById("btnTrocarEmojiLogado");
+const painelSelecaoEmoji = document.getElementById("painelSelecaoEmoji");
+const btnFecharPainelEmoji = document.getElementById("btnFecharPainelEmoji");
+const gradeEmojis = document.getElementById("gradeEmojis");
+const inputBuscaEmoji = document.getElementById("inputBuscaEmoji");
+
+const painelEditorCores = document.getElementById("painelEditorCores");
+const btnFecharEditor = document.getElementById("btnFecharEditor");
+const btnVoltarGaleria = document.getElementById("btnVoltarGaleria");
+const editorPreviewBox = document.getElementById("editorPreviewBox");
+const gradeCoresEditor = document.getElementById("gradeCoresEditor");
+const btnConfirmarAvatar = document.getElementById("btnConfirmarAvatar");
+
+function abrirGaleria() {
+  if (inputBuscaEmoji) inputBuscaEmoji.value = "";
+  if (gradeEmojis) {
+    gradeEmojis.innerHTML = "";
+    inicializarCatalogo("");
+    carregarMaisEmojis(gradeEmojis, idEmojiSelecionado);
+  }
+  if (painelSelecaoEmoji) painelSelecaoEmoji.classList.add("ativo");
+  if (painelEditorCores) painelEditorCores.classList.remove("ativo");
+}
+
+if (btnTrocarEmoji) btnTrocarEmoji.addEventListener("click", abrirGaleria);
+if (btnTrocarEmojiLogado) btnTrocarEmojiLogado.addEventListener("click", abrirGaleria);
+if (btnFecharPainelEmoji) btnFecharPainelEmoji.addEventListener("click", () => painelSelecaoEmoji.classList.remove("ativo"));
+
+if (gradeEmojis) {
+  gradeEmojis.addEventListener("scroll", () => {
+    if (gradeEmojis.scrollTop + gradeEmojis.clientHeight >= gradeEmojis.scrollHeight - 40) {
       carregarMaisEmojis(gradeEmojis, idEmojiSelecionado);
-      painelSelecaoEmoji.classList.add("ativo");
-      painelEditorCores.classList.remove("ativo");
     }
+  });
 
-    if (btnTrocarEmoji) btnTrocarEmoji.addEventListener("click", abrirGaleria);
-    if (btnFecharPainelEmoji) btnFecharPainelEmoji.addEventListener("click", () => painelSelecaoEmoji.classList.remove("ativo"));
+  gradeEmojis.addEventListener("click", (e) => {
+    const item = e.target.closest(".emoji-item");
+    if (!item) return;
 
-    // Scroll infinito da galeria
-    if (gradeEmojis) {
-      gradeEmojis.addEventListener("scroll", () => {
-        if (gradeEmojis.scrollTop + gradeEmojis.clientHeight >= gradeEmojis.scrollHeight - 40) {
-          carregarMaisEmojis(gradeEmojis, idEmojiSelecionado);
-        }
-      });
+    idEmojiSelecionado = item.dataset.id;
+    const svgBase = bancoSvgEmojis[idEmojiSelecionado];
 
-      // Clique em um emoji: fecha a galeria e abre o editor de cores
-      gradeEmojis.addEventListener("click", (e) => {
-        const item = e.target.closest(".emoji-item");
-        if (!item) return;
+    painelSelecaoEmoji.classList.remove("ativo");
+    painelEditorCores.classList.add("ativo");
 
-        idEmojiSelecionado = item.dataset.id;
-        const svgBase = bancoSvgEmojis[idEmojiSelecionado];
+    renderizarEditorCores(svgBase, gradeCoresEditor, editorPreviewBox, (svgAtualizado) => {
+      if (emojiPreviewBox) emojiPreviewBox.innerHTML = svgAtualizado;
+      if (perfilCardEmojiBox) perfilCardEmojiBox.innerHTML = svgAtualizado;
+    });
+  });
+}
 
-        painelSelecaoEmoji.classList.remove("ativo");
-        painelEditorCores.classList.add("ativo");
+if (inputBuscaEmoji) {
+  inputBuscaEmoji.addEventListener("input", (e) => {
+    gradeEmojis.innerHTML = "";
+    inicializarCatalogo(e.target.value.trim());
+    carregarMaisEmojis(gradeEmojis, idEmojiSelecionado);
+  });
+}
 
-        // Abre o editor com as cores extraídas do SVG escolhido
-        renderizarEditorCores(svgBase, gradeCoresEditor, editorPreviewBox, (svgAtualizado) => {
-          // Callback a cada troca de cor: atualiza também a tela principal se desejar
-          emojiPreviewBox.innerHTML = svgAtualizado;
-        });
-      });
-    }
+if (btnVoltarGaleria) {
+  btnVoltarGaleria.addEventListener("click", () => {
+    painelEditorCores.classList.remove("ativo");
+    painelSelecaoEmoji.classList.add("ativo");
+  });
+}
 
-    // Busca na galeria
-    if (inputBuscaEmoji) {
-      inputBuscaEmoji.addEventListener("input", (e) => {
-        gradeEmojis.innerHTML = "";
-        inicializarCatalogo(e.target.value.trim());
-        carregarMaisEmojis(gradeEmojis, idEmojiSelecionado);
-      });
-    }
+if (btnFecharEditor) {
+  btnFecharEditor.addEventListener("click", () => {
+    painelEditorCores.classList.remove("ativo");
+  });
+}
 
-    // Voltar do editor para a galeria
-    if (btnVoltarGaleria) {
-      btnVoltarGaleria.addEventListener("click", () => {
-        painelEditorCores.classList.remove("ativo");
-        painelSelecaoEmoji.classList.add("ativo");
-      });
-    }
-
-    // Fechar o editor
-    if (btnFecharEditor) {
-      btnFecharEditor.addEventListener("click", () => {
-        painelEditorCores.classList.remove("ativo");
-        carregarEmojiPrincipal(); // Reverte caso não tenha confirmado
-      });
-    }
-
-    // Confirmar e salvar a personalização
-    if (btnConfirmarAvatar) {
-      btnConfirmarAvatar.addEventListener("click", () => {
-        const svgFinal = obterSvgCustomizado();
-        svgCustomizadoSalvo = svgFinal;
-       if (btnConfirmarAvatar) {
-      btnConfirmarAvatar.addEventListener("click", () => {
-        const svgFinal = obterSvgCustomizado();
-        svgCustomizadoSalvo = svgFinal;
-        emojiPreviewBox.innerHTML = svgFinal;
-        painelEditorCores.classList.remove("ativo");
-        showToast("Avatar personalizado com sucesso!", "sucesso");
-      });
-    }
-        emojiPreviewBox.innerHTML = svgFinal;
-        painelEditorCores.classList.remove("ativo");
-        showToast("Avatar personalizado com sucesso!", "sucesso");
-      });
-    }
+if (btnConfirmarAvatar) {
+  btnConfirmarAvatar.addEventListener("click", () => {
+    const svgFinal = obterSvgCustomizado();
+    svgCustomizadoSalvo = svgFinal;
+    if (emojiPreviewBox) emojiPreviewBox.innerHTML = svgFinal;
+    if (perfilCardEmojiBox) perfilCardEmojiBox.innerHTML = svgFinal;
+    if (usuarioAtivo) usuarioAtivo.emojiSvg = svgFinal;
+    painelEditorCores.classList.remove("ativo");
+    showToast("Avatar personalizado!", "sucesso");
+  });
+}

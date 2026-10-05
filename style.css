@@ -1,6 +1,6 @@
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
-body { background: #080d14; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none; width: 100vw; height: 100vh; height: 100dvh; position: relative; margin: 0; padding: 0; }
+body { background: #080d14; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none; display: flex; align-items: center; justify-content: center; width: 100vw; height: 100vh; height: 100dvh; position: relative; margin: 0; padding: 0; }
 /* ===============================
    ELEMENTOS DE FUNDO & EFEITOS
 =============================== */
@@ -53,7 +53,8 @@ body { background: #080d14; overflow: hidden; font-family: 'Segoe UI', Tahoma, G
 /* ===============================
    PALCO CENTRAL RESPONSIVO
 =============================== */
-.menu-stage { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 600px; margin: auto; padding: 50px 10px 20px; }
+.menu-stage { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 600px; margin: auto; padding: 0 16px; }
+
 .emoji-preview { width: clamp(80px, 18vw, 115px); height: clamp(80px, 18vw, 115px); margin-bottom: 8px; filter: drop-shadow(0 14px 22px #000000a6); animation: flutuar 3s ease-in-out infinite alternate; }
 /*emoji do index */
 .emoji-preview-svg { width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; animation: flutuar 3s ease-in-out infinite alternate; filter: drop-shadow(0 14px 22px #000000a6); }
@@ -191,7 +192,9 @@ body { background: #080d14; overflow: hidden; font-family: 'Segoe UI', Tahoma, G
 #mathInput { pointer-events: all; width: 70px; height: 32px; background: #09131d; border: 2px solid #00e5ff; border-radius: 6px; color: #fff; font-size: 16px; font-weight: bold; text-align: center; outline: none; box-shadow: 0 0 10px #00e5ff66; transition: border-color 0.15s, box-shadow 0.15s; }
 #mathInput.erro { border-color: #f36; box-shadow: 0 0 12px #ff336699; color: #f36; }
 #mathInput::placeholder { color: #3b5266; }
-#hud { position: absolute; top: 16px; left: 16px; color: #fff; font-size: clamp(13px, 3.5vw, 17px); font-weight: bold; background: #0d1722cc; padding: 8px 14px; border-radius: 8px; border: 1px solid #1e3144; pointer-events: none; z-index: 5; }
+
+#hud { position: absolute; top: 16px; left: 16px; color: #fff; font-size: clamp(13px, 3.5vw, 17px); font-weight: bold; background: #0d1722cc; padding: 8px 14px; border-radius: 8px; border: 1px solid #1e3144; pointer-events: all; z-index: 15; display: flex; align-items: center; }
+
 #gameOverModal { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh; background: #0b1118e0; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 14px; z-index: 20; padding: 16px; text-align: center; }
 #gameOverModal h1 { color: #f36; font-size: clamp(28px, 8vw, 40px); letter-spacing: 2px; text-shadow: 0 0 16px #ff336688; }
 #gameOverModal p { color: #fff; font-size: clamp(16px, 4.5vw, 20px); }
@@ -332,3 +335,33 @@ body { background: #080d14; overflow: hidden; font-family: 'Segoe UI', Tahoma, G
 .btn-confirmar-avatar { width: 160px; height: 36px; background: #00e5ff; color: #080d14; border: none; border-radius: 8px; font-size: 13px; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: transform 0.1s, background 0.15s; box-shadow: 0 0 12px #00e5ff4d; }
 .btn-confirmar-avatar:hover { background: #33ebff; }
 .btn-confirmar-avatar:active { transform: scale(0.96); }
+
+
+
+
+/* Card do Perfil Logado */
+.bloco-apresentacao { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; }
+.bloco-perfil-card { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 480px; }
+.perfil-card-apelido { font-size: clamp(26px, 6vw, 34px); font-weight: 900; color: #ffffff; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; text-shadow: 0 4px 12px #000000cc; }
+.perfil-avatar-wrap { margin-bottom: 12px; }
+.perfil-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; margin-bottom: 10px; }
+.perfil-stat-item { background: #07121c; border: 1px solid #142a3e; border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; justify-content: center; }
+.perfil-stat-label { font-size: 10px; color: #7f95ac; text-transform: uppercase; font-weight: 700; }
+.perfil-stat-valor { font-size: 26px; font-weight: 900; color: #00e5ff; line-height: 1.1; margin: 3px 0; }
+.perfil-stat-sub { font-size: 9.5px; color: #4e657a; }
+.perfil-stat-topo { display: flex; align-items: center; gap: 8px; width: 100%; }
+.perfil-badge-pos { width: 26px; height: 26px; border-radius: 6px; background: #f1c40f22; color: #f1c40f; font-weight: 900; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.perfil-stat-info { display: flex; flex-direction: column; flex: 1; }
+.perfil-stat-titulo { font-size: 12px; font-weight: 700; color: #eaf2fa; }
+.perfil-stat-modo { font-size: 10px; color: #6e8499; }
+.perfil-stat-pontos { font-size: 14px; font-weight: 800; color: #00e5ff; }
+.perfil-acoes-secundarias { display: flex; align-items: center; justify-content: center; margin-bottom: 16px; width: 100%; }
+.btn-perfil-zerar { background: #0a1622; color: #ff3366; border: 1px solid #ff33664d; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 6px; cursor: pointer; transition: background 0.15s; }
+.btn-perfil-zerar:hover { background: #ff336622; }
+.perfil-botoes-principais { display: flex; align-items: center; justify-content: center; gap: 14px; width: 100%; }
+.btn-perfil-sair { display: inline-flex; align-items: center; justify-content: center; width: clamp(100px, 26vw, 130px); height: 50px; background: #27ae60; color: #ffffff; font-size: 19px; font-weight: 800; border-radius: 25px; border: 1px solid #ffffff33; box-shadow: inset 0 3px 2px #ffffff66, 0 5px 0 #186839, 0 12px 20px #0000008c; cursor: pointer; transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s; }
+.btn-perfil-sair:hover { background: #2ecc71; }
+.btn-perfil-sair:active { transform: translateY(4px); box-shadow: inset 0 1px 1px #ffffff40, 0 1px 0 #186839, 0 4px 10px #00000066; }
+@media (max-width: 480px) {
+  .perfil-stats-grid { grid-template-columns: 1fr; }
+}

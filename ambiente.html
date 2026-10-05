@@ -8,7 +8,11 @@
 </head>
 <body>
 
-  <div id="hud">PONTOS: <span id="pontosTxt">0</span> | RECORDE: <span id="recordeTxt">0</span></div>
+  <!-- HUD superior com pontuação, recorde e botão de voltar -->
+  <div id="hud">
+    <span>PONTOS: <span id="pontosTxt">0</span> | RECORDE: <span id="recordeTxt">0</span></span>
+    <button id="btnVoltarMenu" type="button" style="background: #172b3c; border: 1px solid #00e5ff66; color: #00e5ff; font-weight: bold; border-radius: 6px; padding: 5px 12px; cursor: pointer; margin-left: 14px;">MENU</button>
+  </div>
 
   <!-- Caixa de texto acoplada à cabeça (centralizada) -->
   <div id="inputContainer">
@@ -16,12 +20,15 @@
     <input type="text" id="mathInput" placeholder="?" autocomplete="off" inputmode="numeric">
   </div>
 
-  <!-- Tela de Derrota -->
+  <!-- Tela de Derrota com opção de reiniciar ou voltar ao perfil -->
   <div id="gameOverModal">
     <h1>GAME OVER</h1>
     <p>Pontuação: <span id="pontosFinalTxt">0</span></p>
     <p style="font-size: 16px; color: #f5d442;">Melhor Recorde: <span id="recordeFinalTxt">0</span></p>
-    <button id="btnReiniciar">JOGAR NOVAMENTE</button>
+    <div style="display: flex; gap: 10px; margin-top: 10px;">
+      <button id="btnReiniciar">JOGAR NOVAMENTE</button>
+      <button id="btnVoltarMenuGO" style="background: #101c2a; border: 1px solid #00e5ff; color: #00e5ff; font-weight: bold; border-radius: 6px; padding: 11px 20px; cursor: pointer;">PERFIL</button>
+    </div>
   </div>
 
   <canvas id="gameCanvas"></canvas>
