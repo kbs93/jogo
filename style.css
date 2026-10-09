@@ -13,7 +13,7 @@ body { background: #080d14; overflow: hidden; font-family: 'Segoe UI', Tahoma, G
 .btn-hamburguer:active { transform: scale(0.95); }
 .btn-hamburguer span { width: 20px; height: 2px; background: #00e5ff; border-radius: 2px; box-shadow: 0 0 6px #00e5ff80; }
 
-.overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh; background: #04080cb3; backdrop-filter: blur(3px); opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s; z-index: 40; }
+.overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh; background: transparent; backdrop-filter: none; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s; z-index: 40; }
 .overlay.ativo { opacity: 1; visibility: visible; }
 
 .drawer { position: fixed; top: 0; left: 0; width: 310px; max-width: 86vw; height: 100vh; height: 100dvh; background: #0d1722; border-right: 1px solid #1e3144; box-shadow:none; z-index: 50; transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; padding: 18px 16px; }
@@ -399,3 +399,27 @@ body { background: #080d14; overflow: hidden; font-family: 'Segoe UI', Tahoma, G
 @media (max-width: 480px) {
   .perfil-stats-grid { grid-template-columns: 1fr; }
 }
+
+
+/* ===============================
+   ITENS DO RANKING TOP 50 (MINIATURA E POSIÇÃO)
+=============================== */
+.ranking-row-item { display: flex; align-items: center; gap: 9px; background: #07121c; border: 1px solid #142a3e; padding: 7px 10px; border-radius: 8px; transition: transform 0.1s, border-color 0.15s; }
+.ranking-row-item:hover { border-color: #274768; background: #0b1a29; }
+.ranking-row-item.destaque-topo { border-color: #f1c40f40; background: #091724; }
+
+.ranking-badge-col { width: 26px; height: 26px; border-radius: 6px; font-weight: 900; font-size: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.pos-ouro { background: #f1c40f26; color: #f1c40f; border: 1px solid #f1c40f66; box-shadow: 0 0 8px #f1c40f33; }
+.pos-prata { background: #e2e8f026; color: #e2e8f0; border: 1px solid #e2e8f066; }
+.pos-bronze { background: #d9770626; color: #f59e0b; border: 1px solid #d9770666; }
+.pos-padrao { background: #00e5ff14; color: #00e5ff; border: 1px solid #00e5ff33; font-size: 10px; }
+
+.ranking-avatar-mini { width: 32px; height: 32px; min-width: 32px; border-radius: 50%; background: #0d1e2e; border: 1px solid #1e3b56; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px; }
+.ranking-avatar-mini svg { width: 100%; height: 100%; display: block; }
+
+.ranking-user-info { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.ranking-user-nick { font-size: 12.5px; font-weight: 800; color: #eaf2fa; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: 0.5px; }
+.ranking-user-meta { font-size: 9.5px; color: #556a80; }
+
+.ranking-user-score { font-size: 13.5px; font-weight: 900; color: #00e5ff; white-space: nowrap; font-family: monospace; }
+.ranking-user-score small { font-size: 9px; font-weight: 700; color: #556a80; text-transform: uppercase; margin-left: 2px; }
