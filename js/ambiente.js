@@ -5,7 +5,8 @@ import {
   atualizarCobra,
   atualizarParticulas,
   desenharCabecaRealista,
-  definirAvatarCobra
+  definirAvatarCobra,
+  obterCorCorpoCobra
 } from "./snake.js";
 import { db } from "./firebaseConfig.js";
 import { 
@@ -406,11 +407,13 @@ function desenhar() {
     ctx.restore();
   }
 
+const corDoCorpo = obterCorCorpoCobra();
+
   for (let i = gameState.segmentos.length - 1; i > 0; i--) {
     const seg = gameState.segmentos[i];
     ctx.beginPath();
     ctx.arc(seg.x, seg.y, CONFIG.raioSegmento, 0, Math.PI * 2);
-    ctx.fillStyle = "#f5d442";
+    ctx.fillStyle = corDoCorpo;
     ctx.shadowColor = "rgba(0,0,0,0.35)";
     ctx.shadowBlur = 4;
     ctx.fill();
