@@ -28,9 +28,35 @@ const pontosFinalTxt = document.getElementById("pontosFinalTxt");
 const recordeFinalTxt = document.getElementById("recordeFinalTxt");
 const btnReiniciar = document.getElementById("btnReiniciar");
 
-// 2. Leitura do UID pela URL e busca direta no Firestore
+
+// 1. Bloqueia restauração por histórico (seta avançar do Chrome)
+window.addEventListener("pageshow", (event) => {
+  if (event.persisted) {
+    window.location.replace("index.html");
+  }
+});
+
+// 2. Leitura do UID e destruição imediata da URL
 const params = new URLSearchParams(window.location.search);
 export const usuarioId = params.get("uid");
+
+if (!usuarioId) {
+  window.location.replace("index.html");
+} else {
+  // Limpa imediatamente o ?uid= da barra do navegador para a seta avançar NÃO memorizar o link com ID
+  window.history.replaceState(null, "", window.location.pathname);
+}
+// Se não houver UID na URL, expulsa imediatamente para a tela inicial
+if (!usuarioId) {
+  window.location.replace("index.html");
+}
+
+// Se o usuário tentar acessar a tela do jogo pelo botão avançar (cache), recarrega e bloqueia
+window.addEventListener("pageshow", (event) => {
+  if (event.persisted) {
+    window.location.replace("index.html");
+  }
+});
 
 export let perfilJogador = {
   id: usuarioId || null,
@@ -426,14 +452,12 @@ window.addEventListener("keyup", (e) => {
 });
 
 // Ação de Voltar para o Perfil com o UID
-// Ação de Voltar para o Perfil garantindo a gravação antes do redirecionamento
 async function voltarAoMenu() {
   await salvarRecordeNoFirebase();
-  if (usuarioId) {
-    window.location.href = `index.html?uid=${encodeURIComponent(usuarioId)}&pts=${encodeURIComponent(gameState.pontos || 0)}`;
-  } else {
-    window.location.href = "index.html";
-  }
+  const destino = usuarioId 
+    ? `index.html?uid=${encodeURIComponent(usuarioId)}&pts=${encodeURIComponent(gameState.pontos || 0)}`
+    : "index.html";
+  window.location.replace(destino);
 }
 const btnVoltarMenu = document.getElementById("btnVoltarMenu");
 if (btnVoltarMenu) btnVoltarMenu.addEventListener("click", voltarAoMenu);

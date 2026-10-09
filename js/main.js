@@ -1,9 +1,9 @@
 import { bancoSvgEmojis, inicializarCatalogo, carregarMaisEmojis } from "./emoji.js";
 import { renderizarEditorCores, obterSvgCustomizado } from "./editor.js";
-import { autenticarEJogar, buscarPerfilExistente, buscarPerfilPorId } from "./authService.js";
+import { cadastrarNovoJogador, buscarPerfilExistente, buscarPerfilPorId } from "./authService.js";
 
 // Estado em memória (Zero localStorage)
-let usuarioAtivo = null; // Guarda os dados do usuário autenticado na sessão
+let usuarioAtivo = null;
 let recordeSalvo = 0;
 let dificuldadeSalva = "facil";
 let operacaoSalva = "soma";
@@ -21,7 +21,10 @@ const perfilStatPontosTxt = document.getElementById("perfilStatPontosTxt");
 const btnPerfilZerarRecorde = document.getElementById("btnPerfilZerarRecorde");
 const btnPerfilSair = document.getElementById("btnPerfilSair");
 const btnPerfilJogar = document.getElementById("btnPerfilJogar");
-
+const btnEntrarJogo = document.getElementById("btnEntrarJogo");
+const btnIniciarJogo = document.getElementById("btnIniciarJogo");
+const inputApelido = document.getElementById("inputApelido");
+const inputPin = document.getElementById("inputPin");
 const elRecordeMenu = document.getElementById("recordeMenuTxt");
 const elRecordeModal = document.getElementById("recordeModalTxt");
 const elRankingPontos = document.getElementById("rankingPontosTxt");
@@ -36,7 +39,7 @@ function atualizarRecordeVisual(pontos) {
 }
 atualizarRecordeVisual(0);
 
-// Sistema de Notificações Toast nativo
+// Notificações Toast
 function showToast(mensagem, tipo = 'info') {
   const container = document.getElementById('toastContainer');
   if (!container) return;
@@ -64,9 +67,7 @@ function showToast(mensagem, tipo = 'info') {
   setTimeout(fechar, 3200);
 }
 
-// Alternância de Telas (Login vs Perfil Logado)
-// Alternância de Telas (Login vs Perfil Logado)
-// Alternância de Telas (Login vs Perfil Logado)
+// Exibir Tela de Perfil Intermediária
 function exibirPerfil(perfil, pontosUltimaPartida = null) {
   usuarioAtivo = perfil;
   if (blocoLoginPadrao) blocoLoginPadrao.style.display = "none";
@@ -78,17 +79,13 @@ function exibirPerfil(perfil, pontosUltimaPartida = null) {
   const recordeBanco = typeof perfil.recorde === "number" ? perfil.recorde : 0;
   const pontosPartida = pontosUltimaPartida !== null ? Number(pontosUltimaPartida) : recordeBanco;
   
-  // A Maior Pontuação Pessoal é sempre o ápice (o maior entre o banco e o que acabou de fazer)
   const maiorPontuacao = Math.max(recordeBanco, pontosPartida);
   usuarioAtivo.recorde = maiorPontuacao;
 
-  // 1. Caixa Esquerda: MAIOR PONTUAÇÃO PESSOAL
   if (perfilStatMaiorTxt) perfilStatMaiorTxt.textContent = maiorPontuacao;
   if (elRecordeMenu) elRecordeMenu.textContent = maiorPontuacao;
   if (elRecordeModal) elRecordeModal.textContent = maiorPontuacao;
   if (elRankingPontos) elRankingPontos.textContent = `${maiorPontuacao} pts`;
-
-  // 2. Caixa Direita: Recorde Atual da Rodada
   if (perfilStatPontosTxt) perfilStatPontosTxt.textContent = `${pontosPartida} pts`;
 
   const mapaNomes = { facil: 'Fácil', medio: 'Médio', dificil: 'Difícil', frenesi: 'Frenesi' };
@@ -112,61 +109,55 @@ function deslogarEVoltarInicio() {
   if (elBox) elBox.innerHTML = '<img src="./img/logo5.png" alt="Apresentação" class="img-apresentacao">';
   if (elPerfil) elPerfil.style.display = "none";
   if (elLogin) elLogin.style.display = "flex";
-if (elBtn) {
+
+  if (elBtn) {
     elBtn.disabled = false;
     elBtn.textContent = "Jogar";
   }
-  const elBtnPerfil = document.getElementById("btnPerfilJogar");
-  if (elBtnPerfil) {
-    elBtnPerfil.disabled = false;
-    elBtnPerfil.textContent = "Jogar";
+  if (btnPerfilJogar) {
+    btnPerfilJogar.disabled = false;
+    btnPerfilJogar.textContent = "Jogar";
   }
 }
 
-// Reset ao carregar ou voltar pelo histórico
-// Checa se o usuário retornou do jogo com seu UID na URL
-// Checa se o usuário retornou do jogo com seu UID na URL
-// Checa se o usuário retornou do jogo com seu UID na URL
 async function verificarSessaoInicial() {
   const params = new URLSearchParams(window.location.search);
   const uidUrl = params.get("uid");
   const ptsUrl = params.get("pts");
 
   if (uidUrl) {
-    if (blocoLoginPadrao) blocoLoginPadrao.style.display = "none";
-    
     const perfil = await buscarPerfilPorId(uidUrl);
+    window.history.replaceState(null, "", window.location.origin + window.location.pathname);
+    
     if (perfil) {
       exibirPerfil(perfil, ptsUrl);
       return;
     }
   }
 
-  // Garante a URL totalmente limpa se não houver perfil
-  if (window.location.search) {
-    window.history.replaceState(null, "", window.location.origin + window.location.pathname);
-  }
   deslogarEVoltarInicio();
 }
 
 verificarSessaoInicial();
 
-window.addEventListener("pageshow", () => {
-  const params = new URLSearchParams(window.location.search);
-  if (params.get("uid")) {
-    verificarSessaoInicial();
+window.addEventListener("pageshow", (e) => {
+  if (e.persisted || !usuarioAtivo) {
+    deslogarEVoltarInicio();
   }
 });
 
+window.addEventListener("popstate", () => {
+  if (!usuarioAtivo) {
+    deslogarEVoltarInicio();
+  }
+});
 
 if (btnPerfilSair) {
   btnPerfilSair.addEventListener("click", () => {
     deslogarEVoltarInicio();
-    
-    // Remove todos os parâmetros da URL de forma canônica e definitiva na pilha de navegação
     const urlLimpa = window.location.origin + window.location.pathname;
     window.history.replaceState(null, "", urlLimpa);
-    
+    window.location.replace(urlLimpa);
     showToast("Você saiu da conta.", "info");
   });
 }
@@ -177,7 +168,6 @@ if (btnPerfilZerarRecorde) {
     usuarioAtivo.recorde = 0;
     atualizarRecordeVisual(0);
     
-    // Zera também no Firestore de forma persistente
     try {
       const { doc, updateDoc, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
       const { db } = await import("./firebaseConfig.js");
@@ -192,7 +182,7 @@ if (btnPerfilZerarRecorde) {
   });
 }
 
-// Controle do Drawer Lateral
+// Drawer Lateral
 const btnHamburguer = document.getElementById("btnHamburguer");
 const btnFechar = document.getElementById("btnFechar");
 const overlay = document.getElementById("overlay");
@@ -240,7 +230,7 @@ btnsOperacao.forEach(function(btn) {
   });
 });
 
-// Gerenciador de Modais
+// Modais
 function abrirModal(id) {
   fecharMenu();
   const modal = document.getElementById(id);
@@ -262,7 +252,6 @@ document.querySelectorAll(".modal-backdrop").forEach(backdrop => {
   });
 });
 
-// Eventos dos botões do Menu Lateral
 const bindClick = (id, fn) => {
   const el = document.getElementById(id);
   if (el) el.addEventListener("click", fn);
@@ -271,7 +260,6 @@ const bindClick = (id, fn) => {
 bindClick("btnAbrirRegras", () => abrirModal("modalRegras"));
 bindClick("btnAbrirDificuldade", () => abrirModal("modalDificuldade"));
 
-// Tabela de Recordes no Menu: Se já tiver usuário identificado, vai para o bloco de rascunho
 bindClick("btnAbrirRecordes", () => {
   fecharMenu();
   if (usuarioAtivo) {
@@ -290,7 +278,7 @@ bindClick("btnModoPressao", () => { fecharMenu(); showToast("Atenção: Modo Sob
 bindClick("btnAnalyticsRH", () => { fecharMenu(); showToast("Métricas de raciocínio ativadas.", "info"); });
 bindClick("btnMascotes", () => { fecharMenu(); showToast("Escolha seu avatar clicando na logo!", "sucesso"); });
 
-// Lógica de Dificuldade
+// Dificuldade
 const cardsDificuldade = document.querySelectorAll(".card-dif");
 let nivelSelecionado = dificuldadeSalva;
 
@@ -324,94 +312,118 @@ bindClick("btnLimparRecordes", () => {
   showToast("Recorde redefinido para esta sessão.", "alerta");
 });
 
-// Sanitização e Leitura Dinâmica do Jogador
-const inputApelido = document.getElementById("inputApelido");
-const inputPin = document.getElementById("inputPin");
-const btnIniciarJogo = document.getElementById("btnIniciarJogo");
-const emojiPreviewBox = document.getElementById("emojiPreviewBox");
-
-
-
-inputApelido.addEventListener("input", function() {
-  this.value = this.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-  checarPerfilDinamico();
-});
-
-inputPin.addEventListener("input", function() {
-  if (this.value.length > 8) {
-    this.value = this.value.slice(0, 8);
-  }
-  checarPerfilDinamico();
-});
-
-
-let debounceTimer = null;
-function checarPerfilDinamico() {
-  clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(async () => {
-    const nick = inputApelido.value.trim();
-    const pin = inputPin.value.trim();
-    if (nick.length >= 3 && pin.length >= 4) {
-      const perfil = await buscarPerfilExistente(nick, pin);
-      if (perfil) {
-        // Anexa o UID à URL sem recarregar a página
-        const novaUrl = `${window.location.origin}${window.location.pathname}?uid=${encodeURIComponent(perfil.id)}`;
-        window.history.replaceState({ uid: perfil.id }, "", novaUrl);
-
-        exibirPerfil(perfil);
-        showToast(`Bem-vindo de volta, ${perfil.apelido}!`, "sucesso");
-      }
-    }
-  }, 400);
+// Sanitização de entradas
+if (inputApelido) {
+  inputApelido.addEventListener("input", function() {
+    this.value = this.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+  });
 }
 
-// Iniciar Jogo (Tanto da tela inicial quanto do card logado)
-// Iniciar Jogo com sanitização defensiva contra undefined
-async function iniciarPartida(nick, pin, btnAlvo) {
-  const nickSeguro = String(nick || "").trim();
-  const pinSeguro = String(pin || "").trim();
+if (inputPin) {
+  inputPin.addEventListener("input", function() {
+    if (this.value.length > 8) {
+      this.value = this.value.slice(0, 8);
+    }
+  });
+}
+
+// ==========================================
+// 1. BOTÃO "JOGAR" DA TELA INICIAL (NOVO CADASTRO)
+// ==========================================
+btnIniciarJogo.addEventListener("click", async (e) => {
+  e.preventDefault();
+
+  const nickSeguro = String(inputApelido.value || "").trim();
+  const pinSeguro = String(inputPin.value || "").trim();
 
   if (nickSeguro.length < 3) {
     showToast("Digite um apelido com no mínimo 3 caracteres.", "alerta");
-    if (inputApelido) inputApelido.focus();
+    inputApelido.focus();
     return;
   }
 
   if (pinSeguro.length < 4) {
     showToast("O PIN de segurança deve ter pelo menos 4 caracteres.", "alerta");
-    if (inputPin) inputPin.focus();
+    inputPin.focus();
     return;
   }
 
-  btnAlvo.disabled = true;
-  btnAlvo.textContent = "Carregando...";
+  btnIniciarJogo.disabled = true;
+  btnIniciarJogo.textContent = "Criando...";
 
   try {
-    const emojiIdAtual = (usuarioAtivo && usuarioAtivo.emojiId) || idEmojiSelecionado || "grinning_eyes";
-    const svgAtual = svgCustomizadoSalvo || (usuarioAtivo && usuarioAtivo.emojiSvg) || bancoSvgEmojis[emojiIdAtual] || "";
+    const emojiIdAtual = idEmojiSelecionado || "grinning_eyes";
+    const svgAtual = svgCustomizadoSalvo || bancoSvgEmojis[emojiIdAtual] || "";
 
-    const resposta = await autenticarEJogar(nickSeguro, pinSeguro, emojiIdAtual, svgAtual);
+    const resposta = await cadastrarNovoJogador(nickSeguro, pinSeguro, emojiIdAtual, svgAtual);
 
     if (!resposta.sucesso) {
       showToast(resposta.mensagem, "alerta");
-      btnAlvo.disabled = false;
-      btnAlvo.textContent = "Jogar";
+      btnIniciarJogo.disabled = false;
+      btnIniciarJogo.textContent = "Jogar";
       return;
     }
 
     showToast(resposta.mensagem, "sucesso");
-
     setTimeout(() => {
-      window.location.href = `ambiente.html?uid=${encodeURIComponent(resposta.id)}`;
+      window.location.replace(`ambiente.html?uid=${encodeURIComponent(resposta.id)}`);
     }, 450);
   } catch (erro) {
-    console.error("Erro na autenticação:", erro);
+    console.error("Erro no cadastro:", erro);
     showToast("Erro: " + (erro.message || "Tente novamente"), "alerta");
-    btnAlvo.disabled = false;
-    btnAlvo.textContent = "Jogar";
+    btnIniciarJogo.disabled = false;
+    btnIniciarJogo.textContent = "Jogar";
   }
+});
+
+// ==========================================
+// 2. BOTÃO "ENTRAR" DA TELA INICIAL (USUÁRIO EXISTENTE)
+// ==========================================
+if (btnEntrarJogo) {
+  btnEntrarJogo.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    const nick = inputApelido.value.trim();
+    const pin = inputPin.value.trim();
+
+    if (nick.length < 3) {
+      showToast("Digite seu apelido com no mínimo 3 caracteres.", "alerta");
+      inputApelido.focus();
+      return;
+    }
+
+    if (pin.length < 4) {
+      showToast("Digite o PIN com pelo menos 4 dígitos.", "alerta");
+      inputPin.focus();
+      return;
+    }
+
+    btnEntrarJogo.disabled = true;
+    btnEntrarJogo.textContent = "Buscando...";
+
+    try {
+      const res = await buscarPerfilExistente(nick, pin);
+
+      if (res.sucesso && res.perfil) {
+        window.history.replaceState(null, "", window.location.origin + window.location.pathname);
+        exibirPerfil(res.perfil);
+        showToast(`Bem-vindo de volta, ${res.perfil.apelido}!`, "sucesso");
+      } else {
+        showToast(res.mensagem, "alerta");
+      }
+    } catch (err) {
+      console.error("Erro ao autenticar:", err);
+      showToast("Falha na conexão ao buscar perfil.", "alerta");
+    } finally {
+      btnEntrarJogo.disabled = false;
+      btnEntrarJogo.textContent = "Entrar";
+    }
+  });
 }
 
+// ==========================================
+// 3. BOTÃO "JOGAR" DENTRO DA TELA DO PERFIL
+// ==========================================
 if (btnPerfilJogar) {
   btnPerfilJogar.addEventListener("click", async (e) => {
     e.preventDefault();
@@ -421,32 +433,23 @@ if (btnPerfilJogar) {
     btnPerfilJogar.textContent = "Entrando...";
 
     try {
-      // Se o usuário personalizou um novo avatar enquanto estava no card, salva no banco
       if (svgCustomizadoSalvo && svgCustomizadoSalvo !== usuarioAtivo.emojiSvg) {
-        await autenticarEJogar(
-          usuarioAtivo.apelido, 
-          usuarioAtivo.pin, 
-          idEmojiSelecionado || usuarioAtivo.emojiId, 
-          svgCustomizadoSalvo
-        );
+        const { doc, updateDoc, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
+        const { db } = await import("./firebaseConfig.js");
+        await updateDoc(doc(db, "usuarios", usuarioAtivo.id), {
+          emojiId: idEmojiSelecionado || usuarioAtivo.emojiId,
+          emojiSvg: svgCustomizadoSalvo,
+          ultimoAcesso: serverTimestamp()
+        });
       }
 
-      // Redireciona imediatamente para o ambiente do jogo
-      window.location.href = `ambiente.html?uid=${encodeURIComponent(usuarioAtivo.id)}`;
+      window.location.replace(`ambiente.html?uid=${encodeURIComponent(usuarioAtivo.id)}`);
     } catch (err) {
       console.warn("Aviso ao sincronizar avatar:", err);
-      // Mesmo com aviso de rede, entra no jogo com o ID que já está validado
-      window.location.href = `ambiente.html?uid=${encodeURIComponent(usuarioAtivo.id)}`;
+      window.location.replace(`ambiente.html?uid=${encodeURIComponent(usuarioAtivo.id)}`);
     }
   });
 }
-
-btnIniciarJogo.addEventListener("click", (e) => {
-  e.preventDefault();
-  iniciarPartida(inputApelido.value.trim(), inputPin.value.trim(), btnIniciarJogo);
-});
-
-
 
 // Ranking Lateral TOP 50
 const painelRanking = document.getElementById("painelRanking");
@@ -514,7 +517,8 @@ if (gradeEmojis) {
     painelEditorCores.classList.add("ativo");
 
     renderizarEditorCores(svgBase, gradeCoresEditor, editorPreviewBox, (svgAtualizado) => {
-      if (emojiPreviewBox) emojiPreviewBox.innerHTML = svgAtualizado;
+      const elPreview = document.getElementById("emojiPreviewBox");
+      if (elPreview) elPreview.innerHTML = svgAtualizado;
       if (perfilCardEmojiBox) perfilCardEmojiBox.innerHTML = svgAtualizado;
     });
   });
@@ -545,7 +549,8 @@ if (btnConfirmarAvatar) {
   btnConfirmarAvatar.addEventListener("click", () => {
     const svgFinal = obterSvgCustomizado();
     svgCustomizadoSalvo = svgFinal;
-    if (emojiPreviewBox) emojiPreviewBox.innerHTML = svgFinal;
+    const elPreview = document.getElementById("emojiPreviewBox");
+    if (elPreview) elPreview.innerHTML = svgFinal;
     if (perfilCardEmojiBox) perfilCardEmojiBox.innerHTML = svgFinal;
     if (usuarioAtivo) usuarioAtivo.emojiSvg = svgFinal;
     painelEditorCores.classList.remove("ativo");

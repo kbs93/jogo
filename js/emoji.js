@@ -1139,6 +1139,37 @@ export const bancoSvgEmojis = {
 	</g>
 </svg>
 `,
+"emoji_vip": `<svg viewBox="0 0 32 32"><path d="M0 0h32v32H0z" fill="none"/>
+<g fill="none">
+<circle cx="16" cy="17" r="12" fill="#0284c7"/>
+<path fill="#38bdf8" d="M16 6a12 12 0 0 1 11.8 10H4.2A12 12 0 0 1 16 6z"/>
+<path fill="#eab308" d="M11 5l2 4l3-3l3 3l2-4l-1 5H12z"/>
+<circle cx="16" cy="5.5" r="0.8" fill="#ffffff"/>
+<path fill="#0f172a" d="M7 13.5c2.5-.5 7 0 9 1.5c2-1.5 6.5-2 9-1.5c.8 2.5 0 6.5-3 6.5c-3 0-4.5-2.5-6-2.5s-3 2.5-6 2.5c-3 0-3.8-4-3-6.5z"/>
+<path stroke="#22d3ee" stroke-width="0.9" stroke-linecap="round" d="M8.5 15l5.5 1.5m4 0l5.5-1.5"/>
+<path stroke="#082f49" stroke-width="1.4" stroke-linecap="round" d="M12 23c1.5 2.5 6.5 2.5 8 0"/>
+<path stroke="#ffffff" stroke-width="0.8" stroke-linecap="round" d="M13.5 23.3c1 1.2 4 1.2 5 0"/></g>
+</svg>`,
+
+// 1. CYBER ROBOT (Mascote robô com visor LED ciano e antenas neon)
+"emoji_cyber_bot": `<svg viewBox="0 0 32 32"><path d="M0 0h32v32H0z" fill="none"/><g fill="none"><rect x="6" y="8" width="20" height="17" rx="5" fill="#1e293b"/><path fill="#0f172a" d="M9 12h14v8H9z"/><circle cx="12.5" cy="16" r="2" fill="#06b6d4"/><circle cx="19.5" cy="16" r="2" fill="#06b6d4"/><circle cx="13" cy="15.5" r="0.6" fill="#ffffff"/><circle cx="20" cy="15.5" r="0.6" fill="#ffffff"/><path stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" d="M16 4v4M4 16h2m20 0h2"/><circle cx="16" cy="3.5" r="1.5" fill="#60a5fa"/><path stroke="#06b6d4" stroke-width="1.2" stroke-linecap="round" d="M12 22h8"/></g></svg>`,
+
+"emoji_viking": `<svg viewBox="0 0 32 32"><path d="M0 0h32v32H0z" fill="none"/><g fill="none"><circle cx="16" cy="16" r="12" fill="#fed7aa"/><path d="M4 14a12 12 0 0 1 24 0H4z" fill="#64748b"/><path d="M4 13h24v3H4z" fill="#475569"/><circle cx="8" cy="14.5" r="0.8" fill="#cbd5e1"/><circle cx="16" cy="14.5" r="0.8" fill="#cbd5e1"/><circle cx="24" cy="14.5" r="0.8" fill="#cbd5e1"/><path d="M6 14C3 13 1 9 2 6c1.5 3 3 4 5 5zm20 0c3-1 5-5 4-8-1.5 3-3 4-5 5z" fill="#f8fafc"/><circle cx="11.5" cy="17.5" r="1.3" fill="#0f172a"/><circle cx="20.5" cy="17.5" r="1.3" fill="#0f172a"/><path d="M11 21.5h10v4.5c0 1.2-1 2-2 2h-6c-1 0-2-.8-2-2z" fill="#ea580c"/><path d="M12.5 20.5c1 1.5 6 1.5 7 0" stroke="#9a3412" stroke-width="1.2" stroke-linecap="round"/></g></svg>`,
+
+// 1. MAGO (Aba larga no grid 32x32, chapéu dominante, barba quadrada e boca única)
+"emoji_mago": `<svg viewBox="0 0 32 32"><path d="M0 0h32v32H0z" fill="none"/><g fill="none"><path d="M6 16a10 10 0 0 0 20 0H6z" fill="#fed7aa"/><path d="M16 1l11 14H5z" fill="#4338ca"/><path d="M16 1l7 14h-7z" fill="#3730a3"/><path d="M1 14.5c4-.8 26-.8 30 0l-3 3.5H4z" fill="#312e81"/>
+<rect x="13" y="12" width="6" height="3.5" rx="0.8" fill="#facc15"/><circle cx="11.5" cy="20" r="1.4" fill="#0f172a"/>
+<circle cx="20.5" cy="20" r="1.4" fill="#0f172a"/><path d="M11 23.5h10v5.5c0 1.2-1 2-2 2h-6c-1 0-2-.8-2-2z" fill="#f8fafc"/><path d="M12.5 22.5c1 1.5 6 1.5 7 0" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/></g></svg>`,
+
+// 2. BRUXA (Aba larga no grid 32x32, cone clássico escuro, fita roxa, fivela e verruga)
+"emoji_bruxa": `<svg viewBox="0 0 32 32"><path d="M0 0h32v32H0z" fill="none"/><g fill="none"><path d="M6 16a10 10 0 0 0 20 0H6z" fill="#86efac"/><path d="M16 1c2 4 8 9 11 14H5c2-5 8-10 11-14z" fill="#0f172a"/><path d="M16 1l6 14h-6z" fill="#1e1b4b"/><path d="M1 14.5c4-.8 26-.8 30 0l-3 3.5H4z" fill="#0f172a"/><path d="M4 14h24v2.5H4z" fill="#9333ea"/><rect x="13" y="12" width="9" height="3.5" rx="0.8" fill="#facc15"/><circle cx="11.5" cy="20" r="1.4" fill="#0f172a"/><circle cx="20.5" cy="20" r="1.4" fill="#0f172a"/><circle cx="8.5" cy="23.5" r="0.9" fill="#15803d"/><path d="M12.5 23.5c1.2 1.8 5.8 1.8 7 0" stroke="#166534" stroke-width="1.2" stroke-linecap="round"/></g></svg>`,
+// 3. DUENDE / GOBLIN (Pele esverdeada, orelhas pontudas saindo dos lados e gorro verde com dobra)
+"emoji_duende": `<svg viewBox="0 0 32 32"><path d="M0 0h32v32H0z" fill="none"/><g fill="none"><path d="M6 16C2 15 1 12 1 12s3 1 5 3zm20 0c4-1 5-4 5-4s-3 1-5 3z" fill="#4ade80"/><circle cx="16" cy="16" r="12" fill="#4ade80"/><path d="M4 14a12 12 0 0 1 24 0H4z" fill="#15803d"/><path d="M16 2c4 3 10 5 11 11H5c1-6 7-8 11-11z" fill="#16a34a"/><circle cx="27" cy="13" r="1.5" fill="#facc15"/><circle cx="11.5" cy="17.5" r="1.3" fill="#0f172a"/><circle cx="20.5" cy="17.5" r="1.3" fill="#0f172a"/><path d="M12 21.5c1.5 2 6.5 2 8 0" stroke="#14532d" stroke-width="1.2" stroke-linecap="round"/><path d="M13 22l1-1.5h1.5zm4.5 0l1-1.5H20z" fill="#ffffff"/></g></svg>`,
+
+// 4. NINJA (Máscara preta/escura cobrindo topo e boca, faixa com abertura nos olhos e olhar focado)
+"emoji_ninja": `<svg viewBox="0 0 32 32"><path d="M0 0h32v32H0z" fill="none"/><g fill="none"><circle cx="16" cy="16" r="12" fill="#1e293b"/><rect x="8" y="14" width="16" height="6" rx="2" fill="#fed7aa"/><path d="M4 13h24v2H4z" fill="#dc2626"/><circle cx="12" cy="17" r="1.3" fill="#0f172a"/><circle cx="20" cy="17" r="1.3" fill="#0f172a"/><path d="M10 15.5l3.5 1m5 0l3.5-1" stroke="#0f172a" stroke-width="0.9" stroke-linecap="round"/></g></svg>`,
+
+
 
 	};
 

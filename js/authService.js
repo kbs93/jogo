@@ -22,12 +22,18 @@ function gerarSufixoId(tamanho = 5) {
 }
 
 /**
- * Busca dados prévios do usuário quando ele preenche Apelido + PIN
+ * Autentica usuário existente para abrir a tela de perfil.
  */
 export async function buscarPerfilExistente(apelido, pin) {
   const nickFormatado = String(apelido || "").trim().toUpperCase();
   const pinFormatado = String(pin || "").trim();
-  if (nickFormatado.length < 3 || pinFormatado.length < 4) return null;
+
+  if (nickFormatado.length < 3) {
+    return { sucesso: false, mensagem: "Digite um apelido com no mínimo 3 letras." };
+  }
+  if (pinFormatado.length < 4) {
+    return { sucesso: false, mensagem: "Digite um PIN com pelo menos 4 dígitos." };
+  }
 
   try {
     const qApelido = query(
@@ -35,28 +41,46 @@ export async function buscarPerfilExistente(apelido, pin) {
       where("apelido", "==", nickFormatado),
       limit(1)
     );
+
     const snap = await getDocs(qApelido);
-    if (!snap.empty) {
-      const dados = snap.docs[0].data();
-      if (dados.pin === pinFormatado) {
-   return {
-          id: snap.docs[0].id,
-          apelido: dados.apelido || nickFormatado,
-          pin: dados.pin || pinFormatado,
-          recorde: typeof dados.recorde === "number" ? dados.recorde : 0,
-          ultimaPontuacao: typeof dados.ultimaPontuacao === "number" ? dados.ultimaPontuacao : (dados.recorde || 0),
-          emojiId: dados.emojiId || "grinning_eyes",
-          emojiSvg: dados.emojiSvg || ""
-        };
-      }
+
+    if (snap.empty) {
+      return { 
+        sucesso: false, 
+        mensagem: "Perfil não encontrado. Clique em 'Jogar' para criar sua conta." 
+      };
     }
+
+    const docUser = snap.docs[0];
+    const dados = docUser.data();
+
+    if (dados.pin !== pinFormatado) {
+      return { 
+        sucesso: false, 
+        mensagem: "Senha incorreto para este nome." 
+      };
+    }
+
+    return {
+      sucesso: true,
+      perfil: {
+        id: docUser.id,
+        apelido: dados.apelido || nickFormatado,
+        pin: dados.pin || pinFormatado,
+        recorde: typeof dados.recorde === "number" ? dados.recorde : 0,
+        ultimaPontuacao: typeof dados.ultimaPontuacao === "number" ? dados.ultimaPontuacao : (dados.recorde || 0),
+        emojiId: dados.emojiId || "grinning_eyes",
+        emojiSvg: dados.emojiSvg || ""
+      }
+    };
   } catch (err) {
-    console.warn("Falha na checagem em tempo real:", err);
+    console.error("Falha ao buscar perfil:", err);
+    return { sucesso: false, mensagem: "Erro de conexão ao buscar perfil." };
   }
-  return null;
 }
+
 /**
- * Busca perfil diretamente pelo UID do Firestore
+ * Busca perfil diretamente pelo UID do Firestore (retorno de partida).
  */
 export async function buscarPerfilPorId(uid) {
   if (!uid) return null;
@@ -80,9 +104,9 @@ export async function buscarPerfilPorId(uid) {
 }
 
 /**
- * Autentica o dono da conta ou cria um novo se o apelido for inédito.
+ * Criação exclusiva de novo cadastro. Se o apelido já existir, bloqueia.
  */
-export async function autenticarEJogar(apelido, pin, emojiId, emojiSvg) {
+export async function cadastrarNovoJogador(apelido, pin, emojiId, emojiSvg) {
   const nickFormatado = String(apelido || "").trim().toUpperCase();
   const pinFormatado = String(pin || "").trim();
   const idEmojiTratado = String(emojiId || "grinning_eyes");
@@ -101,46 +125,16 @@ export async function autenticarEJogar(apelido, pin, emojiId, emojiSvg) {
   ]);
 
   const snapshot = await buscarComTimeout;
-  const paletaCores = svgTratado ? extrairCoresSvg(svgTratado) : [];
 
-  // Se já existe usuário com esse apelido
+  // Bloqueio se já existir conta com este apelido
   if (!snapshot.empty) {
-    const docExistente = snapshot.docs[0];
-    const dados = docExistente.data();
-
-    if (dados.pin !== pinFormatado) {
-      return {
-        sucesso: false,
-        mensagem: `O apelido "${nickFormatado}" já está em uso com outro PIN.`
-      };
-    }
-
-    const refDoc = doc(db, "usuarios", docExistente.id);
-    
-    // Atualização com campos válidos (sem undefined e com serverTimestamp)
-    if (svgTratado) {
-      await setDoc(refDoc, {
-        emojiId: idEmojiTratado,
-        emojiSvg: svgTratado,
-        paletaCores: paletaCores.length ? paletaCores : (dados.paletaCores || []),
-        ultimoAcesso: serverTimestamp()
-      }, { merge: true });
-    }
-
     return {
-      sucesso: true,
-      id: docExistente.id,
-      apelido: dados.apelido || nickFormatado,
-      pin: dados.pin || pinFormatado,
-      recorde: typeof dados.recorde === "number" ? dados.recorde : 0,
-      emojiId: idEmojiTratado,
-      emojiSvg: svgTratado || dados.emojiSvg || "",
-      paletaCores: paletaCores.length ? paletaCores : (dados.paletaCores || []),
-      mensagem: `Bem-vindo de volta, ${dados.apelido}!`
+      sucesso: false,
+      mensagem: `O apelido "${nickFormatado}" já está cadastrado. Clique em "Entrar".`
     };
   }
 
-  // Novo Usuário: cria com id único e timestamps oficiais
+  const paletaCores = svgTratado ? extrairCoresSvg(svgTratado) : [];
   const novoId = `${nickFormatado}_${gerarSufixoId(5)}`;
   const refNovoDoc = doc(db, "usuarios", novoId);
 
@@ -167,6 +161,6 @@ export async function autenticarEJogar(apelido, pin, emojiId, emojiSvg) {
     emojiId: novoPerfil.emojiId,
     emojiSvg: novoPerfil.emojiSvg,
     paletaCores: novoPerfil.paletaCores,
-    mensagem: `Perfil criado com sucesso!`
+    mensagem: "Perfil criado com sucesso!"
   };
 }

@@ -119,7 +119,7 @@ export function atualizarParticulas() {
     if (p.opacidade <= 0) gameState.particulas.splice(i, 1);
   }
 }
-
+// TAMANHO DAS CABEÇAS E SEGMENTOS: 18px de raio, 36px de diâmetro, 13px de distância entre centros.
 export function desenharCabecaRealista(ctx, x, y, raio) {
   const fatorVisual = 1.28;
   const tamanho = (raio * 2) * fatorVisual;

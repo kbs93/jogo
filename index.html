@@ -23,12 +23,13 @@
   <div class="overlay" id="overlay"></div>
 
   <!-- Painel lateral (Drawer) -->
-  <nav class="drawer" id="drawer">
+  <aside class="drawer" id="drawer">
     <div class="drawer-header">
       <div class="drawer-title">PAINEL DE CONTROLE</div>
       <button class="btn-fechar" id="btnFechar" aria-label="Fechar Menu">&times;</button>
     </div>
-<nav class="drawer-menu">
+
+    <nav class="drawer-menu">
       <!-- 1. Operações da Tabuada -->
       <button class="drawer-btn" id="btnToggleModos" type="button">
         <i class="bi bi-calculator-fill icone"></i>
@@ -126,13 +127,14 @@
         <span>Configurações</span>
       </button>
     </nav>
+
     <div class="drawer-footer">
       Total-X v1.0 • Plataforma de Agilidade Mental
     </div> 
-    </nav>
-<!--=======
-=====================================Painel Lateral Direito: Ranking TOP 50 (usando nav) ================================-->
-  <nav class="painel-ranking" id="painelRanking">
+  </aside>
+
+  <!-- Painel Lateral Direito: Ranking TOP 50 -->
+  <aside class="painel-ranking" id="painelRanking">
     <div class="ranking-header">
       <div class="ranking-titulo">
         <i class="bi bi-trophy-fill"></i>
@@ -141,26 +143,23 @@
       <button class="btn-fechar" id="btnFecharRanking" aria-label="Fechar Ranking">&times;</button>
     </div>
 
-    <!-- Vazio: pronto para carregar os dados do Firebase -->
+    <!-- Lista dinâmica via Firebase -->
     <div class="ranking-conteudo" id="listaRankingTop50"></div>
 
     <div class="ranking-footer">
       Sincronização em tempo real
     </div>
-  </nav>
-  <!-- Apresentação Central -->
-<!-- Botão Flutuante do Ranking (Canto Superior Direito) -->
+  </aside>
+
+  <!-- Botão Flutuante do Ranking -->
   <button class="btn-ranking-flutuante" id="btnAbrirLeaderboard" aria-label="Abrir Ranking Top 50">
     <i class="bi bi-trophy-fill"></i>
     <span>TOP 50</span>
   </button>
 
   <!-- Apresentação Central -->
-
-
-<!-- Apresentação Central -->
   <main class="menu-stage">
-<!-- Bloco 1: Tela Inicial Padrão -->
+    <!-- Bloco 1: Tela Inicial Padrão -->
     <div class="bloco-apresentacao" id="blocoLoginPadrao">
       <div class="emoji-trigger-wrap" id="btnTrocarEmoji" title="Clique para trocar de Emoji">
         <div class="emoji-preview-svg" id="emojiPreviewBox">
@@ -196,10 +195,13 @@
         >
       </div>
 
-      <button type="button" class="btn-jogar" id="btnIniciarJogo">Jogar</button>
+      <div class="auth-botoes-box">
+        <button type="button" class="btn-entrar" id="btnEntrarJogo">Entrar</button>
+        <button type="button" class="btn-jogar" id="btnIniciarJogo">Jogar</button>
+      </div>
     </div>
 
-    <!-- Bloco 2: Perfil do Jogador Reconhecido (Layout do Rascunho) -->
+    <!-- Bloco 2: Perfil do Jogador Reconhecido -->
     <div class="bloco-perfil-card" id="blocoPerfilLogado" style="display: none;">
       <h2 class="perfil-card-apelido" id="perfilCardApelidoTxt">SKUL1</h2>
 
@@ -208,7 +210,6 @@
         <span class="emoji-edit-badge"><i class="bi bi-pencil-fill"></i></span>
       </div>
 
-      <!-- Caixa de Estatísticas e Recordes -->
       <div class="perfil-stats-grid">
         <div class="perfil-stat-item">
           <span class="perfil-stat-label">Maior Pontuação Pessoal</span>
@@ -227,7 +228,6 @@
         </div>
       </div>
 
-      <!-- Ações do Perfil -->
       <div class="perfil-acoes-secundarias">
         <button type="button" class="btn-perfil-zerar" id="btnPerfilZerarRecorde">Zerar Recorde</button>
       </div>
@@ -266,13 +266,6 @@
       <button type="button" class="btn-confirmar-avatar" id="btnConfirmarAvatar">Pronto</button>
     </section>
   </main>
-
-
-
-
-
-
-
 
   <!-- ==================== MODAIS ==================== -->
 
@@ -393,15 +386,8 @@
           <span class="recorde-sub">Pontos acumulados</span>
         </div>
 
-        <div class="ranking-lista">
-          <div class="ranking-item topo">
-            <div class="ranking-pos">#1</div>
-            <div class="ranking-info">
-              <span class="ranking-nome">Recorde Atual</span>
-              <span class="ranking-modo" id="rankingDificuldadeTxt">Nível: Fácil</span>
-            </div>
-            <div class="ranking-pontos" id="rankingPontosTxt">0 pts</div>
-          </div>
+        <div class="ranking-lista" id="listaRecordesModal">
+          <!-- Conteúdo gerado dinamicamente -->
         </div>
       </div>
 
@@ -414,6 +400,6 @@
 
   <!-- Container de Toasts de Notificação -->
   <div class="toast-container" id="toastContainer"></div>
- <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>
