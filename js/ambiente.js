@@ -336,6 +336,47 @@ desenharHexagonoUnitario(larguraHex, alturaHex * 1.5, raioHex - 2);
 
 const texturaFundoHex = ctx.createPattern(offscreenCanvas, "repeat");
 
+
+function desenharGomo3D(ctx, x, y, raio, corBase) {
+  // 1. Base com a cor pura do avatar
+  ctx.beginPath();
+  ctx.arc(x, y, raio, 0, Math.PI * 2);
+  ctx.fillStyle = corBase;
+  ctx.fill();
+
+  // 2. Sombra perimetral nas bordas (mantém o gomo redondo)
+  const gradSombra = ctx.createRadialGradient(x, y, raio * 0.45, x, y, raio);
+  gradSombra.addColorStop(0, "rgba(0, 0, 0, 0)");
+  gradSombra.addColorStop(1, "rgba(0, 0, 0, 0.32)");
+
+  ctx.fillStyle = gradSombra;
+  ctx.fill();
+
+  // 3. Brilho 100% centralizado no meio exato do gomo
+  const gradLuz = ctx.createRadialGradient(x, y, 0, x, y, raio * 0.65);
+  gradLuz.addColorStop(0, "rgba(255, 255, 255, 0.45)"); // Centro luminoso
+  gradLuz.addColorStop(1, "rgba(255, 255, 255, 0)");    // Dissipa para a cor base
+
+  ctx.fillStyle = gradLuz;
+  ctx.fill();
+
+  // 4. Borda fina de recorte entre os segmentos
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = "rgba(0, 0, 0, 0.2)";
+  ctx.stroke();
+}
+
+
+
+
+
+
+
+
+
+
+
+
 function desenhar() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -411,14 +452,8 @@ const corDoCorpo = obterCorCorpoCobra();
 
   for (let i = gameState.segmentos.length - 1; i > 0; i--) {
     const seg = gameState.segmentos[i];
-    ctx.beginPath();
-    ctx.arc(seg.x, seg.y, CONFIG.raioSegmento, 0, Math.PI * 2);
-    ctx.fillStyle = corDoCorpo;
-    ctx.shadowColor = "rgba(0,0,0,0.35)";
-    ctx.shadowBlur = 4;
-    ctx.fill();
+    desenharGomo3D(ctx, seg.x, seg.y, CONFIG.raioSegmento, corDoCorpo);
   }
-  ctx.shadowBlur = 0;
 
   desenharCabecaRealista(ctx, cabeca.x, cabeca.y, CONFIG.raioSegmento);
 
@@ -467,3 +502,5 @@ if (btnVoltarMenu) btnVoltarMenu.addEventListener("click", voltarAoMenu);
 
 const btnVoltarMenuGO = document.getElementById("btnVoltarMenuGO");
 if (btnVoltarMenuGO) btnVoltarMenuGO.addEventListener("click", voltarAoMenu);
+
+
