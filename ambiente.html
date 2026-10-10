@@ -15,9 +15,13 @@
   </div>
 
   <!-- Caixa de texto acoplada à cabeça (centralizada) -->
+<!-- Caixa de texto acoplada à cabeça (centralizada) -->
   <div id="inputContainer">
     <span id="timerTxt">5</span>
-    <input type="text" id="mathInput" placeholder="?" autocomplete="off" inputmode="numeric">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+      <span id="contaTxt" style="color: #00f0ff; font-family: monospace; font-weight: bold; font-size: 22px; text-shadow: 0 0 10px rgba(0, 240, 255, 0.6); white-space: nowrap;"></span>
+      <input type="text" id="mathInput" placeholder="?" autocomplete="off" inputmode="numeric">
+    </div>
   </div>
 
   <!-- Tela de Derrota com opção de reiniciar ou voltar ao perfil -->

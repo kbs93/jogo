@@ -22,6 +22,7 @@ const ctx = canvas.getContext("2d");
 const inputContainer = document.getElementById("inputContainer");
 const mathInput = document.getElementById("mathInput");
 const timerTxt = document.getElementById("timerTxt");
+const contaTxt = document.getElementById("contaTxt");
 const pontosTxt = document.getElementById("pontosTxt");
 const recordeTxt = document.getElementById("recordeTxt");
 const gameOverModal = document.getElementById("gameOverModal");
@@ -263,15 +264,19 @@ function atualizar() {
     for (let i = 0; i < gameState.alvos.length; i++) {
       const a = gameState.alvos[i];
       const dist = Math.hypot(a.x - cabeca.x, a.y - cabeca.y);
-      if (dist <= raioAtivacao) {
+   if (dist <= raioAtivacao) {
         gameState.alvoAtivo = a;
         gameState.entradaAtiva = true;
+        if (contaTxt) contaTxt.textContent = `${a.texto} = `;
         inputContainer.style.display = "flex";
         mathInput.value = "";
         mathInput.focus();
         iniciarTimer();
         break;
       }
+
+
+
     }
   }
 }
@@ -394,9 +399,13 @@ function desenhar() {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
-    for (let i = 0; i < gameState.alvos.length; i++) {
+for (let i = 0; i < gameState.alvos.length; i++) {
       const a = gameState.alvos[i];
-      const isAtivo = gameState.alvoAtivo && gameState.alvoAtivo.id === a.id;
+      
+      // Oculta a conta do chão se o jogador já colidiu com ela
+      if (gameState.alvoAtivo && gameState.alvoAtivo.id === a.id) {
+        continue;
+      }
 
       ctx.font = "bold 24px monospace";
       const larguraTexto = ctx.measureText(a.texto).width;
@@ -408,31 +417,38 @@ function desenhar() {
       const py = a.y - alturaPilula / 2;
 
       ctx.save();
-      ctx.shadowColor = isAtivo ? "#ffe600" : "#00f0ff";
-      ctx.shadowBlur = isAtivo ? 20 : 12;
+      ctx.shadowColor = "#00f0ff";
+      ctx.shadowBlur = 12;
 
       const gradientePastilha = ctx.createLinearGradient(a.x, py, a.x, py + alturaPilula);
-      if (isAtivo) {
-        gradientePastilha.addColorStop(0, "rgba(255, 230, 0, 0.95)");
-        gradientePastilha.addColorStop(1, "rgba(210, 160, 0, 0.95)");
-      } else {
-        gradientePastilha.addColorStop(0, "rgba(10, 25, 45, 0.88)");
-        gradientePastilha.addColorStop(1, "rgba(5, 12, 24, 0.92)");
-      }
+      gradientePastilha.addColorStop(0, "rgba(10, 25, 45, 0.88)");
+      gradientePastilha.addColorStop(1, "rgba(5, 12, 24, 0.92)");
 
       ctx.beginPath();
       ctx.roundRect(px, py, larguraPilula, alturaPilula, raioBorda);
       ctx.fillStyle = gradientePastilha;
       ctx.fill();
 
-      ctx.lineWidth = isAtivo ? 3.5 : 2;
-      ctx.strokeStyle = isAtivo ? "#ffffff" : "#00f0ff";
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "#00f0ff";
       ctx.stroke();
       ctx.restore();
 
-      ctx.fillStyle = isAtivo ? "#000000" : "#ffffff";
+      ctx.fillStyle = "#ffffff";
       ctx.fillText(a.texto, a.x, a.y + 1);
     }
+
+
+
+
+
+
+
+
+
+
+
+
   }
 
   for (let i = 0; i < gameState.particulas.length; i++) {
@@ -455,7 +471,20 @@ const corDoCorpo = obterCorCorpoCobra();
     desenharGomo3D(ctx, seg.x, seg.y, CONFIG.raioSegmento, corDoCorpo);
   }
 
-  desenharCabecaRealista(ctx, cabeca.x, cabeca.y, CONFIG.raioSegmento);
+desenharCabecaRealista(ctx, cabeca.x, cabeca.y, CONFIG.raioSegmento);
+
+  // Nome do jogador abaixo da cabeça (estilo Slither)
+  if (perfilJogador && perfilJogador.apelido) {
+    ctx.save();
+    ctx.font = "bold 13px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    ctx.fillStyle = "rgba(255, 255, 255, 0.45)"; // Cor suave e semitransparente idêntica à referência
+    ctx.shadowColor = "rgba(0, 0, 0, 0.7)";
+    ctx.shadowBlur = 4;
+    ctx.fillText(perfilJogador.apelido, cabeca.x, cabeca.y + CONFIG.raioSegmento + 14);
+    ctx.restore();
+  }
 
   ctx.restore();
 }
