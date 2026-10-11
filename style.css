@@ -423,3 +423,109 @@ body { background: #080d14; overflow: hidden; font-family: 'Segoe UI', Tahoma, G
 
 .ranking-user-score { font-size: 13.5px; font-weight: 900; color: #00e5ff; white-space: nowrap; font-family: monospace; }
 .ranking-user-score small { font-size: 9px; font-weight: 700; color: #556a80; text-transform: uppercase; margin-left: 2px; }
+
+/* =========================================================
+   BLOQUEIO DE TELA: FORÇAR MODO HORIZONTAL (LANDSCAPE)
+========================================================= */
+#avisoGirarAparelho {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #080d14fa;
+  backdrop-filter: blur(8px);
+  z-index: 99999;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  color: #ffffff;
+}
+
+#avisoGirarAparelho .icone-girar {
+  font-size: 52px;
+  margin-bottom: 16px;
+  animation: animGirarTel 2s infinite ease-in-out;
+}
+
+#avisoGirarAparelho h2 {
+  font-size: 22px;
+  color: #00e5ff;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+#avisoGirarAparelho p {
+  font-size: 14px;
+  color: #8da4bc;
+  max-width: 300px;
+  line-height: 1.4;
+}
+
+@keyframes animGirarTel {
+  0%, 10% { transform: rotate(0deg); }
+  50%, 60% { transform: rotate(-90deg); }
+  90%, 100% { transform: rotate(0deg); }
+}
+
+/* Ativa a tela de bloqueio apenas se a tela estiver em modo retrato (vertical) */
+@media screen and (orientation: portrait) {
+  #avisoGirarAparelho {
+    display: flex !important;
+  }
+}
+
+/* =========================================================
+   TECLADO NUMÉRICO VIRTUAL (MOBILE - LADO ESQUERDO)
+========================================================= */
+#tecladoVirtualMobile {
+  display: none; /* Oculto por padrão no Desktop */
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 50;
+  grid-template-columns: repeat(3, 54px);
+  grid-gap: 8px;
+  background: rgba(8, 13, 20, 0.85);
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 229, 255, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  user-select: none;
+  touch-action: none; /* Desativa qualquer espera de gesto do sistema operacional */
+}
+
+.btn-tecla-num {
+  width: 54px;
+  height: 48px;
+  background: #0d1722;
+  border: 1px solid #1e3144;
+  border-radius: 8px;
+  color: #00e5ff;
+  font-size: 20px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.1s, transform 0.08s;
+  touch-action: manipulation;
+}
+
+.btn-tecla-num:active {
+  background: #00e5ff;
+  color: #080d14;
+  transform: scale(0.92);
+}
+
+.btn-tecla-apagar {
+  color: #ff9800;
+  border-color: rgba(255, 152, 0, 0.4);
+}
+
+.btn-tecla-limpar {
+  color: #ff3366;
+  border-color: rgba(255, 51, 102, 0.4);
+}

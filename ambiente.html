@@ -7,6 +7,12 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Tela de bloqueio obrigatório: Modo Paisagem/Horizontal -->
+  <div id="avisoGirarAparelho">
+    <div class="icone-girar">📱🔄</div>
+    <h2>Gire seu aparelho</h2>
+    <p>Este jogo foi desenvolvido para rodar na horizontal.</p>
+  </div>
 
   <!-- HUD superior com pontuação, recorde e botão de voltar -->
   <div id="hud">
@@ -22,6 +28,21 @@
       <span id="contaTxt" style="color: #00f0ff; font-family: monospace; font-weight: bold; font-size: 22px; text-shadow: 0 0 10px rgba(0, 240, 255, 0.6); white-space: nowrap;"></span>
       <input type="text" id="mathInput" placeholder="?" autocomplete="off" inputmode="numeric">
     </div>
+  </div>
+  <!-- Teclado Virtual Integrado para Mobile (Lado Esquerdo) -->
+  <div id="tecladoVirtualMobile">
+    <button type="button" class="btn-tecla-num" data-val="1">1</button>
+    <button type="button" class="btn-tecla-num" data-val="2">2</button>
+    <button type="button" class="btn-tecla-num" data-val="3">3</button>
+    <button type="button" class="btn-tecla-num" data-val="4">4</button>
+    <button type="button" class="btn-tecla-num" data-val="5">5</button>
+    <button type="button" class="btn-tecla-num" data-val="6">6</button>
+    <button type="button" class="btn-tecla-num" data-val="7">7</button>
+    <button type="button" class="btn-tecla-num" data-val="8">8</button>
+    <button type="button" class="btn-tecla-num" data-val="9">9</button>
+    <button type="button" class="btn-tecla-num btn-tecla-apagar" data-val="back">⌫</button>
+    <button type="button" class="btn-tecla-num" data-val="0">0</button>
+    <button type="button" class="btn-tecla-num btn-tecla-limpar" data-val="clear">C</button>
   </div>
 
   <!-- Tela de Derrota com opção de reiniciar ou voltar ao perfil -->

@@ -32,6 +32,15 @@ const recordeFinalTxt = document.getElementById("recordeFinalTxt");
 const btnReiniciar = document.getElementById("btnReiniciar");
 
 
+const tecladoVirtualMobile = document.getElementById("tecladoVirtualMobile");
+const ehDispositivoMovel = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+// No mobile, bloqueia o teclado nativo do sistema tornando o input somente leitura
+if (ehDispositivoMovel && mathInput) {
+  mathInput.setAttribute("readonly", "readonly");
+  mathInput.style.caretColor = "transparent"; // Remove o cursor piscante no mobile
+}
+
 // 1. Bloqueia restauração por histórico (seta avançar do Chrome)
 window.addEventListener("pageshow", (event) => {
   if (event.persisted) {
@@ -89,16 +98,95 @@ if (usuarioId) {
     .catch((err) => console.error("Erro ao carregar dados do jogador:", err));
 }
 
+// Tenta travar a orientação na horizontal (Screen Orientation API)
 function redimensionar() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  if (!canvas) return;
+  // Garante a leitura exata do tamanho da janela atualizado
+  canvas.width = document.documentElement.clientWidth || window.innerWidth;
+  canvas.height = document.documentElement.clientHeight || window.innerHeight;
 }
+
 window.addEventListener("resize", redimensionar);
+window.addEventListener("orientationchange", () => {
+  // Dispara em dois tempos para cobrir navegadores rápidos e lentos
+  requestAnimationFrame(redimensionar);
+  setTimeout(redimensionar, 300);
+});
 redimensionar();
+
+// Solicita Fullscreen e orientação horizontal somente quando o usuário tocar na tela
+async function travarModoHorizontal() {
+  try {
+    if (document.documentElement.requestFullscreen && !document.fullscreenElement) {
+      await document.documentElement.requestFullscreen().catch(() => {});
+    }
+    if (screen.orientation && screen.orientation.lock) {
+      await screen.orientation.lock("landscape").catch(() => {});
+    }
+  } catch (err) {}
+}
+
+window.addEventListener("touchstart", travarModoHorizontal, { once: true, passive: true });
+window.addEventListener("click", travarModoHorizontal, { once: true });
+
+// --- Controle de Zoom Dinâmico (Pinça no Mobile e Scroll no PC) ---
+export let escalaAmbiente = 0.75;
+let distanciaDedosInicial = 0;
+let escalaAmbienteInicial = 0.75;
+
+// Zoom com scroll da rodinha do mouse no PC
+window.addEventListener("wheel", (e) => {
+  e.preventDefault();
+  const sensibilidade = 0.001;
+  escalaAmbiente -= e.deltaY * sensibilidade;
+  escalaAmbiente = Math.min(Math.max(0.4, escalaAmbiente), 1.4);
+}, { passive: false });
 
 window.addEventListener("mousemove", (e) => {
   gameState.mouse.x = e.clientX;
   gameState.mouse.y = e.clientY;
+});
+
+// Início do toque (1 dedo = direcional da cobra, 2 dedos = pinça de zoom)
+// Início do toque: mira logo no primeiro toque com 1 dedo ou prepara a pinça com 2 dedos
+window.addEventListener("touchstart", (e) => {
+  if (e.touches.length === 1 && e.touches[0]) {
+    gameState.mouse.x = e.touches[0].clientX;
+    gameState.mouse.y = e.touches[0].clientY;
+  } else if (e.touches.length === 2) {
+    distanciaDedosInicial = Math.hypot(
+      e.touches[0].clientX - e.touches[1].clientX,
+      e.touches[0].clientY - e.touches[1].clientY
+    );
+    escalaAmbienteInicial = escalaAmbiente;
+  }
+}, { passive: true });
+
+// Arrastar contínuo do dedo pelo ecrã (analógico fluido em tempo real)
+window.addEventListener("touchmove", (e) => {
+  // Se for 2 dedos, ajusta a escala do mapa sem interferir na cobra
+  if (e.touches.length === 2 && distanciaDedosInicial > 0) {
+    const distanciaAtual = Math.hypot(
+      e.touches[0].clientX - e.touches[1].clientX,
+      e.touches[0].clientY - e.touches[1].clientY
+    );
+    const fator = distanciaAtual / distanciaDedosInicial;
+    escalaAmbiente = escalaAmbienteInicial * fator;
+    escalaAmbiente = Math.min(Math.max(0.4, escalaAmbiente), 1.4);
+    return;
+  }
+
+  // 1 dedo: atualiza a mira a cada milímetro que o dedo desliza no ecrã
+ // 1 dedo: atualiza a mira instantaneamente e cancela a latência nativa do navegador
+  if (e.touches.length === 1 && e.touches[0]) {
+    if (e.cancelable) e.preventDefault(); // Impede o atraso de rolagem/gestos do navegador
+    gameState.mouse.x = e.touches[0].clientX;
+    gameState.mouse.y = e.touches[0].clientY;
+  }
+}, { passive: false });
+
+window.addEventListener("touchend", () => {
+  distanciaDedosInicial = 0;
 });
 
 function pararTimer() {
@@ -131,6 +219,7 @@ function dispararGameOver() {
   pararTimer();
   pararMultiplayer();
   inputContainer.style.display = "none";
+  if (tecladoVirtualMobile) tecladoVirtualMobile.style.display = "none";
 
   salvarRecordeNoFirebase();
 
@@ -169,6 +258,7 @@ function iniciarTimer() {
       gameState.alvoAtivo = null;
       gameState.entradaAtiva = false;
       inputContainer.style.display = "none";
+      if (tecladoVirtualMobile) tecladoVirtualMobile.style.display = "none";
       pararTimer();
     }
   }, 1000);
@@ -185,6 +275,7 @@ function reiniciarJogo() {
   mathInput.classList.remove("erro");
   mathInput.value = "";
   inputContainer.style.display = "none";
+  if (tecladoVirtualMobile) tecladoVirtualMobile.style.display = "none";
   if (gameOverModal) gameOverModal.style.display = "none";
 
   gameState.segmentos.length = 0;
@@ -200,8 +291,8 @@ function reiniciarJogo() {
 }
 
 document.addEventListener("click", (e) => {
-  if (e.target.closest("#hud") || e.target.closest("#gameOverModal")) return;
-  if (gameState.entradaAtiva && gameState.emJogo && !gameState.bloqueioInput) {
+  if (e.target.closest("#hud") || e.target.closest("#gameOverModal") || e.target.closest("#tecladoVirtualMobile")) return;
+  if (!ehDispositivoMovel && gameState.entradaAtiva && gameState.emJogo && !gameState.bloqueioInput) {
     mathInput.focus();
   }
 });
@@ -237,6 +328,7 @@ removerAlvoSincronizado(gameState.alvoAtivo.id);
     gameState.alvoAtivo = null;
     gameState.entradaAtiva = false;
     inputContainer.style.display = "none";
+    if (tecladoVirtualMobile) tecladoVirtualMobile.style.display = "none";
     pararTimer();
     return;
   }
@@ -254,6 +346,40 @@ removerAlvoSincronizado(gameState.alvoAtivo.id);
   }
 });
 
+
+// Ação dos botões do Teclado Virtual no Mobile
+// Ação imediata (zero lag) dos botões do Teclado Virtual no Mobile
+if (tecladoVirtualMobile) {
+  const manipularToqueTeclado = (e) => {
+    const btn = e.target.closest(".btn-tecla-num");
+    if (!btn || !gameState.alvoAtivo || gameState.bloqueioInput) return;
+
+    // Interrompe na raiz para não deixar a tela nem a mira da cobra capturarem este toque
+    e.preventDefault();
+    e.stopPropagation();
+
+    const val = btn.dataset.val;
+
+    if (val === "back") {
+      mathInput.value = mathInput.value.slice(0, -1);
+    } else if (val === "clear") {
+      mathInput.value = "";
+    } else {
+      mathInput.value += val;
+    }
+
+    // Dispara a validação matemática na mesma fração de milissegundo
+    mathInput.dispatchEvent(new Event("input", { bubbles: true }));
+  };
+
+  // Escuta touchstart no celular e mousedown no PC para resposta imediata ao primeiro toque
+  tecladoVirtualMobile.addEventListener("touchstart", manipularToqueTeclado, { passive: false });
+  tecladoVirtualMobile.addEventListener("mousedown", manipularToqueTeclado);
+}
+
+
+
+
 function atualizar() {
   atualizarCobra();
   atualizarParticulas();
@@ -268,16 +394,19 @@ function atualizar() {
    if (dist <= raioAtivacao) {
         gameState.alvoAtivo = a;
         gameState.entradaAtiva = true;
-        if (contaTxt) contaTxt.textContent = `${a.texto} = `;
+if (contaTxt) contaTxt.textContent = `${a.texto} = `;
         inputContainer.style.display = "flex";
         mathInput.value = "";
-        mathInput.focus();
+
+        if (ehDispositivoMovel) {
+          if (tecladoVirtualMobile) tecladoVirtualMobile.style.display = "grid";
+        } else {
+          mathInput.focus();
+        }
+
         iniciarTimer();
         break;
       }
-
-
-
     }
   }
 }
@@ -373,28 +502,31 @@ function desenharGomo3D(ctx, x, y, raio, corBase) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
 function desenhar() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   const cabeca = gameState.segmentos[0] || { x: 0, y: 0 };
-  const centroX = window.innerWidth / 2;
-  const centroY = window.innerHeight / 2;
+  const centroX = canvas.width / 2;
+  const centroY = canvas.height / 2;
 
   ctx.save();
-  ctx.translate(centroX - cabeca.x, centroY - cabeca.y);
+  // 1. Centraliza no meio da tela
+  ctx.translate(centroX, centroY);
+  // 2. Aplica a escala dinâmica que responde à pinça e scroll
+  ctx.scale(escalaAmbiente, escalaAmbiente);
+  // 3. Alinha a câmera na cabeça do jogador
+  ctx.translate(-cabeca.x, -cabeca.y);
 
+  // 4. Desenha o fundo cobrindo toda a área calculada pela escala
+  const alcanceVisualW = canvas.width / escalaAmbiente;
+  const alcanceVisualH = canvas.height / escalaAmbiente;
   ctx.fillStyle = texturaFundoHex;
-  ctx.fillRect(cabeca.x - centroX, cabeca.y - centroY, canvas.width, canvas.height);
+  ctx.fillRect(
+    cabeca.x - alcanceVisualW / 2,
+    cabeca.y - alcanceVisualH / 2,
+    alcanceVisualW,
+    alcanceVisualH
+  );
 
   if (gameState.emJogo) {
     ctx.textAlign = "center";

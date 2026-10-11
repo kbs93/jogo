@@ -146,9 +146,10 @@ export function criarEfeitoPerdaGomo(x, y) {
 }
 
 export function atualizarCobra() {
-  const cabeca = gameState.segmentos[0];
-  const centroX = window.innerWidth / 2;
-  const centroY = window.innerHeight / 2;
+const cabeca = gameState.segmentos[0];
+  const canvasElement = document.getElementById("gameCanvas");
+  const centroX = canvasElement ? canvasElement.width / 2 : window.innerWidth / 2;
+  const centroY = canvasElement ? canvasElement.height / 2 : window.innerHeight / 2;
 
   if (!gameState.entradaAtiva) {
     let dxTeclado = 0;
@@ -164,12 +165,14 @@ export function atualizarCobra() {
     if (dxTeclado !== 0 || dyTeclado !== 0) {
       anguloDesejado = Math.atan2(dyTeclado, dxTeclado);
     } else {
-      const dxMouse = gameState.mouse.x - centroX;
-      const dyMouse = gameState.mouse.y - centroY;
-      const distMouse = Math.hypot(dxMouse, dyMouse);
+      // Vetor da cabeça (centro do ecrã) em direção ao dedo/toque
+      const dxToque = gameState.mouse.x - centroX;
+      const dyToque = gameState.mouse.y - centroY;
+      const distToque = Math.hypot(dxToque, dyToque);
 
-      if (distMouse > 15) {
-        anguloDesejado = Math.atan2(dyMouse, dxMouse);
+      // Zona morta pequena para evitar vibração se o dedo estiver colado ao centro
+      if (distToque > 18) {
+        anguloDesejado = Math.atan2(dyToque, dxToque);
       }
     }
 
@@ -179,13 +182,13 @@ export function atualizarCobra() {
       while (diferencaAngulo < -Math.PI) diferencaAngulo += Math.PI * 2;
       while (diferencaAngulo > Math.PI) diferencaAngulo -= Math.PI * 2;
 
-      if (Math.abs(diferencaAngulo) < CONFIG.taxaGiro) {
-        gameState.anguloAtual = anguloDesejado;
-      } else {
-        gameState.anguloAtual += Math.sign(diferencaAngulo) * CONFIG.taxaGiro;
-      }
+      // Curva fluida orgânica (estilo Slither.io): interpola proporcionalmente
+      // sem saltar de forma brusca
+      const velocidadeCurva = 0.12; 
+      gameState.anguloAtual += diferencaAngulo * velocidadeCurva;
     }
   }
+
 
   const velAtual = gameState.entradaAtiva ? CONFIG.velocidadeDigitando : CONFIG.velocidade;
   cabeca.x += Math.cos(gameState.anguloAtual) * velAtual;

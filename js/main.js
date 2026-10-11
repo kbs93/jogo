@@ -366,6 +366,9 @@ btnIniciarJogo.addEventListener("click", async (e) => {
 
     showToast(resposta.mensagem, "sucesso");
     setTimeout(() => {
+    if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock("landscape").catch(() => {});
+      }
       window.location.replace(`ambiente.html?uid=${encodeURIComponent(resposta.id)}`);
     }, 450);
   } catch (erro) {
