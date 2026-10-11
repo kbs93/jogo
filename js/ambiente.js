@@ -1,5 +1,5 @@
 import { CONFIG, gameState } from "./config.js";
-import { criarContaAleatoria, popularAlvosIniciais } from "./math.js";
+import { criarContaAleatoria, popularAlvosIniciais, removerAlvoSincronizado } from "./math.js";
 import {
   criarEfeitoPerdaGomo,
   atualizarCobra,
@@ -9,7 +9,8 @@ import {
   obterCorCorpoCobra
 } from "./snake.js";
 import { db } from "./firebaseConfig.js";
-import { 
+import { iniciarMultiplayer, pararMultiplayer, atualizarOutrosJogadores, cacheImagensAvatares } from "./multiplayer.js";
+import {
   doc, 
   getDoc, 
   updateDoc, 
@@ -81,6 +82,8 @@ if (usuarioId) {
         if (dados.emojiSvg) {
           definirAvatarCobra(dados.emojiSvg);
         }
+
+        iniciarMultiplayer(usuarioId, perfilJogador);
       }
     })
     .catch((err) => console.error("Erro ao carregar dados do jogador:", err));
@@ -126,6 +129,7 @@ async function salvarRecordeNoFirebase() {
 function dispararGameOver() {
   gameState.emJogo = false;
   pararTimer();
+  pararMultiplayer();
   inputContainer.style.display = "none";
 
   salvarRecordeNoFirebase();
@@ -158,10 +162,8 @@ function iniciarTimer() {
         return;
       }
 
-      if (gameState.alvoAtivo) {
-        const idx = gameState.alvos.findIndex((a) => a.id === gameState.alvoAtivo.id);
-        if (idx !== -1) gameState.alvos.splice(idx, 1);
-        gameState.alvos.push(criarContaAleatoria());
+ if (gameState.alvoAtivo) {
+        removerAlvoSincronizado(gameState.alvoAtivo.id);
       }
 
       gameState.alvoAtivo = null;
@@ -230,9 +232,7 @@ mathInput.addEventListener("input", () => {
     const ultimo = gameState.segmentos[gameState.segmentos.length - 1];
     gameState.segmentos.push({ x: ultimo.x, y: ultimo.y });
 
-    const idx = gameState.alvos.findIndex((a) => a.id === gameState.alvoAtivo.id);
-    if (idx !== -1) gameState.alvos.splice(idx, 1);
-    gameState.alvos.push(criarContaAleatoria());
+removerAlvoSincronizado(gameState.alvoAtivo.id);
 
     gameState.alvoAtivo = null;
     gameState.entradaAtiva = false;
@@ -257,6 +257,7 @@ mathInput.addEventListener("input", () => {
 function atualizar() {
   atualizarCobra();
   atualizarParticulas();
+  atualizarOutrosJogadores();
 
   const cabeca = gameState.segmentos[0];
   if (!gameState.entradaAtiva) {
@@ -439,16 +440,6 @@ for (let i = 0; i < gameState.alvos.length; i++) {
     }
 
 
-
-
-
-
-
-
-
-
-
-
   }
 
   for (let i = 0; i < gameState.particulas.length; i++) {
@@ -460,11 +451,83 @@ for (let i = 0; i < gameState.alvos.length; i++) {
     ctx.shadowBlur = 8;
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.raio, 0, Math.PI * 2);
-    ctx.fill();
+  ctx.fill();
     ctx.restore();
   }
 
-const corDoCorpo = obterCorCorpoCobra();
+  // --- DESENHAR OUTROS JOGADORES NA ARENA ---
+for (const id in gameState.outrosJogadores) {
+    const outro = gameState.outrosJogadores[id];
+    const segs = outro.segmentos;
+    if (!segs || segs.length === 0) continue;
+
+    const corOutro = outro.cor || "#ff5555";
+    const anguloOutro = typeof outro.angulo === "number" ? outro.angulo : 0;
+    // 1. Corpo do oponente
+    for (let i = segs.length - 1; i > 0; i--) {
+      desenharGomo3D(ctx, segs[i].x, segs[i].y, CONFIG.raioSegmento, corOutro);
+    }
+
+    // 2. Cabeça do oponente (com Avatar personalizado ou Olhos direcionais)
+    const cabOutro = segs[0];
+    const imgAvatar = cacheImagensAvatares[id];
+
+    if (imgAvatar && imgAvatar.complete && imgAvatar.naturalWidth !== 0) {
+      const fatorVisual = 1.35;
+      const tamanho = (CONFIG.raioSegmento * 2) * fatorVisual;
+
+      ctx.save();
+      ctx.translate(cabOutro.x, cabOutro.y);
+      ctx.rotate(anguloOutro - Math.PI / 2);
+      ctx.drawImage(imgAvatar, -tamanho / 2, -tamanho / 2, tamanho, tamanho);
+      ctx.restore();
+    } else {
+      // Cabeça padrão com olhos voltados para a direção do oponente
+      ctx.beginPath();
+      ctx.arc(cabOutro.x, cabOutro.y, CONFIG.raioSegmento, 0, Math.PI * 2);
+      ctx.fillStyle = corOutro;
+      ctx.fill();
+
+      const cos = Math.cos(anguloOutro);
+      const sin = Math.sin(anguloOutro);
+      const distFrente = CONFIG.raioSegmento * 0.35;
+      const distLateral = CONFIG.raioSegmento * 0.45;
+      const rOlho = CONFIG.raioSegmento * 0.22;
+      const rPupila = rOlho * 0.45;
+
+      const o1X = cabOutro.x + cos * distFrente - sin * (-distLateral);
+      const o1Y = cabOutro.y + sin * distFrente + cos * (-distLateral);
+      const o2X = cabOutro.x + cos * distFrente - sin * distLateral;
+      const o2Y = cabOutro.y + sin * distFrente + cos * distLateral;
+
+      ctx.beginPath();
+      ctx.arc(o1X, o1Y, rOlho, 0, Math.PI * 2);
+      ctx.arc(o2X, o2Y, rOlho, 0, Math.PI * 2);
+      ctx.fillStyle = "#161326";
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(o1X + cos * (rOlho * 0.35), o1Y + sin * (rOlho * 0.35), rPupila, 0, Math.PI * 2);
+      ctx.arc(o2X + cos * (rOlho * 0.35), o2Y + sin * (rOlho * 0.35), rPupila, 0, Math.PI * 2);
+      ctx.fillStyle = "#ffffff";
+      ctx.fill();
+    }
+
+    // 3. Nome do oponente abaixo da cabeça
+    if (outro.apelido) {
+      ctx.save();
+      ctx.font = "bold 13px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      ctx.fillStyle = "rgba(255, 255, 255, 0.45)";
+      ctx.shadowColor = "rgba(0, 0, 0, 0.7)";
+      ctx.shadowBlur = 4;
+      ctx.fillText(outro.apelido, cabOutro.x, cabOutro.y + CONFIG.raioSegmento + 14);
+      ctx.restore();
+    }
+  }
+
+  const corDoCorpo = obterCorCorpoCobra();
 
   for (let i = gameState.segmentos.length - 1; i > 0; i--) {
     const seg = gameState.segmentos[i];
@@ -520,8 +583,9 @@ window.addEventListener("keyup", (e) => {
 
 // Ação de Voltar para o Perfil com o UID
 async function voltarAoMenu() {
+  pararMultiplayer();
   await salvarRecordeNoFirebase();
-  const destino = usuarioId 
+  const destino = usuarioId
     ? `index.html?uid=${encodeURIComponent(usuarioId)}&pts=${encodeURIComponent(gameState.pontos || 0)}`
     : "index.html";
   window.location.replace(destino);

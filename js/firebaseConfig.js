@@ -14,6 +14,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 
+
 // Grava a configuração do jogador no Firestore
 export async function salvarConfigJogador(modo) {
   try {

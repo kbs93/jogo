@@ -25,5 +25,6 @@ export const gameState = {
     x: window.innerWidth / 2,
     y: window.innerHeight / 2
   },
-  teclas: { w: false, a: false, s: false, d: false } // <-- Adicione esta linha
+  teclas: { w: false, a: false, s: false, d: false },
+  outrosJogadores: {}
 };
