@@ -4,17 +4,39 @@ const wss = new WebSocketServer({ port: 3000 });
 const jogadores = new Map();
 let alvos = [];
 
-// Gera uma conta única compartilhada
+const TOTAL_MAX_ALVOS = 6;
+const DISTANCIA_MINIMA_ENTRE_CONTAS = 220;
+
+// Gera uma conta única garantindo distância das outras já existentes
 function gerarConta() {
   const n1 = Math.floor(Math.random() * 8) + 2;
   const n2 = Math.floor(Math.random() * 8) + 2;
-  const ang = Math.random() * Math.PI * 2;
-  const dist = 250 + Math.random() * 900;
+
+  let novaPos = { x: 0, y: 0 };
+  let tentativas = 0;
+  let posicaoValida = false;
+
+  while (!posicaoValida && tentativas < 30) {
+    tentativas++;
+    const ang = Math.random() * Math.PI * 2;
+    const dist = 300 + Math.random() * 850;
+    novaPos.x = Math.round(Math.cos(ang) * dist);
+    novaPos.y = Math.round(Math.sin(ang) * dist);
+
+    // Evita criar conta em cima ou colada em qualquer conta existente
+    const muitoPerto = alvos.some(
+      (a) => Math.hypot(a.x - novaPos.x, a.y - novaPos.y) < DISTANCIA_MINIMA_ENTRE_CONTAS
+    );
+
+    if (!muitoPerto) {
+      posicaoValida = true;
+    }
+  }
 
   return {
     id: Math.random().toString(36).substring(2, 9),
-    x: Math.round(Math.cos(ang) * dist),
-    y: Math.round(Math.sin(ang) * dist),
+    x: novaPos.x,
+    y: novaPos.y,
     num1: n1,
     num2: n2,
     resultado: n1 * n2,
@@ -22,8 +44,8 @@ function gerarConta() {
   };
 }
 
-// Inicializa 6 contas na arena compartilhada
-for (let i = 0; i < 6; i++) {
+// Inicializa exatamente a quantidade controlada de contas
+while (alvos.length < TOTAL_MAX_ALVOS) {
   alvos.push(gerarConta());
 }
 
@@ -65,8 +87,13 @@ wss.on("connection", (ws) => {
 
       // Quando qualquer jogador resolve ou consome uma conta
       if (pacote.tipo === "consumirAlvo") {
+        // Remove a conta consumida
         alvos = alvos.filter((a) => a.id !== pacote.id);
-        alvos.push(gerarConta());
+
+        // Repõe apenas até o limite fixo, sem acumular ou multiplicar
+        while (alvos.length < TOTAL_MAX_ALVOS) {
+          alvos.push(gerarConta());
+        }
 
         const msgAlvos = JSON.stringify({ tipo: "alvos", alvos });
         wss.clients.forEach((client) => {

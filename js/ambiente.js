@@ -322,8 +322,11 @@ mathInput.addEventListener("input", () => {
 
     const ultimo = gameState.segmentos[gameState.segmentos.length - 1];
     gameState.segmentos.push({ x: ultimo.x, y: ultimo.y });
+const idParaRemover = gameState.alvoAtivo.id;
 
-removerAlvoSincronizado(gameState.alvoAtivo.id);
+    // Remove imediatamente da tela e da memória local (não espera a rede)
+    gameState.alvos = gameState.alvos.filter(a => a.id !== idParaRemover);
+    removerAlvoSincronizado(idParaRemover);
 
     gameState.alvoAtivo = null;
     gameState.entradaAtiva = false;
