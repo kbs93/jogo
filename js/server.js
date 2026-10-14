@@ -2,52 +2,7 @@ import { WebSocketServer, WebSocket } from "ws";
 
 const wss = new WebSocketServer({ port: 3000 });
 const jogadores = new Map();
-let alvos = [];
-
-const TOTAL_MAX_ALVOS = 6;
-const DISTANCIA_MINIMA_ENTRE_CONTAS = 220;
-
-// Gera uma conta única garantindo distância das outras já existentes
-function gerarConta() {
-  const n1 = Math.floor(Math.random() * 8) + 2;
-  const n2 = Math.floor(Math.random() * 8) + 2;
-
-  let novaPos = { x: 0, y: 0 };
-  let tentativas = 0;
-  let posicaoValida = false;
-
-  while (!posicaoValida && tentativas < 30) {
-    tentativas++;
-    const ang = Math.random() * Math.PI * 2;
-    const dist = 300 + Math.random() * 850;
-    novaPos.x = Math.round(Math.cos(ang) * dist);
-    novaPos.y = Math.round(Math.sin(ang) * dist);
-
-    // Evita criar conta em cima ou colada em qualquer conta existente
-    const muitoPerto = alvos.some(
-      (a) => Math.hypot(a.x - novaPos.x, a.y - novaPos.y) < DISTANCIA_MINIMA_ENTRE_CONTAS
-    );
-
-    if (!muitoPerto) {
-      posicaoValida = true;
-    }
-  }
-
-  return {
-    id: Math.random().toString(36).substring(2, 9),
-    x: novaPos.x,
-    y: novaPos.y,
-    num1: n1,
-    num2: n2,
-    resultado: n1 * n2,
-    texto: `${n1}x${n2}`
-  };
-}
-
-// Inicializa exatamente a quantidade controlada de contas
-while (alvos.length < TOTAL_MAX_ALVOS) {
-  alvos.push(gerarConta());
-}
+let alvos = []; // Apenas armazena as contas enviadas pelo math.js do frontend
 
 wss.on("connection", (ws) => {
   let jogadorId = null;
@@ -69,7 +24,7 @@ wss.on("connection", (ws) => {
           tamanho: pacote.tamanho || 5
         });
 
-        // Envia as contas atuais para quem acabou de entrar
+        // Envia as contas ativas para quem acabou de entrar
         ws.send(JSON.stringify({ tipo: "alvos", alvos }));
         return;
       }
@@ -85,16 +40,21 @@ wss.on("connection", (ws) => {
         return;
       }
 
-      // Quando qualquer jogador resolve ou consome uma conta
+      // O frontend (math.js) criou uma nova conta: o server apenas replica para todos
+      if (pacote.tipo === "adicionarAlvo" && pacote.alvo) {
+        alvos.push(pacote.alvo);
+        const msgAlvos = JSON.stringify({ tipo: "alvos", alvos });
+        wss.clients.forEach((client) => {
+          if (client.readyState === WebSocket.OPEN) {
+            client.send(msgAlvos);
+          }
+        });
+        return;
+      }
+
+      // O jogador acertou a conta: o server apenas remove e avisa todos
       if (pacote.tipo === "consumirAlvo") {
-        // Remove a conta consumida
         alvos = alvos.filter((a) => a.id !== pacote.id);
-
-        // Repõe apenas até o limite fixo, sem acumular ou multiplicar
-        while (alvos.length < TOTAL_MAX_ALVOS) {
-          alvos.push(gerarConta());
-        }
-
         const msgAlvos = JSON.stringify({ tipo: "alvos", alvos });
         wss.clients.forEach((client) => {
           if (client.readyState === WebSocket.OPEN) {

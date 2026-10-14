@@ -319,14 +319,17 @@ mathInput.addEventListener("input", () => {
       gameState.recorde = gameState.pontos;
       if (recordeTxt) recordeTxt.textContent = gameState.recorde;
     }
-
-    const ultimo = gameState.segmentos[gameState.segmentos.length - 1];
+const ultimo = gameState.segmentos[gameState.segmentos.length - 1];
     gameState.segmentos.push({ x: ultimo.x, y: ultimo.y });
-const idParaRemover = gameState.alvoAtivo.id;
 
-    // Remove imediatamente da tela e da memória local (não espera a rede)
-    gameState.alvos = gameState.alvos.filter(a => a.id !== idParaRemover);
-    removerAlvoSincronizado(idParaRemover);
+    const idConsumido = gameState.alvoAtivo.id;
+
+    // 1. Remove imediatamente da tela local (elimina a necessidade de digitar 2 vezes)
+    gameState.alvos = gameState.alvos.filter((a) => a.id !== idConsumido);
+    removerAlvoSincronizado(idConsumido);
+
+    // 2. Trava nova colisão por 800ms para a cobra sair da área da conta
+    proximaColisaoPermitidaEm = Date.now() + CONFIG.cooldownColisaoMs;
 
     gameState.alvoAtivo = null;
     gameState.entradaAtiva = false;
@@ -334,6 +337,7 @@ const idParaRemover = gameState.alvoAtivo.id;
     if (tecladoVirtualMobile) tecladoVirtualMobile.style.display = "none";
     pararTimer();
     return;
+
   }
 
   if (digitado.length >= strEsperada.length) {
@@ -381,15 +385,15 @@ if (tecladoVirtualMobile) {
 }
 
 
-
+let proximaColisaoPermitidaEm = 0;
 
 function atualizar() {
   atualizarCobra();
   atualizarParticulas();
   atualizarOutrosJogadores();
 
-  const cabeca = gameState.segmentos[0];
-  if (!gameState.entradaAtiva) {
+const cabeca = gameState.segmentos[0];
+  if (!gameState.entradaAtiva && Date.now() > proximaColisaoPermitidaEm) {
     const raioAtivacao = 50;
     for (let i = 0; i < gameState.alvos.length; i++) {
       const a = gameState.alvos[i];

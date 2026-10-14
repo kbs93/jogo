@@ -10,7 +10,11 @@ export function consumirAlvoNoServidor(alvoId) {
     socket.send(JSON.stringify({ tipo: "consumirAlvo", id: alvoId }));
   }
 }
-
+export function enviarNovaContaAoServidor(conta) {
+  if (socket && socket.readyState === WebSocket.OPEN) {
+    socket.send(JSON.stringify({ tipo: "adicionarAlvo", alvo: conta }));
+  }
+}
 export function iniciarMultiplayer(usuarioId, perfilJogador) {
   if (!usuarioId) return;
 
@@ -53,11 +57,16 @@ export function iniciarMultiplayer(usuarioId, perfilJogador) {
       const msg = JSON.parse(evento.data);
 
       // 1. Sincronização das contas compartilhadas
+      // 1. Sincronização das contas
       if (msg.tipo === "alvos" && Array.isArray(msg.alvos)) {
-        gameState.alvos = msg.alvos;
+        // Se o servidor estiver sem contas, o cliente cria e popula imediatamente
+        if (msg.alvos.length === 0) {
+          import("./math.js").then((m) => m.popularAlvosIniciais());
+        } else {
+          gameState.alvos = msg.alvos.slice(0, CONFIG.totalAlvos);
+        }
         return;
       }
-
       // 2. Sincronização dos jogadores
       if (msg.tipo === "arena") {
         const idsAtivos = new Set();

@@ -5,7 +5,12 @@ export const CONFIG = {
   raioSegmento: 18,
   distanciaEntreSegmentos: 13,
   totalSegmentosInicial: 5,
-  tempoBase: 5
+  tempoBase: 5,
+  // === SEU CONTROLE MANUAL DE CONTAS ===
+  totalAlvos: 5,                  // Quantidade exata de contas no mapa
+  operacao: "misto",      // "multiplicacao", "soma", "subtracao" ou "divisao"
+  distanciaMinimaEntreAlvos: 260, // Distância em pixels para nunca nascerem juntas
+  cooldownColisaoMs: 800          // Tempo para evitar colisão dupla imediata
 };
 
 export const gameState = {
